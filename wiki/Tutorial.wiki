@@ -2,11 +2,11 @@ This is a list of available tutorials.
 
 = Basics =
 
-* [Getting Started] - installation and setup
-* [Running an Experiment] - experiment basics; using source code or GUI?
-* [Advanced Experiments] - explains FullFactorialExperiment, ExcelSaver
-* [Stochastic Experiments] - explains MultipleReplicationExperiment, seed handling
+ * [Getting Started] - installation and setup
+ * [Running an Experiment] - experiment basics; using source code or GUI?
+ * [Advanced Experiments] - explains FullFactorialExperiment, ExcelSaver
+ * [Stochastic Experiments] - explains MultipleReplicationExperiment, seed handling
 
 = Advanced =
 
-* [Shop Floor Simulation] - main features
+ * [Shop Floor Simulation] - main features
