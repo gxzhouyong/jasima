@@ -1,3 +1,5 @@
+#summary Creating and running a simple experiment in source and XML format
+
 = Running a simple experiment =
 
 After setting up a project to use Jasima, source files can be added in the `src` directory, for example:
