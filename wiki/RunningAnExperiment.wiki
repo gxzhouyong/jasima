@@ -1,0 +1,45 @@
+= Running a simple experiment =
+
+After setting up a project to use Jasima, source files can be added in the `src` directory, for example:
+{{{
+package tutorial;;
+
+import jasima.core.experiment.Experiment;
+import jasima.shopSim.models.holthausSimple2.HolthausSimple2Experiment;
+
+public class Main {
+	public static void main(String[] args) {
+		Experiment e = new HolthausSimple2Experiment();
+		e.runExperiment();
+		e.printResults();
+	}
+}
+}}}
+Compile and run using:
+{{{
+mvn compile exec:java -Dexec.mainClass=tutorial.Main
+}}}
+
+== Using the Eclipse plugin ==
+
+In Eclipse, the project can be run like any Java project.
+The Jasima plugin automatically installed the Eclipse M2E plugin, so Eclipse will interact with Maven and run the project with the correct classpath which includes all Maven dependencies.
+
+= Running an experiment in XML format =
+
+Experiments can also be created from XML files instead of source code.
+Because this format is intended to be used with the Eclipse plugin's graphical editor, creating those files by hand is not covered in this tutorial.
+
+Serialized experiments can be run manually using the class `XmlExperimentRunner`, which does not require the Eclipse plugin.
+For example:
+{{{
+	mvn compile exec:java -Dexec.mainClass=jasima.core.util.XmlExperimentRunner -Dexec.args=xml_experiment.jasima
+}}}
+
+== Using the Eclipse plugin ==
+
+Use File->New->Other and select Jasima Experiment to create an experiment in XML format anywhere in the project tree.
+The default experiment type, `HolthausSimple2Experiment`, will work out of the box.
+The XML file can be run using Run As->Jasima Simulation.
+
+Continue with AdvancedExperiments.

@@ -15,7 +15,7 @@ Jasima can either be downloaded as a source archive or checked out directly from
 After obtaining the source code, Jasima can be installed using `mvn install` or an IDE.
 This will run many tests cases which will take roughly ten minutes and can be skipped using the parameter `-Dmaven.test.skip=true`.
 Likewise, adding `-Dmaven.javadoc.skip=true` will skip Javadoc generation.
-The folling files will be created:
+The following files will be created:
   * `target/apidoc/*` - API documentation (can be skipped)
   * `target/jasima-main-VERSION-javadic.jar` - compressed API documentation (can be skipped)
   * `target/classes/*` - compiled Jasima classes
@@ -25,7 +25,7 @@ The folling files will be created:
 The `install` target will also copy the generated JAR files to your local reposirory.
 If that's not intended, use `mvn package` instead, which accepts the same parameters and will generate the same set of files.
 
-Although the build in the local repository will be preferred over any remote repository, It is a good idea to edit the `pom.xml` and add a version postfix when making code changes.
+Although the build in the local repository will be preferred over any remote repository, rt is a good idea to edit the `pom.xml` and add a version postfix when making code changes.
 
 = Using Jasima in a Maven project =
 
@@ -50,29 +50,4 @@ When inserted into the `pom.xml`, the following snippet will add Jasima as a dep
 
 The Jasima Eclipse plugin will automatically do that when creating a Jasima project.
 
-= Running a simple experiment =
-
-After setting up a project to use Jasima, source files can be added in the `src` directory, for example:
-{{{
-package tutorial;;
-
-import jasima.core.experiment.Experiment;
-import jasima.shopSim.models.holthausSimple2.HolthausSimple2Experiment;
-
-public class Main {
-	public static void main(String[] args) {
-		Experiment e = new HolthausSimple2Experiment();
-		e.runExperiment();
-		e.printResults();
-	}
-}
-}}}
-Compile and run using:
-{{{
-mvn compile exec:java -Dexec.mainClass=tutorial.Main
-}}}
-
-== Using the Eclipse plugin ==
-
-In Eclipse, the project can be run like any Java project.
-The Jasima plugin automatically installed the Eclipse M2E plugin, so Eclipse will interact with Maven and run the project with the correct classpath which includes all Maven dependencies.
+Continue with RunningAnExperiment.
