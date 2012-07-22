@@ -25,7 +25,7 @@ mvn compile exec:java -Dexec.mainClass=tutorial.Main
 == Using the Eclipse plugin ==
 
 In Eclipse, the project can be run like any Java project.
-The Jasima plugin automatically installed the Eclipse M2E plugin, so Eclipse will interact with Maven and run the project with the correct classpath which includes all Maven dependencies.
+The Jasima plugin automatically installed the Eclipse M2E plugin, so Eclipse will interact with Maven and run the project with the correct classpath, which includes all Maven dependencies.
 
 = Running an experiment in XML format =
 
@@ -35,7 +35,7 @@ Because this format is intended to be used with the Eclipse plugin's graphical e
 Serialized experiments can be run manually using the class `XmlExperimentRunner`, which does not require the Eclipse plugin.
 For example:
 {{{
-	mvn compile exec:java -Dexec.mainClass=jasima.core.util.XmlExperimentRunner -Dexec.args=xml_experiment.jasima
+mvn compile exec:java -Dexec.mainClass=jasima.core.util.XmlExperimentRunner -Dexec.args=xml_experiment.jasima
 }}}
 
 == Using the Eclipse plugin ==
