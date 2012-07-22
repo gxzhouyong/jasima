@@ -2,7 +2,7 @@
 
 = Introduction =
 
-This page covers installing Jasima through Maven and setting up a simple experiment.
+This tutorial covers installing Jasima through Maven and setting up and running a simple experiment.
 
 = Installation =
 
