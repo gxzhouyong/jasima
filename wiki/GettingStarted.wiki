@@ -1,0 +1,32 @@
+#summary Getting started with jasima
+
+= Introduction =
+
+This page covers installing Jasima through Maven and setting up a simple experiment.
+
+= Installation =
+
+The easiest way to install Jasima is using Maven, which automatically downloads and installs Jasima and all of its dependencies.  There is no need to manually install Jasima when building a Maven project that includes Jasima as a dependency.
+
+When inserted into the `pom.xml`, the following snippet will add Jasima as a dependency:
+{{{
+<repositories>
+	<repository>
+		<id>jasima-rep</id>
+		<url>http://www2.ips.biba.uni-bremen.de/~hil/maven2</url>
+	</repository>
+</repositories>
+<dependencies>
+	<dependency>
+		<groupId>jasima</groupId>
+		<artifactId>jasima-main</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+</dependencies>
+}}}
+
+== Manually building and installing Jasima ==
+
+# TODO download
+
+After downloading or checkount out the source code, the project can simply be installed using `mvn install` or an IDE.  This will run many tests cases which will take roughly half an hour.  Running `mvn install -Dmaven.test.skip=true` results in a much faster build by skipping all tests.
