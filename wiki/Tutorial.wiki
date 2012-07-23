@@ -2,9 +2,9 @@ This is a list of available tutorials.
 
 = Basics =
 
- * [GettingStarted] - installation and setup
- * [RunningAnExperiment] - experiment basics; using source code or GUI?
- * [AdvancedExperiments] - explains seed handling MultipleReplicationExperiment, FullFactorialExperiment, ExcelSaver
+ * [GettingStarted] - create a Java project that uses Jasima
+ * [RunningAnExperiment] - create, run and analyze a simple experiment
+ * [AdvancedExperiments] - run an experiment a number of times with varying parameters
 
 = Advanced =
 
