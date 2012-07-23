@@ -51,9 +51,9 @@ Each row of the first table represents a `ValueStat` object (also known as tally
 The following statistical values are printed:
   * `Name` - the name of the result
   * `Mean` - the weighted average of all data points
-  * `Min`/'Max' - the lowest and highest number encountered during the simulation
+  * `Min`/`Max` - the lowest and highest number encountered during the simulation
   * `StdDev` - the weighted standard deviation (square root of variance)
-  * `Count` - the number of data points (independent on weight)
+  * `Count` - the number of data points (regardless of their weight)
   * `Sum` - the weighted sum of all data points
 Values will be NaN if there aren't enough data points.
 
