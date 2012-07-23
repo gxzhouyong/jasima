@@ -4,8 +4,7 @@ This is a list of available tutorials.
 
  * [GettingStarted] - installation and setup
  * [RunningAnExperiment] - experiment basics; using source code or GUI?
- * [AdvancedExperiments] - explains FullFactorialExperiment, ExcelSaver
- * [StochasticExperiments] - explains MultipleReplicationExperiment, seed handling
+ * [AdvancedExperiments] - explains seed handling MultipleReplicationExperiment, FullFactorialExperiment, ExcelSaver
 
 = Advanced =
 

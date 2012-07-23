@@ -1,0 +1,23 @@
+#summary FullFactorialExperiment, ExcelSaver
+
+= MultipleReplicationExperiment =
+
+`MultipleReplicationExperiment` is the most simple implementation of `AbstractMultiExperiment`, which can run any experiment a number of times using different random seeds and create statistics about each result.
+Much like `ValueStat` is used to summarize results of many data points in one experiment, it is used by `AbstractMultiExperiment` to summarize the results of a number of runs of the same experiment.
+If the result of a single run is already a `ValueStat` object, all parameters except for the mea value are discarded.
+Results that are neither numeric or of type `ValueStat` result in a list of the results of each run.
+
+== Seed handling ==
+
+TODO
+
+= FullFactorialExperiment =
+
+`FullFactorialExperiment` is another implementation of `AbstractMultiExperiment`.
+Instead of simply running an experimnt a number of times, it can also vary one or more parameters between runs.
+
+= ExcelSaver =
+
+TODO
+
+Continue with ShopFloorSimulation.
