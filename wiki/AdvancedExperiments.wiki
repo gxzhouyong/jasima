@@ -11,10 +11,26 @@ Results that are neither numeric or of type `ValueStat` result in a list of the 
 
 TODO
 
+== Example ==
+
+..
+
+== Creating a MultipleReplicationExperiment using the Eclipse plugin ==
+
+Nested experiments should be created from outside to inside.
+First, create a `MultipleReplicationExperiment` using the Jasima Experiment wizard.
+Then, press the 'new' icon next to the `baseExperiment` property to create any experiment that should be run multiple times, for example `HolthausSimple2Experiment`.
+The properties of the inner experiment can be edited while the `baseExperiment` property is expanded.
+Properties belonging to the inner experiment can be recognized by the gray bar next to them.
+
+It is also possible to assign an existing experiment to the `baseExperiment` property.
+To do so, click on the `Load` icon and change the file filter to 'Jasima experiments'.
+A copy of the experiment will be made, so changes in the original file are not visible in the outer experiment's file.
+
 = FullFactorialExperiment =
 
 `FullFactorialExperiment` is another implementation of `AbstractMultiExperiment`.
-Instead of simply running an experimnt a number of times, it can also vary one or more parameters between runs.
+Instead of simply running an experiment a number of times, it can also vary one or more parameters between runs.
 
 = ExcelSaver =
 
