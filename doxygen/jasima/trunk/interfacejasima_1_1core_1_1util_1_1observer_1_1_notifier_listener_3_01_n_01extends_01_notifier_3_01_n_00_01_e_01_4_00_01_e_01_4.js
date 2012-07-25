@@ -1,0 +1,4 @@
+var interfacejasima_1_1core_1_1util_1_1observer_1_1_notifier_listener_3_01_n_01extends_01_notifier_3_01_n_00_01_e_01_4_00_01_e_01_4 =
+[
+    [ "update", "interfacejasima_1_1core_1_1util_1_1observer_1_1_notifier_listener_3_01_n_01extends_01_notifier_3_01_n_00_01_e_01_4_00_01_e_01_4.html#a553d8a67bd8b671ce30fc7dc3f645f05", null ]
+];
