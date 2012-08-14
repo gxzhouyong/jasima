@@ -59,4 +59,4 @@ Values will be NaN if there aren't enough data points.
 
 All results that are not convertible to `ValueStat` are printed in a separate table, which has only two columns: `Name` and `Value`.
 
-Continue with AdvancedExperiments.
+Continue with StaticShopExperiment.
