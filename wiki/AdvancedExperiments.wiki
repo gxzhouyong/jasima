@@ -9,11 +9,8 @@ Results that are neither numeric or of type `ValueStat` result in a list of the 
 
 == Seed handling ==
 
-TODO
-
-== Example ==
-
-..
+By default, `MultipleReplicationExperiment` will use its own random stream to generate distinct seeds for each replication of the base experiment.
+That means that while the replications will most likely have unique seeds and random streams, all seeds and random seeds will be the same when the same seed is used for the `MultipleReplicationExperiment`.
 
 == Creating a MultipleReplicationExperiment using the Eclipse plugin ==
 
@@ -31,6 +28,9 @@ A copy of the experiment will be made, so changes in the original file are not v
 
 `FullFactorialExperiment` is another implementation of `AbstractMultiExperiment`.
 Instead of simply running an experiment a number of times, it can also vary one or more parameters between runs.
+
+Each factor name must match a property of the base experiment.
+Factors are represented as a shallow tree in the graphical editor, with each factor name containing a number of factor values.
 
 = ExcelSaver =
 
