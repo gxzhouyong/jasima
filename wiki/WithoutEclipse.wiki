@@ -1,5 +1,7 @@
 #summary Using Jasima without Eclipse
 
+= Introduction =
+
 Although Jasima can be integrated into the Eclipse IDE using a plugin, it does not depend on Eclipse and can be used on its own.
 Maven is not strictly required to use Jasima either, but will simplify installation and updates of Jasima and all its dependencies.
 There is no documentation for using Jasima without Maven.
@@ -36,11 +38,6 @@ public class Main {
 		e.printResults();
 	}
 }
-}}}
-
-= Running a single class from a Maven project =
-{{{
-mvn compile exec:java -Dexec.mainClass=<mainClass> <args>
 }}}
 
 = Running an experiment in XML format =
