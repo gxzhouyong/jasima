@@ -34,6 +34,6 @@ Factors are represented as a shallow tree in the graphical editor, with each fac
 
 = ExcelSaver =
 
-TODO
+Can be used to save results in [Excel MS Excel format].
 
 Continue with ShopFloorSimulation.
