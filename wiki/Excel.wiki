@@ -8,7 +8,7 @@ The class `ExcelSaver` can be used to generate Microsoft Excel (.xls) files from
 It can either be added from code or created and added by an experiment runner class using the `--xlsres` parameter.
 It does not make a difference if the experiment itself is created from code, deserialied from an XML file or created from an Excel file.
 
-#TODO explain sheets and tables
+<wiki:comment>TODO explain sheets and tables</wiki:comment>
 
 = Configuring an experiment from an Excel file =
 
@@ -48,7 +48,6 @@ The special property 'experiment' will override the outer experiment's `baseExpe
 Empty cells are allowed, and will lead to the property not being changed in the configuration in which they appear.
 Except for empty cells, the layout must be rectangular (in particular, each row will have the same length).
 
-#TODO is this realistic?
 Example (will create 4 experiments):
 || *experiment* || *utilLevel* || *dueDateFactor* ||
 || || 0.5 || 0.5 ||
@@ -65,7 +64,7 @@ Unlike the 'configurations' sheet, each column have a different name and each va
 The special property 'experiment' is also supported.
 The order of the value cells within their column is not significant.
 
-Example (will create 24 experiments)::
+Example (will create 36 experiments)::
 || *experiment* || *utilLevel* || *dueDateFactor* ||
 || `holthaus_small.jasima` || 0.5 || 0.5 ||
 || `holthaus_big.jasima` || 0.6 || 0.7 ||
