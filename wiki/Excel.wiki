@@ -29,7 +29,7 @@ It may either contain a class name, in which case its default constructor is use
 
 == The 'parameters' sheet ==
 
-This sheet is used to configure the `AbstractMultiExperiment`.
+This optional sheet is used to configure the `AbstractMultiExperiment`.
 Only the first two columns are used, and each row must form a key-value pair.
 Each pair will set one property of the outer experiment.
 The key 'experiment' is special:
