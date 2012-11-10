@@ -64,7 +64,7 @@ Unlike the 'configurations' sheet, each column have a different name and each va
 The special property 'experiment' is also supported.
 The order of the value cells within their column is not significant.
 
-Example (will create 36 experiments)::
+Example (will create 36 experiments):
 || *experiment* || *utilLevel* || *dueDateFactor* ||
 || `holthaus_small.jasima` || 0.5 || 0.5 ||
 || `holthaus_big.jasima` || 0.6 || 0.7 ||
