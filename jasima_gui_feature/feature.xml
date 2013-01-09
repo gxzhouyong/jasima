@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="jasima_feature"
+      label="jasima GUI feature"
+      version="1.0.0.qualifier">
+
+   <description url="http://jasima.googlecode.com/">
+      jasima - an efficient Java simulator for manufacturing and logistics
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+   </copyright>
+
+   <license url="http://www.gnu.org/licenses/">
+      jasima is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jasima is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with jasima.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.forms" version="3.5" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.ui" version="3.7" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.core" version="3.7" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.debug.ui" version="3.7" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.launching" version="3.6" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.debug.ui" version="3.6" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.m2e.core"/>
+      <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+   </requires>
+
+   <plugin
+         id="jasima_gui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
