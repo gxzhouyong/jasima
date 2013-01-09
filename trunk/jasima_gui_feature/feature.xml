@@ -27,6 +27,10 @@ You should have received a copy of the GNU General Public License
 along with jasima.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </license>
 
+   <url>
+      <discovery label="jasima GUI update site" url="http://jasima.googlecode.com/svn/eclipse"/>
+   </url>
+
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui.ide"/>
