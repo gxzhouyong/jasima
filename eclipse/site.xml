@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/jasima_feature_1.0.0.201301091803.jar" id="jasima_feature" version="1.0.0.201301091803">
+   <feature url="features/jasima_feature_1.0.1.201301101417.jar" id="jasima_feature" version="1.0.1.201301101417">
       <category name="jasima_gui_cat"/>
    </feature>
    <category-def name="jasima_gui_cat" label="jasima GUI"/>
