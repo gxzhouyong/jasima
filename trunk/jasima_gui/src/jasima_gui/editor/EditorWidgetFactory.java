@@ -246,13 +246,13 @@ public class EditorWidgetFactory {
 			Control toolBar = editor.getToolBar();
 			if (toolBar != null) {
 				toolBar.setParent(col2);
-				GridDataFactory.swtDefaults().grab(true, false)
-						.applyTo(lblStatus);
+				GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER)
+						.grab(true, false).applyTo(lblStatus);
 				GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER)
 						.applyTo(toolBar);
 			} else {
-				GridDataFactory.swtDefaults().span(2, 1).grab(true, false)
-						.applyTo(lblStatus);
+				GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER)
+						.span(2, 1).grab(true, false).applyTo(lblStatus);
 			}
 
 			final Composite client = tle.getToolkit().createComposite(parent);
