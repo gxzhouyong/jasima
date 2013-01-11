@@ -294,4 +294,9 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			// ignore
 		}
 	}
+
+	public Object cloneObject(Object obj) {
+		XStream xstr = getXStream();
+		return xstr.fromXML(xstr.toXML(obj));
+	}
 }
