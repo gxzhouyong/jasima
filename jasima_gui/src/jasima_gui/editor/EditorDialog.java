@@ -11,8 +11,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
-import com.thoughtworks.xstream.XStream;
-
 public class EditorDialog extends Dialog {
 
 	protected TopLevelEditor tle;
@@ -39,8 +37,7 @@ public class EditorDialog extends Dialog {
 
 			if (oldValue != null) {
 				// we need a generic way to clone objects
-				XStream xstr = tle.getXStream();
-				oldValue = xstr.fromXML(xstr.toXML(oldValue));
+				oldValue = tle.cloneObject(oldValue);
 			}
 		} catch (PropertyException e) {
 			e.printStackTrace();

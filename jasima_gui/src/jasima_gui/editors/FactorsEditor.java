@@ -7,6 +7,7 @@ import jasima_gui.editor.IProperty;
 import jasima_gui.editor.PropertyException;
 import jasima_gui.editor.PropertyLister;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -39,6 +40,7 @@ public class FactorsEditor extends EditorWidget implements SelectionListener,
 	private TreeEditor factorsTreeEditor;
 	private Button btnAddFactor;
 	private Button btnAddValue;
+	private Button btnClone;
 	private Button btnEdit;
 	private Button btnRemove;
 
@@ -64,7 +66,7 @@ public class FactorsEditor extends EditorWidget implements SelectionListener,
 
 		factorsTree = new Tree(this, SWT.BORDER | SWT.V_SCROLL);
 		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 230)
-				.span(1, 4).applyTo(factorsTree);
+				.span(1, 5).applyTo(factorsTree);
 		factorsTree.addSelectionListener(this);
 		factorsTree.addTreeListener(this);
 
@@ -79,6 +81,10 @@ public class FactorsEditor extends EditorWidget implements SelectionListener,
 		btnAddValue = toolkit.createButton(this, "Add value...", SWT.PUSH);
 		btnAddValue.addSelectionListener(this);
 		GridDataFactory.fillDefaults().applyTo(btnAddValue);
+
+		btnClone = toolkit.createButton(this, "Clone", SWT.PUSH);
+		btnClone.addSelectionListener(this);
+		GridDataFactory.fillDefaults().applyTo(btnClone);
 
 		btnEdit = toolkit.createButton(this, "Edit...", SWT.PUSH);
 		btnEdit.addSelectionListener(this);
@@ -111,6 +117,9 @@ public class FactorsEditor extends EditorWidget implements SelectionListener,
 			}
 
 			property.setValue(ffe);
+			hideError();
+		} catch (InvocationTargetException e) {
+			showError(e.getTargetException().getLocalizedMessage());
 		} catch (PropertyException e) {
 			showError(e.getLocalizedMessage());
 		} catch (Exception e) {
@@ -182,42 +191,45 @@ public class FactorsEditor extends EditorWidget implements SelectionListener,
 			Object ffe = property.getValue();
 			final Object baseExp = ffe.getClass()
 					.getMethod("getBaseExperiment").invoke(ffe);
-			Collection<IProperty> props = PropertyLister
-					.listWritableProperties(new INoExceptProperty() {
-						public void setValue(Object val) {
-							throw new UnsupportedOperationException();
-						}
+			if (baseExp != null) {
+				INoExceptProperty baseExpProp = new INoExceptProperty() {
+					public void setValue(Object val) {
+						throw new UnsupportedOperationException();
+					}
 
-						public boolean isWritable() {
-							throw new UnsupportedOperationException();
-						}
+					public boolean isWritable() {
+						throw new UnsupportedOperationException();
+					}
 
-						public boolean isImportant() {
-							throw new UnsupportedOperationException();
-						}
+					public boolean isImportant() {
+						throw new UnsupportedOperationException();
+					}
 
-						public Object getValue() {
-							throw new UnsupportedOperationException();
-						}
+					public Object getValue() {
+						throw new UnsupportedOperationException();
+					}
 
-						public Type getType() {
-							return baseExp.getClass();
-						}
+					public Type getType() {
+						return baseExp.getClass();
+					}
 
-						public String getName() {
-							throw new UnsupportedOperationException();
-						}
+					public String getName() {
+						throw new UnsupportedOperationException();
+					}
 
-						public String getHTMLDescription() {
-							throw new UnsupportedOperationException();
-						}
+					public String getHTMLDescription() {
+						throw new UnsupportedOperationException();
+					}
 
-						public boolean canBeNull() {
-							throw new UnsupportedOperationException();
-						}
-					}, topLevelEditor);
-			for (IProperty prop : props) {
-				facNameEditor.add(prop.getName());
+					public boolean canBeNull() {
+						throw new UnsupportedOperationException();
+					}
+				};
+				Collection<IProperty> props = PropertyLister
+						.listWritableProperties(baseExpProp, topLevelEditor);
+				for (IProperty prop : props) {
+					facNameEditor.add(prop.getName());
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -322,17 +334,17 @@ public class FactorsEditor extends EditorWidget implements SelectionListener,
 		int dlgReturn = dlg.open();
 		try {
 			Object propVal = property.getValue();
-			if (dlgReturn != EditorDialog.OK && itm.getData() == INVALID) {
-				itm.dispose();
+			if (dlgReturn != EditorDialog.OK) {
+				if (itm.getData() == INVALID) {
+					itm.dispose();
+				}
 				return;
 			}
 			itm.setData(propVal);
 			itm.setText(String.valueOf(propVal));
 			factorsTree.setSelection(itm);
 			treeSelectionChanged();
-			if (dlgReturn == EditorDialog.OK) {
-				storeValue();
-			}
+			storeValue();
 		} catch (PropertyException e) {
 			assert false;
 		}
@@ -363,18 +375,22 @@ public class FactorsEditor extends EditorWidget implements SelectionListener,
 				factorName = factorName.getParentItem();
 			}
 
-			Object initVal;
-			if (selection[0] != factorName) {
-				initVal = selection[0].getData();
-			} else if (factorName.getItemCount() > 0) {
-				initVal = factorName.getItem(0).getData();
-			} else {
-				initVal = INVALID;
-			}
 			TreeItem valueItem = new TreeItem(factorName, SWT.DEFAULT);
 			selection[0].setExpanded(true);
 			valueItem.setData(INVALID);
-			editFactorValue(valueItem, initVal);
+			editFactorValue(valueItem, INVALID);
+		} else if (source == btnClone) {
+			TreeItem[] selection = factorsTree.getSelection();
+			if (selection.length != 1)
+				return;
+			TreeItem valueItem = new TreeItem(selection[0].getParentItem(),
+					SWT.DEFAULT);
+			valueItem
+					.setData(topLevelEditor.cloneObject(selection[0].getData()));
+			valueItem.setText(String.valueOf(valueItem.getData()));
+			factorsTree.setSelection(valueItem);
+			treeSelectionChanged();
+			storeValue();
 		} else if (source == btnEdit) {
 			editSelection();
 		} else if (source == btnRemove) {
@@ -399,6 +415,8 @@ public class FactorsEditor extends EditorWidget implements SelectionListener,
 	private void treeSelectionChanged() {
 		int selectionLength = factorsTree.getSelectionCount();
 		btnAddValue.setEnabled(selectionLength == 1);
+		btnClone.setEnabled(selectionLength == 1
+				&& !isFactorName(factorsTree.getSelection()[0]));
 		btnEdit.setEnabled(selectionLength == 1);
 		btnRemove.setEnabled(selectionLength > 0);
 	}
