@@ -5,7 +5,7 @@
       version="1.0.2.qualifier">
 
    <description url="http://jasima.googlecode.com/">
-      jasima - an efficient Java simulator for manufacturing and logistics
+      GUI component of jasima - an efficient Java simulator for manufacturing and logistics
    </description>
 
    <copyright url="http://www.example.com/copyright">
@@ -26,7 +26,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with jasima.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
-============================================================================
+===============================================================
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
