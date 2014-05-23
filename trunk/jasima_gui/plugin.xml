@@ -257,5 +257,21 @@
          </addProperty>
       </propertyFilter>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="jasima_gui.pref.JasimaPage"
+            id="jasima_gui.jasimaPrefs"
+            name="Jasima">
+      </page>
+   </extension>
+   <extension
+         id="jasima_gui.pref"
+         name="Jasima preferences"
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="jasima_gui.pref.Initializer">
+      </initializer>
+   </extension>
 
 </plugin>

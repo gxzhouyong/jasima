@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010, 2014 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.1.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,6 +69,9 @@ public class JasimaNewWizardPage extends WizardPage {
 	private Text typeText;
 
 	private ISelection selection;
+
+	private static final String DEFAULT_FILENAME = "new_experiment.jasima";
+	private static final String NUMBERED_FILENAME = "new_experiment_%d.jasima";
 
 	/**
 	 * Constructor for SampleNewWizardPage.
@@ -151,6 +154,8 @@ public class JasimaNewWizardPage extends WizardPage {
 	 */
 
 	private void initialize() {
+		String fileName = DEFAULT_FILENAME;
+
 		if (selection != null && selection.isEmpty() == false
 				&& selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection) selection;
@@ -167,9 +172,29 @@ public class JasimaNewWizardPage extends WizardPage {
 				else
 					container = ((IResource) obj).getParent();
 				containerText.setText(container.getFullPath().toString());
+
+				fileName = generateFileName(container, DEFAULT_FILENAME);
 			}
 		}
-		fileText.setText("new_experiment.jasima");
+
+		fileText.setText(fileName);
+	}
+
+	private String generateFileName(IResource container, String startingPoint) {
+		if (container == null)
+			return startingPoint;
+
+		int fileNameIdx = 1;
+		while (((IContainer) container).getFile(new Path(startingPoint))
+				.exists()) {
+			if (++fileNameIdx > 1000) {
+				// give up before we loop forever
+				return startingPoint;
+			}
+			startingPoint = String.format(NUMBERED_FILENAME, fileNameIdx);
+		}
+
+		return startingPoint;
 	}
 
 	/**
@@ -184,7 +209,14 @@ public class JasimaNewWizardPage extends WizardPage {
 		if (dialog.open() == ContainerSelectionDialog.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
-				containerText.setText(((Path) result[0]).toString());
+				Path p = (Path) result[0];
+				containerText.setText(p.toString());
+
+				// also generate a new unique file name
+				IResource container = ResourcesPlugin.getWorkspace().getRoot()
+						.findMember(p);
+
+				fileText.setText(generateFileName(container, getFileName()));
 			}
 		}
 	}

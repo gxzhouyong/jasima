@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010, 2014 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.1.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,15 @@
  *******************************************************************************/
 package jasima_gui.wizards;
 
+import jasima_gui.pref.Pref;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
@@ -82,10 +86,25 @@ public class JasimaNewProjectWizard extends Wizard implements INewWizard {
 							.getResourceAsStream("default_pom.xml"), "utf8"));
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			OutputStreamWriter wrtr = new OutputStreamWriter(bos, "utf8");
+			StringBuffer newLine = new StringBuffer();
 			while ((line = rdr.readLine()) != null) {
-				wrtr.append(line.replace("${PROJECT_NAME}", proj.getProject()
-						.getName()));
-				wrtr.append('\n');
+				newLine.setLength(0);
+				Pattern var = Pattern.compile("\\$\\{([A-Z_]+)\\}");
+				Matcher m = var.matcher(line);
+				while (m.find()) {
+					String val = m.group(1);
+					if (val.equals("PROJECT_NAME")) {
+						val = proj.getProject().getName();
+					} else if (val.equals("JASIMA_VERSION")) {
+						val = Pref.JASIMA_VERSION.val();
+					} else {
+						val = "$0"; // do not change
+					}
+					m.appendReplacement(newLine, val);
+				}
+				m.appendTail(newLine);
+				newLine.append('\n');
+				wrtr.append(newLine);
 			}
 			wrtr.flush();
 			proj.getProject()

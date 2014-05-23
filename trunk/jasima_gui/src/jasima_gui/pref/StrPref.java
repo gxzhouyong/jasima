@@ -18,19 +18,22 @@
  *
  * $Id$
  *******************************************************************************/
-package jasima_gui.util;
+package jasima_gui.pref;
 
-import java.util.Comparator;
+public class StrPref extends Pref {
+	private final String def;
 
-public class ToStringBasedComparator implements Comparator<Object> {
-	public static final ToStringBasedComparator INSTANCE = new ToStringBasedComparator();
-
-	protected ToStringBasedComparator() {
+	StrPref(String key, String def) {
+		super(key);
+		this.def = def;
 	}
 
 	@Override
-	public int compare(Object o1, Object o2) {
-		return String.valueOf(o1).compareTo(String.valueOf(o2));
+	public void initDefault() {
+		prefStore().setDefault(key, def);
 	}
 
+	public String val() {
+		return prefStore().getString(key);
+	}
 }

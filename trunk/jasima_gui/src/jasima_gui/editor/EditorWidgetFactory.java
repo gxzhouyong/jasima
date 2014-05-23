@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010, 2014 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.1.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -266,13 +266,13 @@ public class EditorWidgetFactory {
 			Control toolBar = editor.getToolBar();
 			if (toolBar != null) {
 				toolBar.setParent(col2);
-				GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER)
-						.grab(true, false).applyTo(lblStatus);
+				GridDataFactory.swtDefaults().grab(true, false)
+						.applyTo(lblStatus);
 				GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER)
 						.applyTo(toolBar);
 			} else {
-				GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER)
-						.span(2, 1).grab(true, false).applyTo(lblStatus);
+				GridDataFactory.swtDefaults().span(2, 1).grab(true, false)
+						.applyTo(lblStatus);
 			}
 
 			final Composite client = tle.getToolkit().createComposite(parent);
@@ -297,8 +297,7 @@ public class EditorWidgetFactory {
 					boolean expanded = e.getState();
 					client.setVisible(expanded);
 					((GridData) client.getLayoutData()).exclude = !expanded;
-					parent.layout(true); // TODO check
-					editor.getScrolledForm().reflow(true);
+					editor.reLayout();
 				}
 			});
 

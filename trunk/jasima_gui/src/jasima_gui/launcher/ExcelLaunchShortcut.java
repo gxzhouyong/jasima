@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010, 2014 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.1.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,15 @@
  *******************************************************************************/
 package jasima_gui.launcher;
 
+import jasima_gui.pref.Pref;
+
 import org.eclipse.debug.core.ILaunchConfigurationType;
 
 public class ExcelLaunchShortcut extends SimulationLaunchShortcut {
 
 	@Override
 	protected String getDefaultArgs() {
-		return super.getDefaultArgs() + " --xlsres";
+		return Pref.XLS_EXP_RES_FMT.val();
 	}
 
 	@Override
