@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010, 2014 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.1.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -313,10 +313,5 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		} catch (Exception e) {
 			// ignore
 		}
-	}
-
-	public Object cloneObject(Object obj) {
-		XStream xstr = getXStream();
-		return xstr.fromXML(xstr.toXML(obj));
 	}
 }

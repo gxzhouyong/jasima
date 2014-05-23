@@ -18,19 +18,29 @@
  *
  * $Id$
  *******************************************************************************/
-package jasima_gui.util;
+package jasima_gui.pref;
 
-import java.util.Comparator;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
-public class ToStringBasedComparator implements Comparator<Object> {
-	public static final ToStringBasedComparator INSTANCE = new ToStringBasedComparator();
+import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
-	protected ToStringBasedComparator() {
-	}
+public class Initializer extends AbstractPreferenceInitializer {
 
 	@Override
-	public int compare(Object o1, Object o2) {
-		return String.valueOf(o1).compareTo(String.valueOf(o2));
+	public void initializeDefaultPreferences() {
+		for (Field f : Pref.class.getFields()) {
+			int requiredMods = Modifier.PUBLIC | Modifier.STATIC
+					| Modifier.FINAL;
+			if (((f.getModifiers() & requiredMods) == requiredMods)
+					&& Pref.class.isAssignableFrom(f.getType())) {
+				try {
+					((Pref) f.get(null)).initDefault();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010, 2014 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.1.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
+import com.thoughtworks.xstream.XStream;
+
 public class EditorDialog extends Dialog {
 
 	protected TopLevelEditor tle;
@@ -57,7 +59,8 @@ public class EditorDialog extends Dialog {
 
 			if (oldValue != null) {
 				// we need a generic way to clone objects
-				oldValue = tle.cloneObject(oldValue);
+				XStream xstr = tle.getXStream();
+				oldValue = xstr.fromXML(xstr.toXML(oldValue));
 			}
 		} catch (PropertyException e) {
 			e.printStackTrace();

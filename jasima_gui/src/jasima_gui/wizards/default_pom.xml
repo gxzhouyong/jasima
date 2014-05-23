@@ -12,7 +12,7 @@
 		<dependency>
 			<groupId>com.googlecode.jasima</groupId>
 			<artifactId>jasima-main</artifactId>
-			<version>1.0.0</version>
+			<version>${JASIMA_VERSION}</version>
 		</dependency>
 	</dependencies>
 </project>

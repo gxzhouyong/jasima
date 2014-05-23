@@ -18,19 +18,32 @@
  *
  * $Id$
  *******************************************************************************/
-package jasima_gui.util;
+package jasima_gui.pref;
 
-import java.util.Comparator;
+import jasima_gui.Activator;
 
-public class ToStringBasedComparator implements Comparator<Object> {
-	public static final ToStringBasedComparator INSTANCE = new ToStringBasedComparator();
+import org.eclipse.jface.preference.IPreferenceStore;
 
-	protected ToStringBasedComparator() {
+public abstract class Pref {
+
+	public static final StrPref EXP_RES_FMT = new StrPref(
+			"default-experiment-result-format", "--xlsres");
+
+	public static final StrPref XLS_EXP_RES_FMT = new StrPref(
+			"default-excel-experiment-result-format", "--xlsres");
+
+	public static final StrPref JASIMA_VERSION = new StrPref(
+			"default-jasima-version", "1.0.0");
+
+	public final String key;
+
+	Pref(String key) {
+		this.key = key;
 	}
 
-	@Override
-	public int compare(Object o1, Object o2) {
-		return String.valueOf(o1).compareTo(String.valueOf(o2));
+	public static IPreferenceStore prefStore() {
+		return Activator.getDefault().getPreferenceStore();
 	}
 
+	public abstract void initDefault();
 }

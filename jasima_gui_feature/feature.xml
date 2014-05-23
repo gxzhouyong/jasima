@@ -2,7 +2,7 @@
 <feature
       id="jasima_feature"
       label="jasima GUI feature"
-      version="1.0.2.qualifier">
+      version="1.0.3.qualifier">
 
    <description url="http://jasima.googlecode.com/">
       GUI component of jasima - an efficient Java simulator for manufacturing and logistics
@@ -719,10 +719,10 @@ Public License instead of this License.  But first, please read
       <import plugin="org.eclipse.jdt.debug.ui" version="3.6" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.m2e.core"/>
       <import plugin="org.eclipse.ui.console"/>
       <import plugin="org.eclipse.search"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import feature="org.eclipse.m2e.feature"/>
    </requires>
 
    <plugin
