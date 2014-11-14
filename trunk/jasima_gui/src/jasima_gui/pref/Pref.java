@@ -33,7 +33,7 @@ public abstract class Pref {
 			"default-excel-experiment-result-format", "--xlsres");
 
 	public static final StrPref JASIMA_VERSION = new StrPref(
-			"default-jasima-version", "1.0.0");
+			"default-jasima-version", "1.1.0");
 
 	public final String key;
 
