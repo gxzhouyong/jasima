@@ -62,6 +62,9 @@ import org.eclipse.ui.dialogs.SelectionDialog;
  */
 
 public class JasimaNewWizardPage extends WizardPage {
+
+	public static final String DEFAULT_EXPERIMENT = "jasima.shopSim.models.dynamicShop.DynamicShopExperiment";
+
 	private Text containerText;
 
 	private Text fileText;
@@ -129,7 +132,7 @@ public class JasimaNewWizardPage extends WizardPage {
 		label.setText("&Experiment class:");
 		typeText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		typeText.setText("jasima.shopSim.models.holthaus.HolthausExperiment");
+		typeText.setText(DEFAULT_EXPERIMENT);
 		typeText.setLayoutData(gd);
 		typeText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
