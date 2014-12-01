@@ -5,12 +5,11 @@ In general, scheduling is concerned with the allocation of limited
 resources to tasks over time, with the basic aim to ensure
 an effective and efficient use of the available resources. In this case, the resources are machines that have to be allocated to jobs
 (the tasks) in the best possible way (minimising or maximising
-some objective function). Each job consists of a number of processing steps, or operations, that need to be performed on distinct machines. The basic restrictions are that
+some objective function). In flow shop and job shop problems, each job consists of a number of processing steps, or operations, that need to be performed on distinct machines. It is further assumed that
   * a job can be processed by only one machine at at time (no splitting or overlapping),
   * a machine can process only one job at a time (no batch processing),
-
   * a started operation must be completed before the respective machine can process another job (no preemption),
-  * an operation can only be performed on the specified work centre (no alternate routeings),
+  * an operation can only be performed on the specified machine (no alternate routeings),
   * the processing of jobs is independent of the progress of other jobs (no assembly operations or precedence constraints),
   * processing times are independent of the schedule and cover all activities related to the
   * execution of an operation (no sequence-dependent setup times),
