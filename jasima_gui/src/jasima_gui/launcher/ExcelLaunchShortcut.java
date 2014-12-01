@@ -22,8 +22,6 @@ package jasima_gui.launcher;
 
 import jasima_gui.pref.Pref;
 
-import org.eclipse.debug.core.ILaunchConfigurationType;
-
 public class ExcelLaunchShortcut extends SimulationLaunchShortcut {
 
 	@Override
@@ -34,10 +32,5 @@ public class ExcelLaunchShortcut extends SimulationLaunchShortcut {
 	@Override
 	protected String getLauncherClass() {
 		return "jasima.core.util.run.ExcelExperimentRunner";
-	}
-
-	protected ILaunchConfigurationType getConfigurationType() {
-		return getLaunchManager().getLaunchConfigurationType(
-				"jasima_gui.jasimaLaunchConfigurationType");
 	}
 }

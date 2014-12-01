@@ -26,6 +26,7 @@ import static org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants.ATTR_P
 import jasima_gui.pref.Pref;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
@@ -53,39 +54,49 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 			if (pathArg.contains("\"") || pathArg.contains("\\")) {
 				Status status = new Status(Status.ERROR, "jasima_gui",
 						"The file name must not contain backslashes or quotation marks.");
-				ErrorDialog.openError(PlatformUI.getWorkbench()
-						.getModalDialogShellProvider().getShell(), "Error",
+				ErrorDialog.openError(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell(), "Error",
 						"Can't create launch configuration.", status);
 				return;
 			}
-			ILaunchConfigurationType configType = getConfigurationType();
 
-			ILaunchConfiguration[] configs = DebugPlugin.getDefault()
-					.getLaunchManager()
-					.getLaunchConfigurations(getConfigurationType());
-			for (ILaunchConfiguration config : configs) {
-				if (config.getAttribute(ATTR_PROGRAM_ARGUMENTS, "").contains(
-						pathArg)) {
-					DebugUITools.launch(config, mode);
-					return;
-				}
+			ILaunchConfiguration cfg = findConfiguration(resource);
+
+			if (cfg == null) {
+				String baseName = resource.getProjectRelativePath().removeFileExtension().toString();
+				ILaunchConfigurationWorkingCopy wc = getConfigurationType().newInstance(null,
+						getLaunchManager().generateLaunchConfigurationName(baseName));
+				wc.setAttribute(ATTR_MAIN_TYPE_NAME, getLauncherClass());
+				wc.setAttribute(ATTR_PROJECT_NAME, resource.getProject().getName());
+				wc.setAttribute(ATTR_PROGRAM_ARGUMENTS, getDefaultArgs() + " \"" + pathArg + "\"");
+				wc.setMappedResources(new IResource[] { resource });
+				cfg = wc.doSave();
 			}
 
-			String baseName = resource.getProjectRelativePath()
-					.removeFileExtension().toString();
-			ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
-					getLaunchManager()
-							.generateLaunchConfigurationName(baseName));
-			wc.setAttribute(ATTR_MAIN_TYPE_NAME, getLauncherClass());
-			wc.setAttribute(ATTR_PROJECT_NAME, resource.getProject().getName());
-			wc.setAttribute(ATTR_PROGRAM_ARGUMENTS, getDefaultArgs() + " \""
-					+ pathArg + "\"");
-			// wc.setMappedResources(new IResource[] { resource });
-			// can't keep it up to date anyway...
-			ILaunchConfiguration config = wc.doSave();
-			DebugUITools.launch(config, mode);
+			DebugUITools.launch(cfg, mode);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	protected static ILaunchConfiguration findConfiguration(IResource resource) {
+		try {
+			ILaunchConfigurationType configType = getConfigurationType();
+			ILaunchConfiguration[] configs = getLaunchManager().getLaunchConfigurations(getConfigurationType());
+			for (ILaunchConfiguration config : configs) {
+				if (config.getType() != configType)
+					continue;
+
+				IResource[] res = config.getMappedResources();
+				if (res.length != 1)
+					continue; // old configuration, ignore it
+
+				if (res[0].equals(resource)) {
+					return config;
+				}
+			}
+			return null;
+		} catch (CoreException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -93,13 +104,12 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 		return Pref.EXP_RES_FMT.val();
 	}
 
-	protected ILaunchManager getLaunchManager() {
+	protected static ILaunchManager getLaunchManager() {
 		return DebugPlugin.getDefault().getLaunchManager();
 	}
 
-	protected ILaunchConfigurationType getConfigurationType() {
-		return getLaunchManager().getLaunchConfigurationType(
-				"jasima_gui.jasimaLaunchConfigurationType");
+	protected static ILaunchConfigurationType getConfigurationType() {
+		return getLaunchManager().getLaunchConfigurationType("jasima_gui.jasimaLaunchConfigurationType");
 	}
 
 	protected String getLauncherClass() {
@@ -113,8 +123,7 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 			if (ss.size() == 1) {
 				Object element = ss.getFirstElement();
 				if (element instanceof IAdaptable) {
-					return (IResource) ((IAdaptable) element)
-							.getAdapter(IResource.class);
+					return (IResource) ((IAdaptable) element).getAdapter(IResource.class);
 				}
 			}
 		}
@@ -151,5 +160,4 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 		// let the framework resolve configurations based on resource mapping
 		return null;
 	}
-
 }
