@@ -22,7 +22,7 @@ If the processing orders of all jobs specify that they visit the machines in the
 = Specific Problem Characteristics and Objective Function =
 Following the setting by Rajendran and Holthaus (1999), there are *10 machines* in the shop and *new jobs arrive over time according to a Poisson process*, where their characteristics are completely unknown until the time of their arrival (release). Upon arrival, processing times and machines (which are both drawn from a uniform discrete distribution) are assigned to operations at random, which implies that all 10 machines have roughly the same utilisation, i.e. there is no long-term bottleneck.
 
-The objective function is the minimisation of the *mean flow time* of jobs, where the flow time of a job is defined as the length of time the job spends in the shop, from the time of its arrival to the time of its completion. jasima is configured to simulate the completion of 10000 jobs, where the flow times of the first 2000 Jobs are not included in the objective function as they cover the warmup period. In other words, the performance measure obtained from a simulation run is the mean flow time of *jobs numbered from 2001 to 10000*. To reduce the influence of a certain stream of random numbers, *each simulation run is repeated 30 times* using different random number streams. To enable for results to be reproduced, we give here the seeds of the first 3 replications.
+The objective function is the minimisation of the *mean flow time* of jobs, where the flow time of a job is defined as the length of time the job spends in the shop, from the time of its arrival to the time of its completion. jasima is configured to simulate the completion of 10000 jobs, where the flow times of the first 2000 Jobs are not included in the objective function as they cover the warmup period. In other words, the performance measure obtained from a simulation run is the mean flow time of *jobs numbered from 2001 to 10000*. To reduce the influence of a certain stream of random numbers, *each simulation run is repeated 30 times* using different random number streams. REMARK1: To enable for results to be reproduced, we give here the seeds of the first 3 replications.
 
 = Experimental Factors =
 In accordance with Rajendran and Holthaus (1999), we vary four of the problem parameters as follows:
@@ -37,4 +37,4 @@ In accordance with Rajendran and Holthaus (1999), we vary four of the problem pa
 
 Hence, with four experimental factors and two values for each factor, there are *2^4^=16 test Problems* in total.
 
-Reproducing results: Link to Getting Started guide and ExperimentClass
+REMARK2: Reproducing results: Link to Getting Started guide and ExperimentClass
