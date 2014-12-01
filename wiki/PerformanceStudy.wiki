@@ -1,4 +1,4 @@
-#summary Performance study of automatically designed dispatching rules.
+#summary Performance Study of Automatically Designed Dispatching Rules.
 
 = Motivation =
 
@@ -26,8 +26,10 @@ For a more detailed description of the dispatching rules and the hyper-heuristic
 The currently best dispatching rules and there scores with respect to the two performance measures are:
 
 || || *Dispatching Rule* || *Hyper-heuristic* || *Mean Flow Time* || *Performance Index*||
-|| 1. || gp.... || GP || 800.88 || 0.90 ||
-|| 2. || gp... || GP || 821.22 || 0.91 ||
-|| 3. || IFT-UIT+NPT || - || 900.11 || 0.94 ||
+|| 1. || ECJ14-TREE_BASE_NORM_ND-Rule || GP_NORM_ND || 665.74 || 0.9009 ||
+|| 2. || ECJ14-TREE_EXT_NORM_ND-Rule || GP_NORM_ND || 669.18 || 0.9069 ||
+|| 3. || GECCO10-genSeed-2reps || GP || 669.83 || 0.9057 ||
+|| 4. || GECCO10-genSeed-10reps || GP || 671.30 || 0.9050 ||
+|| 5. || IFT−UIT+NPT || - || 677.14 || 0.9091 ||
 
-For definitions of the performance measures and a more detailed description of the results, see DetailedResults.
+For definitions of the performance measures and a more detailed description of the results, see DetailedResults (Excel??).
