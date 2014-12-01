@@ -1,9 +1,33 @@
-#summary Description of the job shop and flow shop problems.
+#summary Description of the scheduling problems.
 
-= Introduction =
-Multi-stage problems,
-which are generally NP-hard (Garey et al., 1976), are characterised by jobs that consist of a
-number of processing steps, or operations, that need to be performed on distinct machines. If
+= General Definition =
+In general, scheduling is concerned with the allocation of limited
+resources to tasks over time, with the basic aim to ensure
+an effective and efficient use of the available resources. In this case, the resources are machines that have to be allocated to jobs
+(the tasks) in the best possible way (minimising or maximising
+some objective function). Each job consists of a number of processing steps, or operations, that need to be performed on distinct machines. The basic constraints/assumptions are that
+  * a job can be processed by only one machine at at time (no splitting or overlapping),
+  * a machine can process only one job at a time (no batch processing),
+  * a started operation must be completed before the respective machine can process another job (no preemption),
+  * an operation can only be performed on the specified work centre (no alternate routeings),
+  * the processing of jobs is independent of the progress of other jobs (no assembly operations or precedence constraints),
+  * processing times are independent of the schedule and cover all activities related to the
+  * execution of an operation (no sequence-dependent setup times),
+ machines are the only limiting resource (no lack of operators, tools or material),
+  * there are no space or time constraints on input and output buers (no blocking, scrap or rework),
+  * all machines are continuously available (no breakdowns or maintenance activities),
+
+
+
+ all jobs are available to be scheduled instantly (no dynamic job arrivals).
+A problem that fulfils all of the above conditions is typically identified by an empty  field.
+Otherwise, specific entries are used to indicate certain deviations from these assumptions as
+illustrated in the following. If jobs arrive at the shop over time, i.e. each job j has its own specific release date r j, this is
+denoted by an r j entry in the  field
+
+
+
+ If
 all jobs follow the same route that involves visiting each of the m distinct machines exactly
 once, the shop is called a flow shop, which is denoted by Fm. Hence, every job consists of
 exactly m operations in a flow shop. In the other extreme of an ideal job shop, each job has its
@@ -34,26 +58,6 @@ Add your content here.  Format your content with:
   * Headings, paragraphs, and lists
   * Automatic links to other wiki pages
 
-The standard assumptions with respect to the processing characteristics of production scheduling
-problems are that
- a job can be processed by only one machine at at time (no splitting or overlapping),
- a machine can process only one job at a time (no batch processing),
- a started operation must be completed before the respective machine can process another
-job (no preemption),
- an operation can only be performed on the specified work centre (no alternate routeings),
 
- the processing of jobs is independent of the progress of other jobs (no assembly operations
-or precedence constraints),
- processing times are independent of the schedule and cover all activities related to the
-execution of an operation (no sequence-dependent setup times),
- machines are the only limiting resource (no lack of operators, tools or material),
- there are no space or time constraints on input and output buers (no blocking, scrap or
-rework),
- all machines are continuously available (no breakdowns or maintenance activities),
- all jobs are available to be scheduled instantly (no dynamic job arrivals).
-A problem that fulfils all of the above conditions is typically identified by an empty  field.
-Otherwise, specific entries are used to indicate certain deviations from these assumptions as
-illustrated in the following. If jobs arrive at the shop over time, i.e. each job j has its own specific release date r j, this is
-denoted by an r j entry in the  field
 
 Specifically, the job shop is continuously loaded with new jobs until the last of the first 2500 jobs has left the system, which marks the end of a simulation run. The first 500 jobs cover the warmup period and are therefore discarded. The mean flow time statistics then consist of the data collected for jobs numbered from 501 to 2500. Finally, 200 replications are run for both variants (Section 5.1) of the JSP.
