@@ -301,7 +301,7 @@ public class ListEditor extends EditorWidget implements SelectionListener {
 			int[] selection = listView.getSelectionIndices();
 			Arrays.sort(selection);
 			for (int i = selection.length - 1; i >= 0; --i) {
-				objects.remove(i);
+				objects.remove(selection[i]);
 			}
 			listView.remove(selection); // still not rebuilding it
 			listSelectionChanged();
