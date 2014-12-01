@@ -32,4 +32,4 @@ The currently best dispatching rules and there scores with respect to the two pe
 || 4. || GECCO10-genSeed-10reps || GP || 671.30 || 0.9050 ||
 || 5. || IFT−UIT+NPT || - || 677.14 || 0.9091 ||
 
-For definitions of the performance measures and a more detailed description of the results, see DetailedResults (Excel??).
+REMARK0: For definitions of the performance measures and a more detailed description of the results, see DetailedResults (Excel??).
