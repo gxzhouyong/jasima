@@ -1,6 +1,6 @@
 #summary Description of the Scheduling Problems.
 
-= General Definition of Job Shop/Flow Shop Problems =
+= General Definition of the Job Shop/Flow Shop Problem =
 In general, scheduling is concerned with the allocation of limited
 resources to tasks over time, with the basic aim to ensure
 an effective and efficient use of the available resources. In this case, the resources are machines that have to be allocated to jobs
