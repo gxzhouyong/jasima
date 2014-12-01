@@ -4,6 +4,58 @@
 
 Add your content here.
 
+The 1jjC and PmjjC problems are both optimally solved by the Shortest Processing Time (SPT)
+rule, according to which jobs are scheduled in non-decreasing order of their processing times
+(Smith, 1956; Pinedo, 2008, Chapters 3 and 5). Thus, the priority index of SPT for job j can
+be simply defined as
+ISPT
+j = 􀀀pj: (3.1)
+The application of the SPT rule is further the best one can do for the analogous problems with
+dynamic job arrivals without information on future jobs, which are assumed to be unknown in
+this work. There are several obvious ways to adapt SPT to multi-stage problems. One possibility
+is to base the priority of a job only on the processing time of its imminent operation on the
+considered work centre, thereby ignoring all subsequent operations of the respective job. The
+priority index of this rule, commonly identified by the name of its single stage relative, is thus
+ISPT
+j = 􀀀pj;i; (3.30)
+where pj;i indicates the processing time of the imminent operation i of job j.
+
+A rule that operates in this way is the Processing Time plus Work In Next Queue
+(PT+WINQ) rule, presented by Holthaus and Rajendran (1997a,b). The priority index of
+this rule is given by
+IPT+WINQ
+j = 􀀀(pj;i + Wz j;i+1 ); (3.43)
+where Wz j;i+1 denotes the current work content, i.e. the sum of operation processing times
+of jobs in the queue and the remaining processing time of the operation in process, of the
+work centre z j;i+1, required for the subsequent operation of job j. If there is no subsequent
+operation, i.e. the imminent operation of the job is its last, then Wz j;i+1 = 0. Hence, this
+component, called WINQ in the following, assigns maximum priority to a job that will leave
+the system after the completion of its imminent operation. By considering the queue lengths of
+work centres that jobs visit for their next operation in addition to the processing time of their
+imminent operation, the PT+WINQ rule is able to trade o the minimisation of the local mean
+flow time with the importance of balancing the work content of other work centres to avoid idle
+times due to starvation. As a consequence, PT+WINQ shows to perform significantly better
+for the Jmjr jjC problem than its two components, the SPT and WINQ rules, and a policy
+that randomly switches between those two rules, especially in conditions of high utilisation
+(Holthaus, 1997; Holthaus and Rajendran, 1997a,b; Rajendran and Holthaus, 1999).
+
+Encouraged by these results, Holthaus and Rajendran propose a modification of the
+PT+WINQ rule in a follow-up paper (Holthaus and Rajendran, 2000). The name of this modification,
+2PT+WINQ+NPT, is derived from the formula of the priority index of the rule, which
+is defined as
+I2PT+WINQ+NPT
+j = 􀀀(2pj;i + Wz j;i+1 + pj;i+1): (3.44)
+Thus, the main dierence to PT+WINQ is the incorporation of the processing time of the
+subsequent operation of a job pj;i+1, and the idea behind this is to give priority to jobs that can
+be quickly pushed through their next two operations. Holthaus and Rajendran (2000, 2002)
+apply 2PT+WINQ+NPT to the Jmjr jjC problem and find that it outperforms both SPT and
+PT+WINQ, especially when the shop is highly utilised. On the other hand, in a
+flow-dominant job shop, looking only at the next operation is likely to be insucient. This is
+illustrated by the other extreme of a flow shop, where all jobs in a queue move on to the same
+work centre for their next operation. The WINQ component is the same for all jobs in this
+case, and the PT+WINQ rule thus reverts to the SPT rule. Furthermore, 2PT+WINQ+NPT
+appears to loose its advantage over SPT for the Fmjr jjC problem, and perform worse in fact
+(Holthaus and Rajendran, 2002).
 
 = Details =
 
@@ -11,3 +63,12 @@ Add your content here.  Format your content with:
   * Text in *bold* or _italic_
   * Headings, paragraphs, and lists
   * Automatic links to other wiki pages
+
+Regarding the selection of benchmarks, it is obviously necessary to include PT+WINQ
+in the performance comparison to assess whether the analysis of its weaknesses has actually
+led to the development of a better rule. Moreover, SPT and 2PT+WINQ+NPT are selected as
+benchmark rules due to their reported strong performance for the Jmjr jjC problem (see Section
+3.4.1). The PT+WINQ and 2PT+WINQ+NPT rules are further modified by replacing the
+WINQ component by the extended version that is used within the UIT component, providing
+two more benchmarks. The job-based relative of SPT, the LWKR rule, and the simple FCFS
+rule complete the set of benchmark rules.
