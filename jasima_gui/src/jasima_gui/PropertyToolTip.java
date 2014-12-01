@@ -129,7 +129,7 @@ public class PropertyToolTip extends ToolTip {
 		htmlDoc.append(getJavadocStylesheet());
 		htmlDoc.append("html {background-color:");
 		htmlDoc.append(color2HTML(bgColor));
-		htmlDoc.append(";padding:10px}");
+		htmlDoc.append(";padding:10px} dl {margin: 0px} dt {margin-top: 0.5em}");
 		// TODO add font (see HTMLPrinter)
 
 		htmlDoc.append("</style></head><body><div>");
