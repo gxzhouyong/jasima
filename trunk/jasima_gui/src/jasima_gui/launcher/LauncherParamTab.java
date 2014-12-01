@@ -64,11 +64,9 @@ public class LauncherParamTab extends JavaLaunchTab {
 	protected Text vmArgs;
 
 	protected final ChangeListener updater = new ChangeListener();
-	protected final Image jasimaIcon = Activator.getImageDescriptor(
-			"icons/jasima.png").createImage();
+	protected final Image jasimaIcon = Activator.getImageDescriptor("icons/jasima.png").createImage();
 
-	protected class ChangeListener extends SelectionAdapter implements
-			ModifyListener {
+	protected class ChangeListener extends SelectionAdapter implements ModifyListener {
 		@Override
 		public void modifyText(ModifyEvent e) {
 			scheduleUpdateJob();
@@ -119,16 +117,14 @@ public class LauncherParamTab extends JavaLaunchTab {
 
 		addIndentedLabel(comp, "Experiment file:");
 		experimentFile = new Text(comp, SWT.BORDER);
-		GridDataFactory.fillDefaults().grab(true, false)
-				.applyTo(experimentFile);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(experimentFile);
 		experimentFile.addModifyListener(updater);
 
 		addTitleLabel(comp, "Logging");
 
 		addIndentedLabel(comp, "Log level:");
 		logLevel = new Combo(comp, SWT.BORDER);
-		logLevel.setItems(new String[] { "OFF", "ERROR", "WARN", "INFO",
-				"TRACE", "ALL" });
+		logLevel.setItems(new String[] { "OFF", "ERROR", "WARN", "INFO", "TRACE", "ALL" });
 		GridDataFactory.fillDefaults().applyTo(logLevel);
 		logLevel.addModifyListener(updater);
 
@@ -178,17 +174,12 @@ public class LauncherParamTab extends JavaLaunchTab {
 		configuration.setAttribute(ATTR_VM_ARGUMENTS, "");
 	}
 
-	public static final String addQuotes(String str) {
-		return str.indexOf(' ') == -1 ? str : ("\"" + str + "\"");
-	}
-
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration
-				.setAttribute(ATTR_MAIN_TYPE_NAME, launcherClass.getText());
+		configuration.setAttribute(ATTR_MAIN_TYPE_NAME, launcherClass.getText());
 
-		StringBuilder args = new StringBuilder();
-		args.append(addQuotes("--log=" + logLevel.getText()));
+		Arguments args = new Arguments();
+		args.append("--log=" + logLevel.getText());
 		if (printResults.getSelection())
 			args.append(" --printres");
 		if (saveXML.getSelection()) {
@@ -196,8 +187,7 @@ public class LauncherParamTab extends JavaLaunchTab {
 			if (path.equals(saveXMLPath.getItem(0))) { // default
 				args.append(" --xmlres");
 			} else {
-				args.append(' ');
-				args.append(addQuotes("--xmlres=" + path));
+				args.append("--xmlres=" + path);
 			}
 		}
 		if (saveXLS.getSelection()) {
@@ -205,17 +195,14 @@ public class LauncherParamTab extends JavaLaunchTab {
 			if (path.equals(saveXLSPath.getItem(0))) { // default
 				args.append(" --xlsres");
 			} else {
-				args.append(' ');
-				args.append(addQuotes("--xlsres=" + path));
+				args.append("--xlsres=" + path);
 			}
 		}
 
-		args.append(' ');
-		args.append(addQuotes(experimentFile.getText()));
+		args.append(experimentFile.getText());
 		String extraArgs = additionalArgs.getText().trim();
 		if (!extraArgs.isEmpty()) {
-			args.append(' ');
-			args.append(extraArgs);
+			args.appendUnquoted(extraArgs);
 		}
 
 		configuration.setAttribute(ATTR_PROGRAM_ARGUMENTS, args.toString());
@@ -228,27 +215,7 @@ public class LauncherParamTab extends JavaLaunchTab {
 		try {
 			launcherClass.setText(config.getAttribute(ATTR_MAIN_TYPE_NAME, ""));
 			vmArgs.setText(config.getAttribute(ATTR_VM_ARGUMENTS, ""));
-			String args = config.getAttribute(ATTR_PROGRAM_ARGUMENTS, "");
-			ArrayList<String> argsArr = new ArrayList<String>();
-			while (!(args = args.trim()).isEmpty()) {
-				int delim;
-				if (args.startsWith("\"")) {
-					args = args.substring(1);
-					delim = args.indexOf('"');
-					if (delim < 0) {
-						argsArr.add(args);
-						break;
-					}
-				} else {
-					delim = args.indexOf(' ');
-					if (delim < 0) {
-						argsArr.add(args);
-						break;
-					}
-				}
-				argsArr.add(args.substring(0, delim));
-				args = args.substring(delim + 1);
-			}
+			ArrayList<String> argsArr = Arguments.parseArgs(config);
 
 			experimentFile.setText("");
 			logLevel.setText("INFO");
@@ -259,24 +226,23 @@ public class LauncherParamTab extends JavaLaunchTab {
 			saveXLSPath.select(0);
 
 			boolean hasFilename = false;
-			boolean firstUnparsed = true;
-			StringBuffer unparsed = new StringBuffer();
+			Arguments unparsed = new Arguments();
 			for (String arg : argsArr) {
 				String[] s = arg.split("=", 2);
 				arg = s[0];
 
-				if (arg.equals("--log")) {
+				if (s[0].equals("--log")) {
 					if (s.length > 1)
 						logLevel.setText(s[1]);
-				} else if (arg.equals("--printres")) {
+				} else if (s[0].equals("--printres")) {
 					printResults.setSelection(true);
-				} else if (arg.equals("--xmlres")) {
+				} else if (s[0].equals("--xmlres")) {
 					saveXML.setSelection(true);
 					if (s.length > 1)
 						saveXMLPath.setText(s[1]);
 					else
 						saveXMLPath.select(0);
-				} else if (arg.equals("--xlsres")) {
+				} else if (s[0].equals("--xlsres")) {
 					saveXLS.setSelection(true);
 					if (s.length > 1)
 						saveXLSPath.setText(s[1]);
@@ -286,12 +252,7 @@ public class LauncherParamTab extends JavaLaunchTab {
 					experimentFile.setText(arg);
 					hasFilename = true;
 				} else {
-					if (firstUnparsed) {
-						firstUnparsed = false;
-					} else {
-						unparsed.append(' ');
-					}
-					unparsed.append(addQuotes(arg));
+					unparsed.append(arg);
 				}
 			}
 			additionalArgs.setText(unparsed.toString());
