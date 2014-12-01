@@ -1,63 +1,38 @@
-#summary Description of the scheduling problems.
+#summary Description of the Scheduling Problems.
 
-= General Definition =
+= General Definition of Job Shop/Flow Shop Problems =
 In general, scheduling is concerned with the allocation of limited
 resources to tasks over time, with the basic aim to ensure
 an effective and efficient use of the available resources. In this case, the resources are machines that have to be allocated to jobs
-(the tasks) in the best possible way (minimising or maximising
-some objective function). In flow shop and job shop problems, each job consists of a number of processing steps, or operations, that need to be performed on distinct machines. It is further assumed that
-  * a job can be processed by only one machine at at time (no splitting or overlapping),
-  * a machine can process only one job at a time (no batch processing),
-  * a started operation must be completed before the respective machine can process another job (no preemption),
-  * an operation can only be performed on the specified machine (no alternate routeings),
+(the tasks) in the best possible way (minimising the objective function). In flow shop and job shop problems, each job consists of a number of processing steps, or operations, that need to be performed on distinct machines in a prespecified processing order. It is further assumed that
+
+  * a job can be processed by only one machine at a time (no splitting or overlapping),
+  * a machine can process only one job at a time (no batch processing),
+  * a started operation must be completed before the respective machine can process another job (no preemption),
+  * an operation can only be performed on the specified machine (no alternate routings),
   * the processing of jobs is independent of the progress of other jobs (no assembly operations or precedence constraints),
-  * processing times are independent of the schedule and cover all activities related to the
-  * execution of an operation (no sequence-dependent setup times),
- machines are the only limiting resource (no lack of operators, tools or material),
-  * there are no space or time constraints on input and output buers (no blocking, scrap or rework),
-  * all machines are continuously available (no breakdowns or maintenance activities),
+  * processing times are independent of the schedule and cover all activities related to the execution of an operation (no sequence-dependent setup times),
+  * machines are the only limiting resource (no lack of operators, tools, or material),
+  * there are no space or time constraints on input and output buffers (no blocking, scrap or rework),
+  * all machines are continusouly available (no breakdowns or maintenance activities),
+  * jobs are only available to be scheduled once they have been released.
 
+If the processing orders of all jobs specify that they visit the machines in the same order, the problem is called a flow shop problem. In the more general job shop problem, each job can have a different visiting order of machines.
 
+= Specific Problem Characteristics and Objective Function =
+Following the setting by Rajendran and Holthaus (1999), there are 10 machines in the shop and new jobs arrive over time according to a Poisson process, where their characteristics are completely unknown until the time of their arrival (release). Upon arrival, processing times and machines (which are both drawn from a uniform discrete distribution) are assigned to operations at random, which implies that all 10 machines have roughly the same utilisation, i.e. there is no long-term bottleneck.
 
- all jobs are available to be scheduled instantly (no dynamic job arrivals).
-A problem that fulfils all of the above conditions is typically identified by an empty  field.
-Otherwise, specific entries are used to indicate certain deviations from these assumptions as
-illustrated in the following. If jobs arrive at the shop over time, i.e. each job j has its own specific release date r j, this is
-denoted by an r j entry in the  field
+The objective function is the minimisation of the mean flow time of jobs, where the flow time of a job is defined as the length of time the job spends in the shop, from the time of its arrival to the time of its completion. jasima is configured to simulate the completion of 10000 jobs, where the flow times of the first 2000 Jobs are not included in the objective function as they cover the warmup period. In other words, the performance measure obtained from a simulation run is the mean flow time of jobs numbered from 2001 to 10000. To reduce the influence of a certain stream of random numbers, each simulation run is repeated 30 times using different random number streams. To enable for results to be reproduced, we give here the seeds of the first 3 replications.
 
+= Experimental Factors =
+In accordance with Rajendran and Holthaus (1999), we vary four of the problem parameters as follows:
 
+  * *processing order* is set to *job shop* or *flow shop* (operations of each job are ordered according to the machine index),
 
- If
-all jobs follow the same route that involves visiting each of the m distinct machines exactly
-once, the shop is called a flow shop, which is denoted by Fm. Hence, every job consists of
-exactly m operations in a flow shop. In the other extreme of an ideal job shop, each job has its
-own specified route and may revisit some of the m machines several times while leaving out
-others completely. This implies that the number of operations can vary between jobs in a job
-shop. In practice, the number of dierent job routes is often limited by the product portfolio,
-which leads to a flow pattern that lies in between the two extremes of the linear flow of a flow
-shop and the random pattern of an ideal job shop. Such a shop is referred to as a flow-dominant
-job shop herein, and like the ideal job shop, is denoted by Jm.
+  * *number of operations per job* is set to *10* or *2-10* (drawn from a discrete uniform Distribution),
 
-An important characteristic of multi-stage problem is the workload balance among work
-centres. In a perfectly balanced shop all work centres are equally utilised, where utilisation
-of a work centre is defined as the fraction of busy time averaged across its machines. On the
-other hand, an unbalanced shop implies that some work centres have a higher workload than
-others. Then, the utilisation of the shop is given by the utilisation of the bottleneck, i.e. the
-mostly utilised work centre.
+  * *processing times* are drawn from *U[1, 49]* or *U[15, 35]*, thereby varying the variance of operation processing times,
 
-A more suitable objective for dynamic problems is the minimisation of the mean flow time,
-where the flow time of job j is defined as Cj 􀀀 r j, i.e. the length of time the job spends in the
-shop, from the time of its arrival to the time of its completion. The mean flow time is therefore
-calculated as
+  * *utilisation* is set to *80%* or *95%* by varying the parameter of the interarrival time Distribution.
 
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
-
-
-
-Specifically, the job shop is continuously loaded with new jobs until the last of the first 2500 jobs has left the system, which marks the end of a simulation run. The first 500 jobs cover the warmup period and are therefore discarded. The mean flow time statistics then consist of the data collected for jobs numbered from 501 to 2500. Finally, 200 replications are run for both variants (Section 5.1) of the JSP.
+Hence, with four experimental factors and two values for each factor, there are 2^4^=16 test problems in total.
