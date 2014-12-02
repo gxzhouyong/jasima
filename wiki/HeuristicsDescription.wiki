@@ -2,7 +2,7 @@
 
 = Manually Designed Dispatching Rules =
 
-  * *Tie-breaker*: This rule schedules jobs in non-decreasing order of their job number, assigned to jobs at the point of their arrival by a counter. It is a very simple rule that ensures a deterministic order as two jobs can never have the same number. It is therefore also used in combination with all the other rules below to break ties between jobs having the same priority according to the primary rule.
+  * *Tie-Breaker*: This rule schedules jobs in non-decreasing order of their job number, assigned to jobs at the point of their arrival by a counter. It is a very simple rule that ensures a deterministic order as two jobs can never have the same number. It is therefore also used in combination with all the other rules below to break ties between jobs having the same priority according to the primary rule.
 
   * *SPT*: The Shortest Processing Time (SPT) rule, which schedules jobs in non-decreasing order of the processing time of their imminent operations, originates from
 
