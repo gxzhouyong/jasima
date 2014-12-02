@@ -25,7 +25,7 @@ For a more detailed description of the dispatching rules and the hyper-heuristic
 
 The currently best dispatching rules and there scores with respect to the two performance measures are:
 
-|| || *Dispatching Rule* || *Hyper-Heuristic* || *Mean Flow Time* || *Performance Index*||
+|| *Rank* || *Dispatching Rule* || *Hyper-Heuristic* || *Mean Flow Time* || *Performance Index*||
 || 1. || ECJ2014-TREE_BASE_NORM_ND-Rule || GP_NORM_ND || 665.74 || 0.9009 ||
 || 2. || ECJ2014-TREE_EXT_NORM_ND-Rule || GP_NORM_ND || 669.18 || 0.9069 ||
 || 3. || GECCO2010-genSeed-2reps || GP || 669.83 || 0.9057 ||
