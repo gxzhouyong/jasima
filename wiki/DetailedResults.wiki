@@ -2,23 +2,12 @@
 
 = Introduction =
 
-<TABLE BORDER=2 CELLPADDING=4>
-<TR> <TH COLSPAN=2>Production</TH> </TR>
-<TR> <TD>Raha Mutisya</TD>      <TD>1493</TD> </TR>
-<TR> <TD>Shalom Buraka</TD>     <TD>3829</TD> </TR>
-<TR> <TD>Brandy Davis</TD>      <TD>0283</TD> </TR>
-<TR> <TH COLSPAN=2>Sales</TH> </TR>
-<TR> <TD>Claire Horne</TD>      <TD>4827</TD> </TR>
-<TR> <TD>Bruce Eckel</TD>       <TD>7246</TD> </TR>
-<TR> <TD>Danny Zeman</TD>       <TD>5689</TD> </TR>
-</TABLE>
-
-|| || || || *Mean Flow time (Performance Index)* ||
-|| || || Number of operations per job || 2 – 10 ops || || || || 10 ops || || || ||
-|| || || Proc. Time Distribution || U[1, 49] || || U[15, 35] || || U[1, 49] || || U[15, 35] || ||
+|| || || || *MFT (PI)* || *MFT (PI)* || *MFT (PI)* || *MFT (PI)* || *MFT (PI)* || *MFT (PI)* || *MFT (PI)* || *MFT (PI)* ||
+|| || *Test Problems:* || Number of operations per job || 2–10 || 2–10 || 2–10 || 2–10 || 10 || 10 || 10 || 10 ||
+|| || || Processing time distribution || U[1, 49] || U[1, 49] || U[15, 35] || U[15, 35] || U[1, 49] || U[1, 49] || U[15, 35] || U[15, 35] ||
 || || || Utilisation || 80% || 95% || 80% || 95% || 80% || 95% || 80% || 95% ||
 || *Dispatching Rule* || *Hyper-Heuristic* || *Training Problems* || || || || || || || || ||
-|| EC2014-TREE_BASE_NORM_ND-Rule || GP_NORM_ND || JS, 10 ops, U[1, 49], 95% || 366.96 (0.9509) || *787.74 (0.7975)* || 346.80 (0.9284) || 738.80 (0.7664) || 592.85 (0.9522) || 1218.27 (0.8236) || 551.96 (0.9300) || 1047.22 (0.7926) ||
+|| EC2014-TREE_BASE_NORM_ND-Rule || GP_NORM_ND || JS, 10, U[1, 49], 95% || 366.96 (0.9509) || *787.74 (0.7975)* || 346.80 (0.9284) || 738.80 (0.7664) || 592.85 (0.9522) || 1218.27 (0.8236) || 551.96 (0.9300) || 1047.22 (0.7926) ||
 
 
 665.74 || 0.9009 ||
