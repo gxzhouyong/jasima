@@ -30,6 +30,8 @@ import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -40,6 +42,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
@@ -188,24 +191,8 @@ public class ReferenceEditor extends EditorWidget {
 				public void linkActivated(HyperlinkEvent e) {
 					String href = e.getHref().toString();
 					if (href.startsWith("create:")) {
-						try {
-							Class<?> cls = topLevelEditor.getClassLoader()
-									.loadClass(
-											href.substring("create:".length()));
-							Object obj;
-							if (TypeUtil.isPrimitiveWrapper(cls)) {
-								obj = TypeUtil.createDefaultPrimitive(cls);
-							} else {
-								obj = cls.newInstance();
-							}
-							property.setValue(obj);
-							object = obj;
-							rebuildEditors();
-						} catch (PropertyException ex) {
-							showError(ex.getLocalizedMessage());
-						} catch (Exception ex) {
-							// ignore
-						}
+						String className = href.substring("create:".length());
+						createAndShowObject(className);
 					} else if (href.equals("create")) {
 						createNewObject();
 					} else if (href.equals("load")) {
@@ -401,30 +388,23 @@ public class ReferenceEditor extends EditorWidget {
 	}
 
 	public void createNewObject() {
-		try {
-			IJavaProject proj = topLevelEditor.getJavaProject();
-			Class<?> propType = TypeUtil.toClass(property.getType());
-			SelectionDialog dlg = JavaUI.createTypeDialog(getShell(), null,
-					SearchEngine.createStrictHierarchyScope(proj,
-							proj.findType(propType.getCanonicalName()), true,
-							true, null),
-					IJavaElementSearchConstants.CONSIDER_CLASSES, false, "?");
-			dlg.setTitle(String.format("Types compatible with %s",
-					TypeUtil.toString(propType, true)));
-			if (dlg.open() != SelectionDialog.OK) {
-				return;
-			}
-			IType type = (IType) dlg.getResult()[0];
+		String className = showDialogClassSelection();
+		if (className == null)
+			return;
 
+		createAndShowObject(className);
+	}
+
+	protected void createAndShowObject(String className) {
+		try {
 			Class<?> klass = topLevelEditor.getClassLoader().loadClass(
-					type.getFullyQualifiedName());
+					className);
 
 			Object obj;
 			if (TypeUtil.isPrimitiveWrapper(klass)) {
 				obj = TypeUtil.createDefaultPrimitive(klass);
 			} else {
 				obj = klass.getConstructor().newInstance((Object[]) null);
-				// catch LinkageError?
 			}
 			property.setValue(obj);
 			object = obj;
@@ -439,8 +419,37 @@ public class ReferenceEditor extends EditorWidget {
 			showErrorDialog("Can't instantiate an abstract class.");
 		} catch (PropertyException ex) {
 			showErrorDialog(ex.getLocalizedMessage());
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			StringWriter sw = new StringWriter(512);
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			pw.flush();
+
+			showErrorDialog("Some unexpected error occurred %s: \n%s",
+					e.getLocalizedMessage(), sw.toString());
+		}
+	}
+
+	protected String showDialogClassSelection() {
+		IJavaProject proj = topLevelEditor.getJavaProject();
+		Class<?> propType = TypeUtil.toClass(property.getType());
+		SelectionDialog dlg;
+		try {
+			dlg = JavaUI.createTypeDialog(getShell(), null, SearchEngine
+					.createStrictHierarchyScope(proj,
+							proj.findType(propType.getCanonicalName()), true,
+							true, null),
+					IJavaElementSearchConstants.CONSIDER_CLASSES, false, "?");
+			dlg.setTitle(String.format("Types compatible with %s",
+					TypeUtil.toString(propType, true)));
+			if (dlg.open() != SelectionDialog.OK) {
+				return null;
+			}
+			IType type = (IType) dlg.getResult()[0];
+			return type.getFullyQualifiedName();
+		} catch (JavaModelException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
