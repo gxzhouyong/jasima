@@ -20,12 +20,18 @@
  *******************************************************************************/
 package jasima_gui.editor;
 
+import jasima_gui.FormTextBuilder;
+import jasima_gui.JavaLinkHandler;
 import jasima_gui.ProjectCache;
 import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,16 +40,20 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2;
+import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -52,6 +62,11 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
+import org.eclipse.ui.forms.widgets.ColumnLayout;
+import org.eclipse.ui.forms.widgets.ColumnLayoutData;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.EditorPart;
@@ -59,9 +74,12 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import com.thoughtworks.xstream.XStream;
 
+@SuppressWarnings("restriction")
 public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	public static final String CLASS_URL_PREFIX = "jasima-javaclass:";
+	public static final String HREF_MORE = "jasima-command:more";
+	public static final String HREF_LESS = "jasima-command:less";
 	private EditorUpdater updater;
 	private Object root;
 	private FormToolkit toolkit = null;
@@ -161,7 +179,6 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		} else {
 			headline.setText(getEditorInput().getName());
 		}
-		// TODO tooltip?
 		headline.addSelectionListener(this);
 
 		Control head = form.getForm().getHeadClient();
@@ -173,7 +190,6 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	@Override
 	public void createPartControl(Composite parent) {
-
 		toolkit = new FormToolkit(parent.getDisplay());
 
 		form = toolkit.createScrolledForm(parent);
@@ -192,12 +208,109 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			return;
 		}
 
-		FillLayout layout = new FillLayout();
-		layout.marginHeight = 10;
+		Layout layout = new Layout() {
+			static final int SPACING = 10;
+			static final int VMARGIN = 10;
+			static final int HMARGIN = 5;
+
+			@Override
+			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+				Point retVal = new Point(composite.getSize().x, 0);
+				if(retVal.x == 0) {
+					retVal.x = -1;
+				} else {
+					retVal.x -= 2 * HMARGIN;
+				}
+				retVal.y += VMARGIN;
+				for (Control c : composite.getChildren()) {
+					retVal.y += SPACING;
+					retVal.y += c.computeSize(retVal.x, SWT.DEFAULT).y;
+				}
+				retVal.y += VMARGIN - SPACING;
+				retVal.x = 0;
+				return retVal;
+			}
+
+			@Override
+			protected void layout(Composite composite, boolean flushCache) {
+				int w = composite.getSize().x - 2 * HMARGIN;
+				int posY = VMARGIN;
+				for (Control c : composite.getChildren()) {
+					Point size = c.computeSize(w, SWT.DEFAULT);
+					c.setSize(size);
+					c.setLocation(HMARGIN, posY);
+					posY += size.y;
+					posY += SPACING;
+				}
+			}
+		};
 		form.getBody().setLayout(layout);
 
-		IProperty topLevelProperty = new IProperty() {
+		try {
+			IType type = getJavaProject().findType(root.getClass().getCanonicalName());
+			String doc = JavadocContentAccess2.getHTMLContent(type, true);
 
+			FormTextBuilder bldr;
+
+			bldr = new FormTextBuilder();
+			bldr.parseBadHtml(doc);
+			bldr.startParagraph();
+			bldr.startLink(HREF_LESS);
+			bldr.addText("Hide detailed description");
+			bldr.finishLink();
+			final String longDescription = bldr.finish();
+
+			bldr = new FormTextBuilder();
+			bldr.parseBadHtml(doc.substring(0, doc.indexOf('.') + 1));
+			bldr.addText(" ");
+			bldr.startLink(HREF_MORE);
+			bldr.addText("more");
+			bldr.finishLink();
+			final String summary = bldr.finish();
+
+			final FormText documentation = toolkit.createFormText(form.getBody(), true);
+			documentation.addHyperlinkListener(new IHyperlinkListener() {
+
+				@Override
+				public void linkExited(HyperlinkEvent evt) {
+				}
+
+				@Override
+				public void linkEntered(HyperlinkEvent evt) {
+				}
+
+				@Override
+				public void linkActivated(HyperlinkEvent evt) {
+					String href = evt.getHref().toString();
+					if (href.equals(HREF_MORE)) {
+						documentation.setText(longDescription, true, false);
+						form.getBody().layout(true, true);
+						form.reflow(true);
+					} else if (href.equals(HREF_LESS)) {
+						documentation.setText(summary, true, false);
+						form.getBody().layout(true, true);
+						form.reflow(true);
+					} else {
+						JavaLinkHandler handler = new JavaLinkHandler();
+						try {
+							IJavaElement el = JavaElementLinks.parseURI(new URI(href));
+							if (el == null) {
+								handler.handleExternalLink(new URL(href), evt.display);
+							} else {
+								handler.handleJavadocViewLink(el);
+							}
+						} catch (MalformedURLException e) {
+						} catch (URISyntaxException e) {
+						}
+					}
+				}
+			});
+			documentation.setLayoutData(new ColumnLayoutData(0));
+			documentation.setText(summary, true, false);
+		} catch (CoreException e) {
+		}
+
+		IProperty topLevelProperty = new IProperty() {
 			public void setValue(Object val) throws PropertyException {
 				root = val;
 				makeDirty();
