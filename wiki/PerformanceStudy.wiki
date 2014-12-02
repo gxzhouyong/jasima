@@ -28,12 +28,12 @@ The performance of dispatching rules is assessed in how well they minimise the m
 The current ranking of dispatching rules:
 
 || *Rank* || *Dispatching Rule* || *Hyper-Heuristic* || *Mean Flow Time* || *Performance Index*||
-|| 1. || ECJ2014-TREE_BASE_NORM_ND-Rule || GP_NORM_ND || 665.74 || 0.9009 ||
-|| 2. || ECJ2014-TREE_EXT_NORM_ND-Rule || GP_NORM_ND || 669.18 || 0.9069 ||
+|| 1. || EC2014-TREE_BASE_NORM_ND-Rule || GP_NORM_ND || 665.74 || 0.9009 ||
+|| 2. || EC2014-TREE_EXT_NORM_ND-Rule || GP_NORM_ND || 669.18 || 0.9069 ||
 || 3. || GECCO2010-genSeed-2reps || GP || 669.83 || 0.9057 ||
 || 4. || GECCO2010-genSeed-10reps || GP || 671.30 || 0.9050 ||
 || 5. || IFT−UIT+NPT || - || 677.14 || 0.9091 ||
-|| 6. || ECJ2014-LIN_BASE-Rule || CMA-ES || 702.27 || 0.9394 ||
+|| 6. || EC2014-LIN_BASE-Rule || CMA-ES || 702.27 || 0.9394 ||
 || 7. || 2PT+WINQ+NPT || - || 712.88 || 0.9491 ||
 || 8. || PT+WINQ || - || 723.47 || 0.9587 ||
 || 9. || ASP2013-Rule #6 || MOGP || 722.46 || 0.9611 ||
