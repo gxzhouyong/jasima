@@ -27,15 +27,12 @@ import jasima_gui.util.TypeUtil;
 
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks;
-import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.window.ToolTip;
@@ -46,7 +43,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.PlatformUI;
 
@@ -59,8 +55,7 @@ public class PropertyToolTip extends ToolTip {
 		if (javadocStylesheet != null)
 			return javadocStylesheet;
 		try {
-			InputStreamReader rdr = new InputStreamReader(Platform
-					.getBundle(JavaPlugin.getPluginId())
+			InputStreamReader rdr = new InputStreamReader(Platform.getBundle(JavaPlugin.getPluginId())
 					.getEntry("/JavadocHoverStyleSheet.css").openStream());
 			StringBuilder stylesheet = new StringBuilder();
 			char[] buf = new char[1024];
@@ -78,8 +73,7 @@ public class PropertyToolTip extends ToolTip {
 	protected IProperty prop;
 	protected TopLevelEditor editor;
 
-	public PropertyToolTip(IProperty prop, TopLevelEditor editor,
-			Control control) {
+	public PropertyToolTip(IProperty prop, TopLevelEditor editor, Control control) {
 		super(control);
 		this.prop = prop;
 		this.editor = editor;
@@ -88,13 +82,11 @@ public class PropertyToolTip extends ToolTip {
 	}
 
 	private static String escapeHTML(String input) {
-		return input.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
-				.replaceAll(">", "&gt;");
+		return input.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	}
 
 	private static String color2HTML(Color color) {
-		return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(),
-				color.getBlue());
+		return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
 	}
 
 	@Override
@@ -113,10 +105,8 @@ public class PropertyToolTip extends ToolTip {
 		Browser browser = new Browser(comp, SWT.NONE);
 		GridDataFactory.fillDefaults().hint(400, 200).applyTo(browser);
 
-		ColorRegistry colors = PlatformUI.getWorkbench().getThemeManager()
-				.getCurrentTheme().getColorRegistry();
-		Color bgColor = colors
-				.get("org.eclipse.jdt.ui.JavadocView.backgroundColor");
+		ColorRegistry colors = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
+		Color bgColor = colors.get("org.eclipse.jdt.ui.JavadocView.backgroundColor");
 
 		Class<?> tmp = TypeUtil.toClass(prop.getType());
 		while (tmp.isArray())
@@ -124,8 +114,7 @@ public class PropertyToolTip extends ToolTip {
 		final Class<?> typeAsClass = tmp;
 
 		StringBuilder htmlDoc = new StringBuilder();
-		htmlDoc.append("<!DOCTYPE html><html><head>"
-				+ "<title>Tooltip</title><style type='text/css'>");
+		htmlDoc.append("<!DOCTYPE html><html><head>" + "<title>Tooltip</title><style type='text/css'>");
 		htmlDoc.append(getJavadocStylesheet());
 		htmlDoc.append("html {background-color:");
 		htmlDoc.append(color2HTML(bgColor));
@@ -143,8 +132,7 @@ public class PropertyToolTip extends ToolTip {
 			IType type = null;
 			if (!typeAsClass.isPrimitive()) {
 				try {
-					type = editor.getJavaProject().findType(
-							typeAsClass.getCanonicalName());
+					type = editor.getJavaProject().findType(typeAsClass.getCanonicalName());
 				} catch (JavaModelException e) {
 					// ignore
 				}
@@ -153,10 +141,9 @@ public class PropertyToolTip extends ToolTip {
 			htmlDoc.append("<dl><dt>Property type:</dt><dd><a");
 			if (type != null) {
 				try {
-					htmlDoc.append(" href=\""
-							+ JavaElementLinks.createURI(
-									JavaElementLinks.JAVADOC_SCHEME, type)
-							+ "\"");
+					htmlDoc.append(" href=\"");
+					htmlDoc.append(JavaElementLinks.createURI(JavaElementLinks.JAVADOC_SCHEME, type));
+					htmlDoc.append("\"");
 				} catch (URISyntaxException e) {
 					// ignore
 				}
@@ -169,41 +156,11 @@ public class PropertyToolTip extends ToolTip {
 		htmlDoc.append("</div></body></html>");
 		browser.setText(htmlDoc.toString(), true);
 
-		browser.addLocationListener(JavaElementLinks
-				.createLocationListener(new JavaElementLinks.ILinkHandler() {
-
-					public void handleTextSet() {
-						// ignore
-					}
-
-					public void handleJavadocViewLink(IJavaElement target) {
-						hide();
-						try {
-							JavaUI.openInEditor(target);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-
-					public void handleInlineJavadocLink(IJavaElement target) {
-						handleJavadocViewLink(target);
-					}
-
-					public boolean handleExternalLink(URL url, Display display) {
-						hide();
-						try {
-							PlatformUI.getWorkbench().getBrowserSupport()
-									.createBrowser(null).openURL(url);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						return true;
-					}
-
-					public void handleDeclarationLink(IJavaElement target) {
-						handleJavadocViewLink(target);
-					}
-				}));
+		browser.addLocationListener(JavaElementLinks.createLocationListener(new JavaLinkHandler() {
+			public void linkOpened() {
+				hide();
+			}
+		}));
 		return comp;
 	}
 }
