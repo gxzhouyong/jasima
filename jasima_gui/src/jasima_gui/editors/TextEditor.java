@@ -39,8 +39,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-public class TextEditor extends EditorWidget implements FocusListener,
-		ModifyListener, SelectionListener {
+public class TextEditor extends EditorWidget implements FocusListener, ModifyListener, SelectionListener {
 
 	private Text text;
 	private Button btnNull = null;
@@ -51,18 +50,18 @@ public class TextEditor extends EditorWidget implements FocusListener,
 	}
 
 	public void createControls() {
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(1, false);
 		layout.marginHeight = layout.marginWidth = 0;
 		setLayout(layout);
 
-		text = toolkit.createText(this, "", property.isWritable() ? SWT.BORDER
-				: 0);
+		text = toolkit.createText(this, "", property.isWritable() ? SWT.BORDER : 0);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(text);
 		text.setEditable(property.isWritable());
 		text.addFocusListener(this);
 		text.addModifyListener(this);
 
 		if (property.canBeNull() && property.isWritable()) {
+			layout.numColumns = 2;
 			btnNull = toolkit.createButton(this, "null", SWT.CHECK);
 			btnNull.addSelectionListener(this);
 		}
@@ -148,8 +147,7 @@ public class TextEditor extends EditorWidget implements FocusListener,
 			}
 			if (Number.class.isAssignableFrom(type)) {
 				try {
-					val = type.getConstructor(String.class).newInstance(
-							text.getText());
+					val = type.getConstructor(String.class).newInstance(text.getText());
 				} catch (InvocationTargetException ex) {
 					return;
 				}
