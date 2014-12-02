@@ -31,7 +31,7 @@ In accordance with Rajendran and Holthaus (1999), we vary four of the problem pa
 
   * *number of operations per job* is set to *10* or *2−10* (drawn from a discrete uniform Distribution),
 
-  * *processing times* are drawn from *U[1, 49]* or *U[15, 35]*, thereby varying the variance of operation processing times,
+  * *processing times* are drawn from the *U[1, 49]* or *U[15, 35]* distribution, thereby varying the variance of operation processing times,
 
   * *utilisation* is set to *80%* or *95%* by varying the parameter of the interarrival time distribution.
 
