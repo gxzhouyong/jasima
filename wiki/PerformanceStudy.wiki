@@ -1,6 +1,6 @@
-#summary Performance Study of Automatically Designed Dispatching Rules.
+#summary Performance Study of Dispatching Rules.
 
-= Performance Study of Automatically Designed Dispatching Rules =
+= Performance Study of Dispatching Rules =
 
 ----
 
@@ -50,7 +50,7 @@ The current best dispatching rules:
 || 10. || SPT || - || 761.51 || 1.0000 ||
 || 11. || Tie-Breaker || - || 1014.62 || 1.2807 ||
 
-For more detailed results, subdivided by test problems, see DetailedResults.
+For detailed results, subdivided by test problem, see DetailedResults.
 
 ----
 
