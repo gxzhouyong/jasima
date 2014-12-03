@@ -35,7 +35,7 @@ For a more detailed description of the dispatching rules and hyper-heuristics, s
 
 The performance of dispatching rules is assessed in how well they minimise the mean flow time of jobs across the different test problems. In addition to the absolute mean flow time, according to which dispatching rules are ranked, we also measure performance by a normalised index that indicates the average relative reduction over the mean flow time performance of the SPT rule.
 
-The currently best dispatching rules:
+The currently best dispatching rules are:
 
 || *Rank* || *Dispatching Rule* || *Hyper-Heuristic* || *Mean Flow Time* || *Performance Index*||
 || 1. || EC2014-TREE_BASE_NORM_ND-Rule || GP_NORM_ND || 665.74 || 0.9009 ||
