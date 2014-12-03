@@ -2,8 +2,12 @@
 
 = Results =
 
+----
+
 EXPLAIN ABBREVIATIONS FOR TRAINING PROBLEMS AND PERFORMANCE MEASURES
 ADD REFERENCES TO ProblemsDescription and HeuristicsDescription
+
+----
 
 == Job Shop Problems ==
 
