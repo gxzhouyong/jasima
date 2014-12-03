@@ -1,7 +1,7 @@
 #summary One-sentence summary of this page.
 
 EXPLAIN ABBREVIATIONS FOR TRAINING PROBLEMS ÁND PERFORMANCE MEASURES
-ADD REFERENCES TO PROBLEM AND HEURISTICDESCRIPTION
+ADD REFERENCES TO ProblemsDescription and HeuristicsDescription
 
 = Job Shop Problems =
 
