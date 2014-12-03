@@ -1,6 +1,6 @@
 #summary Description of the Dispatching Rules Included in the Study.
 
-= Dispatching Rules Included in the Performance Study =
+= Tested Dispatching Rules =
 
 ----
 
