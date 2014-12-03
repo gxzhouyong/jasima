@@ -22,7 +22,7 @@
 
   The main difference is the incorporation of the processing time of the subsequent operation of a job so that short jobs can be quickly pushed through their next two operations. In the above paper, the 2PT+WINQ+NPT rule is shown to be the more effective rule than SPT and PT+WINQ for the minimisation of mean flow time in dynamic job shops.
 
-  * *IFT−UIT+NPT*: This rule is a result of a study of the limitations of the PT+WINQ rule, published in
+  * *IFT−UIT+NPT*: This rule has resulted of a study of the limitations of the PT+WINQ rule, published in
 
   J. Branke and C. W. Pickardt (2011). Evolutionary search for difficult problem instances to support the design of job shop dispatching rules. _European Journal of Operational Research_ 212(1), 22–32.
 
