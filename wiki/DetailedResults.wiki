@@ -1,9 +1,11 @@
-#summary One-sentence summary of this page.
+#summary Results Subdivided by Test Problem.
 
-EXPLAIN ABBREVIATIONS FOR TRAINING PROBLEMS ÁND PERFORMANCE MEASURES
+= Results Subdivided by Test Problem. =
+
+EXPLAIN ABBREVIATIONS FOR TRAINING PROBLEMS AND PERFORMANCE MEASURES
 ADD REFERENCES TO ProblemsDescription and HeuristicsDescription
 
-= Job Shop Problems =
+== Job Shop Problems ==
 
 || || *Test Problems:* || Number of operations per job || 2–10 || 2–10 || 2–10 || 2–10 || 10 || 10 || 10 || 10 ||
 || || || Processing time distribution || U[1, 49] || U[1, 49] || U[15, 35] || U[15, 35] || U[1, 49] || U[1, 49] || U[15, 35] || U[15, 35] ||
@@ -21,7 +23,7 @@ ADD REFERENCES TO ProblemsDescription and HeuristicsDescription
 || SPT || - || - || 385.91 (1.0000) || 987.73 (1.0000) || 373.56 (1.0000) || 964.04 (1.0000) ||  622.62 (1.0000) || 1479.24 (1.0000) || 593.53 (1.0000) || 1321.25 (1.0000) ||
 || Tie-Breaker || - || - || 496.99 (1.2878) || 1509.34 (1.5281) || 411.80 (1.1024) || 1120.54 (1.1623) || 798.18 (1.2820) || 2199.00 (1.4866) || 647.88 (1.0916) || 1446.77 (1.0950) ||
 
-= Flow Shop Problems =
+== Flow Shop Problems ==
 
 || || *Test Problems:* || Number of operations per job || 2–10 || 2–10 || 2–10 || 2–10 || 10 || 10 || 10 || 10 ||
 || || || Processing time distribution || U[1, 49] || U[1, 49] || U[15, 35] || U[15, 35] || U[1, 49] || U[1, 49] || U[15, 35] || U[15, 35] ||
