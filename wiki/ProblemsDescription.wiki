@@ -1,6 +1,6 @@
 #summary Description of the Scheduling Problems.
 
-= Description of the Benchmark Problems =
+= Benchmark Problems =
 
 ----
 
