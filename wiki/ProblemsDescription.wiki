@@ -1,6 +1,10 @@
 #summary Description of the Scheduling Problems.
 
-= General Definition of the Job Shop/Flow Shop Problem =
+= Description of the Benchmark Problems =
+
+----
+
+== General Definition of the Job Shop/Flow Shop Problem ==
 In general, scheduling is concerned with the allocation of limited
 resources to tasks over time, with the basic aim to ensure
 an effective and efficient use of the available resources. In this case, the resources are machines that have to be allocated to jobs
@@ -19,12 +23,16 @@ an effective and efficient use of the available resources. In this case, the res
 
 If the processing orders of all jobs specify that they visit the machines in the same order, the problem is called a flow shop problem. In the more general job shop problem, each job can have a different visiting order of machines.
 
-= Specific Problem Characteristics and Objective Function =
+----
+
+== Specific Problem Characteristics and Objective Function ==
 Following the setting by Rajendran and Holthaus (1999), there are *10 machines* in the shop and *new jobs arrive over time according to a Poisson process*, where their characteristics are completely unknown until the time of their arrival (release). Upon arrival, processing times and machines (which are both drawn from a uniform discrete distribution) are assigned to operations at random, which implies that all 10 machines have roughly the same utilisation, i.e. there is no long-term bottleneck.
 
 The objective function is the minimisation of the *mean flow time* of jobs, where the flow time of a job is defined as the length of time the job spends in the shop, from the time of its arrival to the time of its completion. jasima is configured to simulate the completion of 10000 jobs, where the flow times of the first 2000 Jobs are not included in the objective function as they cover the warmup period. In other words, the performance measure obtained from a simulation run is the mean flow time of *jobs numbered from 2001 to 10000*. To reduce the influence of a certain stream of random numbers, *each simulation run is repeated 30 times* using different random number streams.
 
-= Experimental Factors =
+----
+
+== Experimental Factors ==
 In accordance with Rajendran and Holthaus (1999), we vary four of the problem parameters as follows:
 
   * *processing order* is set to *job shop* or *flow shop* (operations of each job are ordered according to the machine index),
@@ -36,3 +44,5 @@ In accordance with Rajendran and Holthaus (1999), we vary four of the problem pa
   * *utilisation* is set to *80%* or *95%* by varying the parameter of the interarrival time distribution.
 
 Hence, with four experimental factors and two values for each factor, there are *2^4^=16 test Problems* in total.
+
+----
