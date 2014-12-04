@@ -43,7 +43,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks;
-import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -56,7 +55,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
@@ -64,7 +62,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -216,7 +213,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			@Override
 			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
 				Point retVal = new Point(composite.getSize().x, 0);
-				if(retVal.x == 0) {
+				if (retVal.x == 0) {
 					retVal.x = -1;
 				} else {
 					retVal.x -= 2 * HMARGIN;
@@ -291,13 +288,12 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 						form.getBody().layout(true, true);
 						form.reflow(true);
 					} else {
-						JavaLinkHandler handler = new JavaLinkHandler();
 						try {
 							IJavaElement el = JavaElementLinks.parseURI(new URI(href));
 							if (el == null) {
-								handler.handleExternalLink(new URL(href), evt.display);
+								JavaLinkHandler.openURL(new URL(href));
 							} else {
-								handler.handleJavadocViewLink(el);
+								JavaLinkHandler.openJavadoc(el);
 							}
 						} catch (MalformedURLException e) {
 						} catch (URISyntaxException e) {
@@ -421,8 +417,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			String href = evt.text;
 			if (href.startsWith(CLASS_URL_PREFIX)) {
 				IJavaElement elem = getJavaProject().findType(href.substring(CLASS_URL_PREFIX.length()));
-				IEditorPart part = JavaUI.openInEditor(elem);
-				JavaUI.revealInEditor(part, elem);
+				JavaLinkHandler.openJavadoc(elem);
 			}
 		} catch (Exception e) {
 			// ignore

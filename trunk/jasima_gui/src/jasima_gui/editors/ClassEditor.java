@@ -20,6 +20,7 @@
  *******************************************************************************/
 package jasima_gui.editors;
 
+import jasima_gui.JavaLinkHandler;
 import jasima_gui.editor.EditorWidget;
 import jasima_gui.editor.PropertyException;
 import jasima_gui.util.TypeUtil;
@@ -89,8 +90,7 @@ public class ClassEditor extends EditorWidget implements IHyperlinkListener {
 			Class<?> val = (Class<?>) property.getValue();
 			IJavaElement elem = topLevelEditor.getJavaProject().findType(
 					val.getCanonicalName());
-			IEditorPart part = JavaUI.openInEditor(elem);
-			JavaUI.revealInEditor(part, elem);
+			JavaLinkHandler.openJavadoc(elem);
 		} catch (Exception e) {
 			// ignore
 		}
