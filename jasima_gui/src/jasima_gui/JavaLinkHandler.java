@@ -31,6 +31,32 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("restriction")
 public class JavaLinkHandler implements JavaElementLinks.ILinkHandler {
 
+	public static void openURL(URL url) {
+		try {
+			PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null).openURL(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void openJavadoc(IJavaElement target) {
+		try {
+			URL location = JavaUI.getJavadocLocation(target, true);
+			if (location != null) {
+				openURL(location);
+				return;
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+
+		try {
+			JavaUI.openInEditor(target);
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+
 	public void linkOpened() {
 
 	}
@@ -41,11 +67,7 @@ public class JavaLinkHandler implements JavaElementLinks.ILinkHandler {
 
 	public void handleJavadocViewLink(IJavaElement target) {
 		linkOpened();
-		try {
-			JavaUI.openInEditor(target);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		openJavadoc(target);
 	}
 
 	public void handleInlineJavadocLink(IJavaElement target) {
@@ -54,11 +76,7 @@ public class JavaLinkHandler implements JavaElementLinks.ILinkHandler {
 
 	public boolean handleExternalLink(URL url, Display display) {
 		linkOpened();
-		try {
-			PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null).openURL(url);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		openURL(url);
 		return true;
 	}
 
