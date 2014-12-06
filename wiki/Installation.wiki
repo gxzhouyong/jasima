@@ -1,0 +1,7 @@
+#Installing jasima.
+
+= Installation =
+
+Start Eclipse and click on “Help > Install New Software…”
+
+Insert the URL https://jasima.googlecode.com/svn/eclipse in the “Work with” field and press enter.
