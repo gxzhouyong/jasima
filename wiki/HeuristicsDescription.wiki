@@ -46,7 +46,7 @@
 <dd><i>European Journal of Operational Research</i> 212(1), <b>2011</b>, pp. 22–32</dd>
 </dl>
 
-  Specifically, it is based on the observations that the minimisation of the local mean ﬂow time should take into account all waiting jobs, that the future (rather than the current) queue lengths should be assessed, and that the focus should be more on idle time avoidance than the balancing queue lengths.}
+  Specifically, it is based on the observations that the minimisation of the local mean ﬂow time should take into account all waiting jobs, that the future (rather than the current) queue lengths should be assessed, and that the focus should be more on idle time avoidance than the balancing queue lengths.
 
 ----
 
