@@ -54,13 +54,17 @@
 
   * *GECCO2010-genSeed-2reps*, *GECCO2010-genSeed-10reps*: These two rules have been generated specifically for the dynamic job shop problems examined in this study by means of a *Genetic Programming (GP)* hyper-heuristic, described in
 
-  T. Hildebrandt, J. Heger, and B. Scholz-Reiter (2010). Towards improved dispatching rules for complex shop ﬂoor scenarios — a genetic programming approach. In _GECCO ’10: Proceedings of the 12th Annual Conference on Genetic and Evolutionary Computation_, ACM Press, pp. 257–264.
+<dd>T. Hildebrandt, J. Heger, and B. Scholz-Reiter</dd>
+<dd>Towards improved dispatching rules for complex shop floor Scenarios — a genetic programming approach</dd>
+<dd><i>GECCO '10: Proceedings of the 12th Annual Conference on Genetic and Evolutionary Computation</i>, ACM Press, <b>2010</b>, pp. 257–264</dd>
 
   The paper also provides a detailed description of the latter rule.
 
   * *ASP2013-Rule #6*: This rule has been generated for dynamic job shop problems similar to those examined in this study by means of a *Multi-Objective GP (MOGP)* hyper-heuristic, described in
 
-  S. Nguyen, M. Zhang, M. Johnston, and K. C. Tan (2013). Dynamic multi-objective job shop scheduling: a genetic programming approach. In _Automated Scheduling and Planning_, pp. 251–282.
+<dd>S. Nguyen, M. Zhang, M. Johnston, and K. C. Tan</dd>
+<dd>Dynamic multi-objective job shop scheduling: a genetic programming approach</dd>
+<dd><i>Automated Scheduling and Planning</i>, Springer, <b>2013</b>, pp. 251–282</dd>
 
   The ASP2013-Rule #6, which is also described in detail in the above paper, is shown to be the best rule in that study for the minimisation of mean flow time. However, the rule can be still considered a comprise rule since the hyper-heuristic is configured to design rules for multiple objectives.
 
