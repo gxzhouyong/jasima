@@ -60,7 +60,7 @@
 
   The paper also provides a detailed description of the latter rule.
 
-  * *ASP2013-Rule #6*: This rule has been generated for dynamic job shop problems similar to those examined in this study by means of a *Multi-Objective GP (MOGP)* hyper-heuristic, described in
+  * *ASP2013-Rule #6*: This rule has been generated for dynamic job shop problems similar to those examined in this study by means of a *Multi-Objective GP (MOGP)* hyper-heuristic, proposed in
 
 <dd>S. Nguyen, M. Zhang, M. Johnston, and K. C. Tan</dd>
 <dd>Dynamic multi-objective job shop scheduling: a genetic programming approach</dd>
