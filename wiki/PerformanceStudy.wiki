@@ -56,6 +56,6 @@ Detailed results, subdivided by test problem, can be found [DetailedResults here
 
 == Source Code ==
 
-The source code of this study will be available shortly.
+The source code for this study will be available shortly.
 
 ----
