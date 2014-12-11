@@ -10,25 +10,41 @@
 
   * *SPT*: The Shortest Processing Time (SPT) rule, which schedules jobs in non-decreasing order of the processing time of their imminent operations, originates from
 
-  W. E. Smith (1956). Various optimizers for single-stage production. _Naval Research Logistics Quarterly_ 3(1–2), 59–66.
+<dl>
+<dd>W. E. Smith</dd>
+<dd>Various optimizers for single-stage production</dd>
+<dd><i>Naval Research Logistics Quarterly</i> 3(1–2), <b>1956</b>, pp. 59–66</dd>
+</dl>
 
   The SPT rule yields the minimum mean flow time for the static single machine problem and is therefore commonly used as a benchmark for other scheduling problems with the mean flow time objective.
 
   * *PT+WINQ*: The Processing Time plus Work In Next Queue (PT+WINQ) rule has been specifically designed for dynamic job shop problems such as those examined in this study, and has been developed in
 
-  O. Holthaus and C. Rajendran (1997). Efficient dispatching rules for scheduling in a job shop. _International Journal of Production Economics_ 48(1), 87–105.
+<dl>
+<dd>O. Holthaus and C. Rajendran</dd>
+<dd>Efficient dispatching rules for scheduling in a job shop</dd>
+<dd><i>International Journal of Production Economics</i> 48(1), <b>1997</b>, pp. 87–105</dd>
+</dl>
 
   The PT+WINQ rule aims to trade off the minimisation of the local mean flow time with the importance of balancing the queue lengths (in terms of processing time) of other machines to avoid idle times due to starvation.
 
   * *2PT+WINQ+NPT*: This rule is an extension of the PT+WINQ rule, developed in
 
-  O. Holthaus and C. Rajendran (2000). Efficient jobshop dispatching rules: further developments. _Production Planning & Control_ 11(2), 171–178.
+<dl>
+<dd>O. Holthaus and C. Rajendran</dd>
+<dd>Efficient jobshop dispatching rules: further developments</dd>
+<dd><i>Production Planning & Control</i> 11(2), <b>2000</b>, pp. 171–178</dd>
+</dl>
 
   The main difference is the incorporation of the processing time of the subsequent operation of a job so that short jobs can be quickly pushed through their next two operations. In the above paper, the 2PT+WINQ+NPT rule is shown to be the more effective rule than SPT and PT+WINQ for the minimisation of mean flow time in dynamic job shops.
 
   * *IFT−UIT+NPT*: This rule has resulted from a study of the limitations of the PT+WINQ rule, published in
 
-  J. Branke and C. W. Pickardt (2011). Evolutionary search for difficult problem instances to support the design of job shop dispatching rules. _European Journal of Operational Research_ 212(1), 22–32.
+<dl>
+<dd>J. Branke and C. W. Pickardt</dd>
+<dd>Evolutionary search for difficult problem instances to support the design of job shop dispatching rules</dd>
+<dd><i>European Journal of Operational Research</i> 212(1), <b>2011</b>, pp. 22–32</dd>
+</dl>
 
   Specifically, it is based on the observations that the minimisation of the local mean ﬂow time should take into account all waiting jobs, that the future (rather than the current) queue lengths should be assessed, and that the focus should be more on idle time avoidance than the balancing queue lengths.}
 
