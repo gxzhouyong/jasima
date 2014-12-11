@@ -43,6 +43,6 @@ In accordance with Rajendran and Holthaus (1999), we vary four of the problem pa
 
   * *utilisation* is set to *80%* or *95%* by varying the parameter of the interarrival time distribution.
 
-Hence, with four experimental factors and two values for each factor, there are *2^4^=16 test Problems* in total.
+Hence, with four experimental factors and two values for each factor, there are *2^4^=16 test problems* in total.
 
 ----
