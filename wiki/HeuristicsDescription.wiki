@@ -70,7 +70,6 @@
 
   * *EC2014-LIN_BASE-Rule*: This rule has the same basic priority function as the 2PT+WINQ+NPT rule, where the coefficients within that function have been optimised by a *Covariance Matrix Adaptation Evolution Strategy (CMA-ES)* hyper-heuristic, as described in
 
-<dt>article <a name="Branke2014">(Branke2014)</a></dt>
 <dd>J. Branke, T. Hildebrandt, and B. Scholz-Reiter</dd>
 <dd>Hyper-heuristic evolution of dispatching rules: a comparison of rule representations</dd>
 <dd><i>Evolutionary Computation</i>, <b>2014</b>, DOI: 10.1162/EVCO a 00131</dd>
