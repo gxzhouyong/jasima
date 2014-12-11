@@ -2,9 +2,10 @@
 
 = Results =
 
-The performance of the [HeuristicsDescription tested dispatching rules] for each of the [ProblemsDescription 16 test problems] are shown in the tables below. The results are 
+The performance of the [HeuristicsDescription tested dispatching rules], measured by the mean flow time (MFT) and the performance index (PI), i.e. the mean flow time normalised by the performance of the SPT rule, for each of the [ProblemsDescription 16 test problems] is shown in the tables below. The first table shows the results relating to the eight job shop problems, followed by an analog table for the flow shop problems.
 
-EXPLAIN ABBREVIATIONS FOR TRAINING PROBLEMS AND PERFORMANCE MEASURES
+
+EXPLAIN ABBREVIATIONS FOR TRAINING PROBLEMS 
 
 
 ----
