@@ -2,8 +2,10 @@
 
 = Results =
 
+The performance of the [HeuristicsDescriptions tested dispatching rules] on each of the 16 [ProblemDescriptions test problems] are shown in the tables below. The results are 
+
 EXPLAIN ABBREVIATIONS FOR TRAINING PROBLEMS AND PERFORMANCE MEASURES
-ADD REFERENCES TO ProblemsDescription and HeuristicsDescription
+
 
 ----
 
