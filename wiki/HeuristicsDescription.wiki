@@ -55,7 +55,7 @@
   * *GECCO2010-genSeed-2reps*, *GECCO2010-genSeed-10reps*: These two rules have been generated specifically for the dynamic job shop problems examined in this study by means of a *Genetic Programming (GP)* hyper-heuristic, described in
 
 <dd>T. Hildebrandt, J. Heger, and B. Scholz-Reiter</dd>
-<dd>Towards improved dispatching rules for complex shop floor Scenarios — a genetic programming approach</dd>
+<dd>Towards improved dispatching rules for complex shop floor scenarios — a genetic programming approach</dd>
 <dd><i>GECCO '10: Proceedings of the 12th Annual Conference on Genetic and Evolutionary Computation</i>, ACM Press, <b>2010</b>, pp. 257–264</dd>
 
   The paper also provides a detailed description of the latter rule.
