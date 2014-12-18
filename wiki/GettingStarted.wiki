@@ -1,5 +1,7 @@
 #summary Getting started with jasima
 
+[http://jasima.googlecode.com/svn/wiki/images/test2.svg]
+
 = Introduction =
 
 This tutorial covers installing Jasima through Maven and setting up and running a simple experiment.
