@@ -4,4 +4,4 @@
 
 Select “File > New > Jasima Project” to create a new jasima project.
 
-http://jasima.googlecode.com/svn/wiki/CreateExp1.png
+https://jasima.googlecode.com/svn/wiki/images/CreateExp1.png
