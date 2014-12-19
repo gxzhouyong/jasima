@@ -56,6 +56,6 @@ Detailed results, subdivided by test problem, can be found [DetailedResults here
 
 == Source Code ==
 
-The source code to replicate these experiments can be downloaded from https://jasima.googlecode.com/svn/trunk/performanceStudy/src/ (you will also need to [Installation install jasima®]).
+The source code to replicate these experiments can be downloaded from https://jasima.googlecode.com/svn/trunk/performanceStudy/src/ (you will also need to install jasima®, as explained in the [gettingStarted Getting Started Guide]).
 
 ----
