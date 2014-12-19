@@ -2,7 +2,7 @@
 
 = Introduction =
 
-This tutorial will guide you through the initial steps of installing and using jasima to create and run simulation experiments of an existing experiment class. All screenshots in this document have been taken on a system running Windows 8, Eclipse Luna (4.4) and Excel 2013, and may differ slightly from what you see on your screen. The best way to use this guide is to work through the document step-by-step without skipping any of the sections.
+This tutorial will guide you through the initial steps of installing and using jasima to create and run simulation experiments of an existing experiment class. All screenshots have been taken on a system running Windows 8, Eclipse Luna (4.4) and Excel 2013, and may differ slightly from what you see on your screen. The best way to use this guide is to work through the sections step-by-step without skipping any section.
 
 Before installing jasima, please make sure that Java SE Runtime Environment and Eclipse are installed on your system. You can find the latest versions at
 
@@ -15,7 +15,6 @@ https://www.eclipse.org/downloads/
 
 
 
-This tutorial covers installing Jasima through Maven and setting up and running a simple experiment.
 
 = Installation =
 
