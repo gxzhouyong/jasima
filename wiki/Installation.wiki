@@ -1,4 +1,4 @@
-#summary Installing jasima.
+#summary Installing jasima®.
 
 = Installation =
 
@@ -14,7 +14,7 @@ After a short moment, the item “jasima GUI” should appear below. Select this
 
 https://jasima.googlecode.com/svn/wiki/images/Install3.png
 
-The following screen provides you with some more details, specifically the jasima version you are about to install. Click on “Next” to confirm.
+The following screen provides you with some more details, specifically the jasima® version you are about to install. Click on “Next” to confirm.
 
 https://jasima.googlecode.com/svn/wiki/images/Install4.png
 
@@ -38,4 +38,4 @@ Click on “Yes” to confirm that you want to reset the perspective.
 
 https://jasima.googlecode.com/svn/wiki/images/Install9.png
 
-You should now be able to create a new jasima project by clicking on 		  “File > New > Jasima Project”.
+You should now be able to create a new jasima® project by clicking on 		  “File > New > Jasima Project”.
