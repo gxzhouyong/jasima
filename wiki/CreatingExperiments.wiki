@@ -5,3 +5,19 @@
 Select “File > New > Jasima Project” to create a new jasima project.
 
 https://jasima.googlecode.com/svn/wiki/images/CreateExp1.png
+
+Enter a name for the project and click on “Finish”.
+
+https://jasima.googlecode.com/svn/wiki/images/CreateExp2.png
+
+Your project will appear in the Eclipse Package Explorer. Right-click on your project and select “New > Jasima Experiment”.
+
+https://jasima.googlecode.com/svn/wiki/images/CreateExp3.png
+
+Enter a name for the experiment, select an experiment class (some standard experiment classes are explained in the next section) and click on “Finish”.
+
+https://jasima.googlecode.com/svn/wiki/images/CreateExp4.png
+
+Your experiment will appear in the project tree in the Eclipse Package Explorer. Doubling-clicking on it will open the GUI for this experiment (in case it is not open already).
+
+https://jasima.googlecode.com/svn/wiki/images/CreateExp5.png
