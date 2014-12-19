@@ -56,6 +56,6 @@ Detailed results, subdivided by test problem, can be found [DetailedResults here
 
 == Source Code ==
 
-The source code to replicate these experiments will be available shortly.
+The source code to replicate these experiments can be downloaded from https://jasima.googlecode.com/svn/trunk/performanceStudy/src/DispatchingRuleComparison.java
 
 ----
