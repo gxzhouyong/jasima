@@ -1,6 +1,6 @@
 #summary Getting started with jasima®.
 
-= Introduction =
+= Getting Started =
 
 This tutorial will guide you through the initial steps of installing and using jasima® to create and run simulation experiments of an existing experiment class, and covers
 
