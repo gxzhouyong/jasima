@@ -1,4 +1,4 @@
-#Installing jasima.
+#summary Installing jasima.
 
 = Installation =
 
