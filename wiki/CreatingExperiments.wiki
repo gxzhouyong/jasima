@@ -1,6 +1,6 @@
-#summary Creating a new experiment using a given experiment class.
+#summary Creating a New Experiment Using a Given Experiment Class.
 
-= Creating a new Simulation Experiment =
+= Creating a New Simulation Experiment =
 
 Select “File > New > Jasima Project” to create a new jasima project.
 
