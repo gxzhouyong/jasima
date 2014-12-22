@@ -17,27 +17,69 @@ The `DynamicShopExperiment` class contains a number of numerical, categorical an
 
 We also configure the simulation to stop after all of the first 10000 arriving jobs (with indices 0 to 9999) have been completed by setting the `stopArrivalsAfterNumJobs` parameter to the corresponding value. Alternatively, you can set the `simulationLength` parameter to stop the simulation after a certain simulated time or the `stopAfterNumJobs` to stop the simulation after a certain number of jobs (not necessarily the first arriving jobs) have been completed.
 
-Pic1
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment1.png
 
 Note that parameters requiring integer values can also be increased and decreased by clicking on the upward and downward arrows located right of the respective field.
 The second type of parameters, categorical parameters, can be set to one of a number of predefined values by clicking on the field next to the parameter, which will open a drop-down menu listing the available options. In this case, we want to build a job shop model and thus select the JOB_SHOP option in the drop-down menu of the categorical `scenario` parameter.
 
-Pic2
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment2.png
 
 The third type of parameters require a reference to a Java object of a certain class. We illustrate the procedure of setting these object parameters by the example of the `sequencingRule` parameter, which refers to the dispatching rule that is used to schedule the machines. The first step is to click on the “new” button located right of the field.
 
-Pic3
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment3.png
 
 This will open a dialog listing all types that are compatible with this parameter, i.e. dispatching rules in the case. Here, we choose the `SPT` rule, which prioritises jobs in non-decreasing order of the processing time of their imminent operation, and click on “OK”.
 
-Pic4
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment4.png
 
 We can further set a tie-breaking rule that is applied if two jobs have the same priority, i.e. the same operation processing time in this case. This can be done by clicking on `sequencingRule`, which will open a submenu, and then on the “New” button of the parameter `tieBreaker`, which will open the above dialog again.
 
-Pic5
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment5.png
 
 In this example, we choose `TieBreakerFASFS` as the tie-breaking rule, which selects jobs in non-decreasing order of their job number (assigned to the job at their point of arrival). You can remove any assigned object again by clicking on the “Delete” button.
 
-Pic6
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment6.png
 
 We have now defined all the compulsory parameters of the `DynamicShopExperiment` class, and are almost ready to run the experiment.
+
+== Run Configuration ==
+
+Before running the experiment, we need to decide on the measures and statistics that we would like jasima to return and also the output format of these results. Currently, jasima supports the XML and Excel file formats. To define the output format right-click on “TenMachinesJobShopExperiment.jasima” and select “Run As > Jasima Simulation”.
+
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment7.png
+
+The run configuration window will open, in which you can set different options for the output of jasima in the “Results” section. In this example, we want the results to be printed to the console as well as written to an Excel (XLS) file, so we select both options by clicking on the respective tickboxes. You can also provide a name for the Excel file by clicking on the adjacent text field and typing in the desired name. For illustrative purposes, let us name this file “BasicResults”. Once you are done, click on “Run” to run the simulation experiment.
+
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment8.png
+
+jasima will start and (depending on the chosen log level) print out a number of statements to the console that describe the progress of the simulation experiment. Once the experiment is complete, the results are printed to the console and the file “BasicResults.xls” (containing the same information) is created, which you should find in the project tree in the Eclipse Package Explorer.
+
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment9.png
+
+By default, the jasima output is based on the data of all jobs. However, in simulation studies it is common to discard jobs that are completed within the initial, so called warmup period. Let us assume that we determined the warmup period of our experiment to comprise the completion of 2000 jobs and that we want the output to include only data of the jobs with indices 2000 to 9999 (corresponding to a sample size of 8000 jobs). In jasima GUI, we can achieve this by clicking on the parameter `shopListener` and the on “Add…” in the submenu.
+
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment10.png
+
+This will open a window to inform you that the property is set to null. Click on the “New” button.
+
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment11.png
+
+Choose `BatchStatCollector`, and click on “OK”. The next window shows some parameters of this collector. Change the values of the parameters `batchSize` (sample size) and `ignoreFirst` to 8000 and 2000 by clicking on the respective text fields, and click on “OK” to confirm (the `initialPeriod` parameter can be used for warmup periods measured in time units).
+
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment12.png
+
+The `BatchStatCollector` should now appear in the submenu of the `shopListener` parameter. Clicking on the “Remove” button will reset the output to the default again.
+
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment13.png
+
+Right-click on `TenMachinesJobShopExperiment.jasima` and select “Run As > Run Configurations…” to enter the “Run Configurations” window again, rename the Excel output file “BatchResults” and rerun jasima by clicking on “Run”.
+
+Sometimes, we may also be interested in statistics related to the machines rather than jobs. In order to retrieve these, you will need to add a machine listener. To do this, click on the parameter `machineListener` and then on “Create new”.
+
+https://jasima.googlecode.com/svn/wiki/images/DSExperiment14.png
+
+Next, add a `MachineStatCollector` by proceeding in the same way as for the `BatchStatCollector`. Enter the “Run Configurations” window for the `TenMachinesJobShopExperiment` once again, rename the Excel output file “MachineResults” and rerun jasima by clicking on “Run”.
+
+Upon the completion of the simulation run, you should have three different Excel files (“BasicResults.xls”, “BatchResults.xls” and “MachineResults.xls”) in the project tree in the Eclipse Package Explorer. We discuss each file in the following section.
+
+== Interpretation of Experimental Results ==
