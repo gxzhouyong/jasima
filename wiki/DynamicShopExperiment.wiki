@@ -95,6 +95,6 @@ https://jasima.googlecode.com/svn/wiki/images/DSExperiment16.png
 
 As expected, the upper section for the parameter settings is exactly the same apart from the `shopListener` parameter, which now also includes the `BatchStatCollector`. In contrast, the results section has been amended by a variety of job-related measures and statistics with a “b0” prefix. Note that the `b0.flowtime` and `b0.tardiness` statistics differ from their counterparts without the prefix. This is due to the fact that the former are based solely on jobs with indices 2000 to 9999, whereas the latter are based on all jobs (which is also evident from the respective count values). Next, open the “!MachineResults.xls” file.
 
-Screenshot (showing Machine Stats missing)
+Screenshot (showing Machine Stats) missing
 
 In addition to the job-related measures, the results section now shows a variety of machine-related statistics for every machine in the shop. Statistics related to the same are identified by the same prefix, which corresponds to the name of the machine, e.g. “m0” in this case. Measures shown include the queue length (`qLen`) and utilisation (`util`) of machines. Note that the actual utilisation of each machine is very close to 0.8, the value of the (analytically derived) `utilLevel` parameter.
