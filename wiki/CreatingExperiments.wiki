@@ -21,3 +21,5 @@ https://jasima.googlecode.com/svn/wiki/images/CreateExp3.png
 Your experiment will appear in the project tree in the Eclipse Package Explorer. Doubling-clicking on it will open the GUI for this experiment (in case it is not open already).
 
 https://jasima.googlecode.com/svn/wiki/images/CreateExp4.png
+
+You can now proceed with [RunningExperiments setting up and running the experiment].
