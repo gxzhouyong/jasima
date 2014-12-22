@@ -8,36 +8,36 @@ The `DynamicShopExperiment` class can be used to design and run a simulation exp
 
 The `DynamicShopExperiment` class contains a number of numerical, categorical and object parameters (variables) to set up one of these models. Numerical parameters can be set by simply clicking on the field next to the parameter and changing its value as desired. In this case, we set the following model parameters:
 
-  *The number of machines (`numMachines`) to 10
-  *The minimum number of operations per job (`numOpsMin`) to 2
-  *The maximum number of operations per job (`numOpsMax`) to 10
-  *The minimum processing time of an operation (`opProcTimeMin`) to 1
-  *The maximum processing time of an operation (`opProcTimeMax`) to 99
-  *The utilisation of the machines, i.e. the relative proportion of time that the machines are busy, determined by the job arrival rate (`utilLevel`) to 0.8
+  * the number of machines (`numMachines`) to 10,
+  * the minimum number of operations per job (`numOpsMin`) to 2,
+  * the maximum number of operations per job (`numOpsMax`) to 10,
+  * the minimum processing time of an operation (`opProcTimeMin`) to 1,
+  * the maximum processing time of an operation (`opProcTimeMax`) to 99,
+  * the utilisation of the machines, i.e. the relative proportion of time that the machines are busy, determined by the job arrival rate (`utilLevel`) to 0.8.
 
 We also configure the simulation to stop after all of the first 10000 arriving jobs (with indices 0 to 9999) have been completed by setting the `stopArrivalsAfterNumJobs` parameter to the corresponding value. Alternatively, you can set the `simulationLength` parameter to stop the simulation after a certain simulated time or the `stopAfterNumJobs` to stop the simulation after a certain number of jobs (not necessarily the first arriving jobs) have been completed.
 
 Pic1
 
 Note that parameters requiring integer values can also be increased and decreased by clicking on the upward and downward arrows located right of the respective field.
-The second type of parameters, categorical parameters, can be set to one of a number of predefined values by clicking on the field next to the parameter, which will open a drop-down menu listing the available options. In this case, we want to build a job shop model and thus select the JOB_SHOP option in the drop-down menu of the categorical “scenario” parameter.
+The second type of parameters, categorical parameters, can be set to one of a number of predefined values by clicking on the field next to the parameter, which will open a drop-down menu listing the available options. In this case, we want to build a job shop model and thus select the JOB_SHOP option in the drop-down menu of the categorical `scenario` parameter.
 
 Pic2
 
-The third type of parameters require a reference to a Java object of a certain class. We illustrate the procedure of setting these object parameters by the example of the “sequencingRule” parameter, which refers to the dispatching rule that is used to schedule the machines. The first step is to click on the “new” button located right of the field.
+The third type of parameters require a reference to a Java object of a certain class. We illustrate the procedure of setting these object parameters by the example of the `sequencingRule` parameter, which refers to the dispatching rule that is used to schedule the machines. The first step is to click on the “new” button located right of the field.
 
 Pic3
 
-This will open a dialog listing all types that are compatible with this parameter, i.e. dispatching rules in the case. Here, we choose the “Shortest Processing Time (SPT)” rule, which prioritises jobs in non-decreasing order of the processing time of their imminent operation, and click on “OK”.
+This will open a dialog listing all types that are compatible with this parameter, i.e. dispatching rules in the case. Here, we choose the `SPT` rule, which prioritises jobs in non-decreasing order of the processing time of their imminent operation, and click on “OK”.
 
 Pic4
 
-We can further set a tie-breaking rule that is applied if two jobs have the same priority, i.e. the same operation processing time in this case. This can be done by clicking on “sequencingRule”, which will open a submenu, and then on the “New” button of the parameter “tieBreaker”, which will open the above dialog again.
+We can further set a tie-breaking rule that is applied if two jobs have the same priority, i.e. the same operation processing time in this case. This can be done by clicking on `sequencingRule`, which will open a submenu, and then on the “New” button of the parameter `tieBreaker`, which will open the above dialog again.
 
 Pic5
 
-In this example, we choose “TieBreakerFASFS” as the tie-breaking rule, which selects jobs in non-decreasing order of their job number (assigned to the job at their point of arrival). You can remove any assigned object again by clicking on the “Delete” button.
+In this example, we choose `TieBreakerFASFS` as the tie-breaking rule, which selects jobs in non-decreasing order of their job number (assigned to the job at their point of arrival). You can remove any assigned object again by clicking on the “Delete” button.
 
 Pic6
 
-We have now defined all the compulsory parameters of the “DynamicShopExperiment” class, and are almost ready to run the experiment.
+We have now defined all the compulsory parameters of the `DynamicShopExperiment` class, and are almost ready to run the experiment.
