@@ -22,4 +22,4 @@ Your experiment will appear in the project tree in the Eclipse Package Explorer.
 
 https://jasima.googlecode.com/svn/wiki/images/CreateExp4.png
 
-For instructions on how to use the GUI, please proceed with the section on [RunningExperiments running a simulation experiment using the GUI].
+For instructions on how to use the GUI, please proceed with the section on [RunningExperiments running a simulation experiment using jasima®].
