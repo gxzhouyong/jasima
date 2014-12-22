@@ -1,0 +1,5 @@
+#summary Running an experiment of the DynamicShopExperiment class.
+
+= Running a Job Shop/Flow Shop Experiment =
+
+The “DynamicShopExperiment” class can be used to design and run a simulation experiment of a standard job shop or flow shop model. In these models, each job consists of a number of operations that have to be processed in a predefined order. Each operation requires a specific machine for its processing for a certain amount of time. Further assumptions are that a job can only be processed by one machine at a time and that a machine can only process one operation at a time. In the flow shop model, all jobs visit the machines for their operations in the same order, whereas the processing order can differ from job to job in the more general job shop model.
