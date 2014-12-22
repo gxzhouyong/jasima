@@ -45,11 +45,11 @@ We have now defined all the compulsory parameters of the `DynamicShopExperiment`
 
 == Run Configuration ==
 
-Before running the experiment, we need to decide on the measures and statistics that we would like jasima to return and also the output format of these results. Currently, jasima® supports the XML and Excel file formats. To define the output format right-click on "!TenMachinesJobShopExperiment.jasima" and select “Run As > Jasima Simulation”.
+Before running the experiment, we need to decide on the measures and statistics that we would like jasima® to return and also the output format of these results. Currently, jasima® supports the XML and Excel file formats. To define the output format right-click on "!TenMachinesJobShopExperiment.jasima" and select “Run As > Jasima Simulation”.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment7.png
 
-The run configuration window will open, in which you can set different options for the output of jasima in the “Results” section. In this example, we want the results to be printed to the console as well as written to an Excel (XLS) file, so we select both options by clicking on the respective tickboxes. You can also provide a name for the Excel file by clicking on the adjacent text field and typing in the desired name. For illustrative purposes, let us name this file “!BasicResults”. Once you are done, click on “Run” to run the simulation experiment.
+The run configuration window will open, in which you can set different options for the output of jasima® in the “Results” section. In this example, we want the results to be printed to the console as well as written to an Excel (XLS) file, so we select both options by clicking on the respective tickboxes. You can also provide a name for the Excel file by clicking on the adjacent text field and typing in the desired name. For illustrative purposes, let us name this file “!BasicResults”. Once you are done, click on “Run” to run the simulation experiment.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment8.png
 
@@ -57,7 +57,7 @@ jasima® will start and (depending on the chosen log level) print out a number o
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment9.png
 
-By default, the jasima output is based on the data of all jobs. However, in simulation studies it is common to discard jobs that are completed within the initial, so called warmup period. Let us assume that we determined the warmup period of our experiment to comprise the completion of 2000 jobs and that we want the output to include only data of the jobs with indices 2000 to 9999 (corresponding to a sample size of 8000 jobs). In jasima GUI, we can achieve this by clicking on the parameter `shopListener` and the on “Add…” in the submenu.
+By default, the jasima® output is based on the data of all jobs. However, in simulation studies it is common to discard jobs that are completed within the initial, so called warmup period. Let us assume that we determined the warmup period of our experiment to comprise the completion of 2000 jobs and that we want the output to include only data of the jobs with indices 2000 to 9999 (corresponding to a sample size of 8000 jobs). In jasima® GUI, we can achieve this by clicking on the parameter `shopListener` and the on “Add…” in the submenu.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment10.png
 
@@ -73,14 +73,14 @@ The `BatchStatCollector` should now appear in the submenu of the `shopListener` 
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment13.png
 
-Right-click on `TenMachinesJobShopExperiment.jasima` and select “Run As > Run Configurations…” to enter the “Run Configurations” window again, rename the Excel output file “BatchResults” and rerun jasima by clicking on “Run”.
+Right-click on "!TenMachinesJobShopExperiment.jasima" and select “Run As > Run Configurations…” to enter the “Run Configurations” window again, rename the Excel output file “!BatchResults” and rerun jasima® by clicking on “Run”.
 
 Sometimes, we may also be interested in statistics related to the machines rather than jobs. In order to retrieve these, you will need to add a machine listener. To do this, click on the parameter `machineListener` and then on “Create new”.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment14.png
 
-Next, add a `MachineStatCollector` by proceeding in the same way as for the `BatchStatCollector`. Enter the “Run Configurations” window for the `TenMachinesJobShopExperiment` once again, rename the Excel output file “MachineResults” and rerun jasima by clicking on “Run”.
+Next, add a `MachineStatCollector` by proceeding in the same way as for the `BatchStatCollector`. Enter the “Run Configurations” window for the "TenMachinesJobShopExperiment" once again, rename the Excel output file “!MachineResults” and rerun jasima® by clicking on “Run”.
 
-Upon the completion of the simulation run, you should have three different Excel files (“BasicResults.xls”, “BatchResults.xls” and “MachineResults.xls”) in the project tree in the Eclipse Package Explorer. We discuss each file in the following section.
+Upon the completion of the simulation run, you should have three different Excel files (“!BasicResults.xls”, “!BatchResults.xls” and “!MachineResults.xls”) in the project tree in the Eclipse Package Explorer. We discuss each file in the following section.
 
 == Interpretation of Experimental Results ==
