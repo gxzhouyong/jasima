@@ -1,6 +1,6 @@
 #summary Running an experiment of the FullFactorialExperiment class.
 
-= Running Multiple Replications with Varying Parameter Values =
+= Running Multiple Replications with Varying Parameters =
 
 Add your content here.
 
