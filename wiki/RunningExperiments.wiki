@@ -1,8 +1,8 @@
-#summary Running an experiment using jasima GUI.
+#summary Running an experiment using jasima® GUI.
 
-= Running a simulation experiment using jasima GUI =
+= Running a simulation experiment using jasima® GUI =
 
-In general, the appearance of the jasima GUI depend on the chosen experiment class, and the methods that are defined within (there is a GUI field for every variable that has a “set” method defined in the class). You can find detailed instructions on how to run an instance of various experiments, covering all steps from the experimental setup to the interpretation of the result files, in the following sections:
+In general, the appearance of the jasima® GUI depend on the chosen experiment class, and the methods that are defined within (there is a GUI field for every variable that has a “set” method defined in the class). You can find detailed instructions on how to run an instance of various experiments, covering all steps from the experimental setup to the interpretation of the result files, in the following sections:
 
   # [DynamicShopExperiment Running a job shop/flow shop experiment]
   # [MultipleReplicationExperiment Running multiple replications of the same experiment]
