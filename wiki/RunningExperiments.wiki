@@ -6,6 +6,6 @@ In general, the appearance of the jasima® GUI depend on the chosen experiment c
 
   # [DynamicShopExperiment Running a Job Shop/Flow Shop Experiment]
   # [MultipleReplicationExperiment Running Multiple Replications of the Same Experiment]
-  # [FullFactorialExperiment Running Multiple Replications with Varying Parameter Values]
+  # [FullFactorialExperiment Running Multiple Replications with Varying Parameters]
 
 Again, it is recommended that you work through each of these sections in the shown order as they build upon each other.
