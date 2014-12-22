@@ -1,4 +1,4 @@
-#summary Running an experiment of the `DynamicShopExperiment` class.
+#summary Running an experiment of the DynamicShopExperiment class.
 
 = Running a Job Shop/Flow Shop Experiment =
 
