@@ -1,4 +1,4 @@
-#summary Getting started with jasima®.
+#summary Getting Started with jasima®.
 
 = Getting Started =
 
