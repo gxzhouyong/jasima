@@ -21,7 +21,7 @@ The experiment can be configured and run in the same way as an experiment of the
 
 == Interpretation of Experimental Results ==
 
-Once jasima has completed all replications, open the Excel file. You will notice that the spreadsheet consists of several worksheets.
+Once jasima has completed all 30 replications, open the Excel file. You will notice that the spreadsheet consists of several worksheets.
 
 https://jasima.googlecode.com/svn/wiki/images/MRExperiment3.png
 (screenshot showing the main experiment sheet, red circle to emphasise other sheets)
