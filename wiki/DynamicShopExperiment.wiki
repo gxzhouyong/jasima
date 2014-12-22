@@ -45,7 +45,7 @@ We have now defined all the compulsory parameters of the `DynamicShopExperiment`
 
 == Run Configuration ==
 
-Before running the experiment, we need to decide on the measures and statistics that we would like jasima® to return and also the output format of these results. Currently, jasima® supports the XML and Excel file formats. To define the output format right-click on "!TenMachinesJobShopExperiment.jasima" and select “Run As > Jasima Simulation”.
+Before running the experiment, we need to decide on the measures and statistics that we would like jasima® to return and also the output format of these results. Currently, jasima® supports the XML and Excel file formats. To define the output format right-click on “!TenMachinesJobShopExperiment.jasima” and select “Run As > Jasima Simulation”.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment7.png
 
@@ -73,13 +73,13 @@ The `BatchStatCollector` should now appear in the submenu of the `shopListener` 
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment13.png
 
-Right-click on "!TenMachinesJobShopExperiment.jasima" and select “Run As > Run Configurations…” to enter the “Run Configurations” window again, rename the Excel output file “!BatchResults” and rerun jasima® by clicking on “Run”.
+Right-click on “!TenMachinesJobShopExperiment.jasima” and select “Run As > Run Configurations…” to enter the “Run Configurations” window again, rename the Excel output file “!BatchResults” and rerun jasima® by clicking on “Run”.
 
 Sometimes, we may also be interested in statistics related to the machines rather than jobs. In order to retrieve these, you will need to add a machine listener. To do this, click on the parameter `machineListener` and then on “Create new”.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment14.png
 
-Next, add a `MachineStatCollector` by proceeding in the same way as for the `BatchStatCollector`. Enter the “Run Configurations” window for the "!TenMachinesJobShopExperiment" once again, rename the Excel output file “!MachineResults” and rerun jasima® by clicking on “Run”.
+Next, add a `MachineStatCollector` by proceeding in the same way as for the `BatchStatCollector`. Enter the “Run Configurations” window for the “!TenMachinesJobShopExperiment” once again, rename the Excel output file “!MachineResults” and rerun jasima® by clicking on “Run”.
 
 Upon the completion of the simulation run, you should have three different Excel files (“!BasicResults.xls”, “!BatchResults.xls” and “!MachineResults.xls”) in the project tree in the Eclipse Package Explorer. We discuss each file in the following section.
 
