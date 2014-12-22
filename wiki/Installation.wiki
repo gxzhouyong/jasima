@@ -38,4 +38,4 @@ Click on “Yes” to confirm that you want to reset the perspective.
 
 https://jasima.googlecode.com/svn/wiki/images/Install9.png
 
-You should now be able to create a new jasima® project by clicking on 		  “File > New > Jasima Project”.
+You should now be able to create a new jasima® project by clicking on 		  “File > New > Jasima Project”, and thus can proceed with [CreatingExperiments creating a new simulation experiment].
