@@ -45,7 +45,7 @@ We have now defined all the compulsory parameters of the `DynamicShopExperiment`
 
 == Run Configuration ==
 
-Before running the experiment, we need to decide on the measures and statistics that we would like jasima to return and also the output format of these results. Currently, jasima supports the XML and Excel file formats. To define the output format right-click on `*“TenMachinesJobShopExperiment.jasima”` and select “Run As > Jasima Simulation”.
+Before running the experiment, we need to decide on the measures and statistics that we would like jasima to return and also the output format of these results. Currently, jasima supports the XML and Excel file formats. To define the output format right-click on "!TenMachinesJobShopExperiment.jasima" and select “Run As > Jasima Simulation”.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment7.png
 
