@@ -1,4 +1,4 @@
-#summary Running an Experiment using jasima® GUI.
+#summary Running an experiment using jasima® GUI.
 
 = Running a Simulation Experiment using jasima® GUI =
 
