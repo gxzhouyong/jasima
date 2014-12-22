@@ -1,6 +1,6 @@
-#summary Running an experiment using jasima® GUI.
+#summary Running an Experiment Using jasima® GUI.
 
-= Running a Simulation Experiment using jasima® GUI =
+= Running a Simulation Experiment Using jasima® GUI =
 
 In general, the appearance of the jasima® GUI depend on the chosen experiment class, and the methods that are defined within (there is a GUI field for every variable that has a “set” method defined in the class). You can find detailed instructions on how to run an instance of various experiments, covering all steps from the experimental setup to the interpretation of the results, in the following sections:
 
