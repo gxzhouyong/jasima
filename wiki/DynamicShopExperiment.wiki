@@ -1,5 +1,18 @@
-#summary Running an experiment of the DynamicShopExperiment class.
+#summary Running an experiment of the `DynamicShopExperiment` class.
 
 = Running a Job Shop/Flow Shop Experiment =
 
-The “DynamicShopExperiment” class can be used to design and run a simulation experiment of a standard job shop or flow shop model. In these models, each job consists of a number of operations that have to be processed in a predefined order. Each operation requires a specific machine for its processing for a certain amount of time. Further assumptions are that a job can only be processed by one machine at a time and that a machine can only process one operation at a time. In the flow shop model, all jobs visit the machines for their operations in the same order, whereas the processing order can differ from job to job in the more general job shop model.
+The `DynamicShopExperiment` class can be used to design and run a simulation experiment of a standard job shop or flow shop model. In these models, each job consists of a number of operations that have to be processed in a predefined order. Each operation requires a specific machine for its processing for a certain amount of time. Further assumptions are that a job can only be processed by one machine at a time and that a machine can only process one operation at a time. In the flow shop model, all jobs visit the machines for their operations in the same order, whereas the processing order can differ from job to job in the more general job shop model.
+
+== Experimental Design ==
+
+The `DynamicShopExperiment` class contains a number of numerical, categorical and object parameters (variables) to set up one of these models. Numerical parameters can be set by simply clicking on the field next to the parameter and changing its value as desired. In this case, we set the following model parameters:
+
+  *The number of machines (“numMachines”) to 10
+  *The minimum number of operations per job (`numOpsMin`) to 2
+  *The maximum number of operations per job (`numOpsMax`) to 10
+  *The minimum processing time of an operation (`opProcTimeMin`) to 1
+  *The maximum processing time of an operation (`opProcTimeMax`) to 99
+  *The utilisation of the machines, i.e. the relative proportion of time that the machines are busy, determined by the job arrival rate (`utilLevel`) to 0.8
+
+We also configure the simulation to stop after all of the first 10000 arriving jobs (with indices 0 to 9999) have been completed by setting the `stopArrivalsAfterNumJobs` parameter to the corresponding value. Alternatively, you can set the `simulationLength` parameter to stop the simulation after a certain simulated time or the `stopAfterNumJobs` to stop the simulation after a certain number of jobs (not necessarily the first arriving jobs) have been completed.
