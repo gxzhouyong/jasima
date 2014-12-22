@@ -1,4 +1,4 @@
-#summary Running multiple replications of the same experiment.
+#summary Running an experiment of the MultipleReplicationExperiment class.
 
 = Running Multiple Replications of the Same Experiment =
 
