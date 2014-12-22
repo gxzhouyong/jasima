@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Running an experiment of the FullFactorialExperiment class.
 
 = Running Multiple Replications with Varying Parameter Values =
 
