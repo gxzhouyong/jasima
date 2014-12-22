@@ -4,8 +4,8 @@
 
 In general, the appearance of the jasima® GUI depend on the chosen experiment class, and the methods that are defined within (there is a GUI field for every variable that has a “set” method defined in the class). You can find detailed instructions on how to run an instance of various experiments, covering all steps from the experimental setup to the interpretation of the results, in the following sections:
 
-  # [DynamicShopExperiment Running a job shop/flow shop experiment]
-  # [MultipleReplicationExperiment Running multiple replications of the same experiment]
-  # [FullFactorialExperiment Running multiple replications with varying parameter values]
+  # [DynamicShopExperiment Running a Job Shop/Flow Shop Experiment]
+  # [MultipleReplicationExperiment Running Multiple Replications of the Same Experiment]
+  # [FullFactorialExperiment Running Multiple Replications with Varying Parameter Values]
 
 Again, it is recommended that you work through each of these sections in the shown order as they build upon each other.
