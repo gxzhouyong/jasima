@@ -6,6 +6,8 @@ Often, simulation studies are conducted to compare a number of different setting
 
 == Experimental Design ==
 
+Set seed to 1234567809, outer seed overwrites seed of base experiment.
+
 == Run Configurations ==
 
 The experiment can be configured and run in the same way as an experiment of the `DynamicShopExperiment` class. The following section illustrates the basic structure of the resulting Excel output files. Since this is independent of the activated shop and machine listeners we only discuss one Excel file (generated with the default shop listener).
