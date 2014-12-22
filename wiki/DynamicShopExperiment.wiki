@@ -20,6 +20,7 @@ We also configure the simulation to stop after all of the first 10000 arriving j
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment1.png
 
 Note that parameters requiring integer values can also be increased and decreased by clicking on the upward and downward arrows located right of the respective field.
+
 The second type of parameters, categorical parameters, can be set to one of a number of predefined values by clicking on the field next to the parameter, which will open a drop-down menu listing the available options. In this case, we want to build a job shop model and thus select the JOB_SHOP option in the drop-down menu of the categorical `scenario` parameter.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment2.png
