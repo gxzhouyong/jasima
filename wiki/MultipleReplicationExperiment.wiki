@@ -26,7 +26,9 @@ Once jasima® has completed all 30 replications, open the Excel file. You will n
 https://jasima.googlecode.com/svn/wiki/images/MRExperiment3.png
 (screenshot showing the main experiment sheet, red circle to emphasise other sheets)
 
-As in the case of the `DynamicShopExperiment` class, the “main experiment” worksheet consists of an upper section describing the parameter setting of the simulation experiment and a lower section showing the experimental results. In addition to the parameter values that are directly related to the replication experiment, the upper section also lists all parameter values of the base experiment, which are indicated by the prefix “baseExperiment”. Note that the lower section shows the results of the replication experiment (not the base experiment), i.e. single value measures such as the number of started jobs (“numJobsStarted”) are now summarised by a statistic, where the value in the “value/mean” column is the number of started jobs averaged over the 30 replications. For statistics such as `flowtime`, only the mean is shown (as indicated by the suffix “mean”), e.g. the value in the “min” column is the minimum mean flow time of jobs obtained in any of the 30 replications. Note also that the number of counted values (or means) for these measures is 30, i.e. equal to the number of replications. Next, open the “sub-exp. overview” worksheet.
+As in the case of the `DynamicShopExperiment` class, the “main experiment” worksheet consists of an upper section describing the parameter setting of the simulation experiment and a lower section showing the experimental results. In addition to the parameter values that are directly related to the replication experiment, the upper section also lists all parameter values of the base experiment, which are indicated by the prefix “baseExperiment”. Note that the lower section shows the results of the replication experiment (not the base experiment), i.e. single value measures such as the number of started jobs (“numJobsStarted”) are now summarised by a statistic, where the value in the “value/mean” column is the number of started jobs averaged over the 30 replications. For statistics such as `flowtime`, only the mean is shown (as indicated by the suffix “mean”), e.g. the value in the “min” column is the minimum mean flow time of jobs obtained in any of the 30 replications. Note also that the number of counted values (or means) for these measures is 30, i.e. equal to the number of replications. 
+(NOT SURE WHETHER THIS IS STILL IMPORTANT: It is also possible to assign an existing experiment to the `baseExperiment` property. To do so, click on the `Load` icon and change the file filter to 'Jasima experiments'. A copy of the experiment will be made, so changes in the original file are not visible in the outer experiment's file.)
+Next, open the “sub-exp. overview” worksheet.
 
 https://jasima.googlecode.com/svn/wiki/images/MRExperiment4.png
 (screenshot showing the sub-exp. overview sheet)
@@ -37,26 +39,3 @@ https://jasima.googlecode.com/svn/wiki/images/MRExperiment5.png
 (screenshot showing the sub-exp. overview sheet)
 
 This spreadsheet provides detailed information on the results of every replication of the base experiment, where each row relates to one replication. The first two columns identify an experiment by its seed and name, followed by a number of columns showing the results of the various measures (which depend on the activated listeners). For statistics such as `flowtime`, only the mean is shown in this worksheet. The other recorded statistical values, i.e. the minimum value, the maximum value, the standard deviation of values, the number of counted values, and the sum of all values, can be found in the subsequent worksheets that have exactly the same structure.
-
-
-
-
-== Creating a MultipleReplicationExperiment using the Eclipse plugin ==
-
-Nested experiments should be created from outside to inside.
-First, create a `MultipleReplicationExperiment` using the Jasima Experiment wizard.
-Then, press the 'new' icon next to the `baseExperiment` property to create any experiment that should be run multiple times, for example `HolthausSimple2Experiment`.
-The properties of the inner experiment can be edited while the `baseExperiment` property is expanded.
-Properties belonging to the inner experiment can be recognized by the gray bar next to them.
-
-It is also possible to assign an existing experiment to the `baseExperiment` property.
-To do so, click on the `Load` icon and change the file filter to 'Jasima experiments'.
-A copy of the experiment will be made, so changes in the original file are not visible in the outer experiment's file.
-
-= FullFactorialExperiment =
-
-`FullFactorialExperiment` is another implementation of `AbstractMultiExperiment`.
-Instead of simply running an experiment a number of times, it can also vary one or more parameters between runs.
-
-Each factor name must match a property of the base experiment.
-Factors are represented as a shallow tree in the graphical editor, with each factor name containing a number of factor values.
