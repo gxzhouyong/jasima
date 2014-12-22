@@ -6,7 +6,9 @@ Often, simulation studies are conducted to compare a number of different setting
 
 == Experimental Design ==
 
-Set seed to 1234567809, outer seed overwrites seed of base experiment.
+Set processing time distribution (U[1, 49], U[15, 35]), utilisation (0.8, 0.95), scenario (JOB_SHOP, FLOW_SHOP), minimum number of operations (2, 10) as in the performance study.
+
+Set seed to 1234567809, note that outer seed overwrites seed of base experiment.
 
 == Run Configurations ==
 
