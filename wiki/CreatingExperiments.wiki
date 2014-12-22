@@ -22,4 +22,4 @@ Your experiment will appear in the project tree in the Eclipse Package Explorer.
 
 https://jasima.googlecode.com/svn/wiki/images/CreateExp4.png
 
-You can now proceed with [RunningExperiments setting up and running the experiment].
+You can now proceed with [RunningExperiments setting up and running an experiment using the GUI].
