@@ -45,15 +45,15 @@ We have now defined all the compulsory parameters of the `DynamicShopExperiment`
 
 == Run Configuration ==
 
-Before running the experiment, we need to decide on the measures and statistics that we would like jasima to return and also the output format of these results. Currently, jasima supports the XML and Excel file formats. To define the output format right-click on "!TenMachinesJobShopExperiment.jasima" and select “Run As > Jasima Simulation”.
+Before running the experiment, we need to decide on the measures and statistics that we would like jasima to return and also the output format of these results. Currently, jasima® supports the XML and Excel file formats. To define the output format right-click on "!TenMachinesJobShopExperiment.jasima" and select “Run As > Jasima Simulation”.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment7.png
 
-The run configuration window will open, in which you can set different options for the output of jasima in the “Results” section. In this example, we want the results to be printed to the console as well as written to an Excel (XLS) file, so we select both options by clicking on the respective tickboxes. You can also provide a name for the Excel file by clicking on the adjacent text field and typing in the desired name. For illustrative purposes, let us name this file “BasicResults”. Once you are done, click on “Run” to run the simulation experiment.
+The run configuration window will open, in which you can set different options for the output of jasima in the “Results” section. In this example, we want the results to be printed to the console as well as written to an Excel (XLS) file, so we select both options by clicking on the respective tickboxes. You can also provide a name for the Excel file by clicking on the adjacent text field and typing in the desired name. For illustrative purposes, let us name this file “!BasicResults”. Once you are done, click on “Run” to run the simulation experiment.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment8.png
 
-jasima will start and (depending on the chosen log level) print out a number of statements to the console that describe the progress of the simulation experiment. Once the experiment is complete, the results are printed to the console and the file “BasicResults.xls” (containing the same information) is created, which you should find in the project tree in the Eclipse Package Explorer.
+jasima® will start and (depending on the chosen log level) print out a number of statements to the console that describe the progress of the simulation experiment. Once the experiment is complete, the results are printed to the console and the file “!BasicResults.xls” (containing the same information) is created, which you should find in the project tree in the Eclipse Package Explorer.
 
 https://jasima.googlecode.com/svn/wiki/images/DSExperiment9.png
 
