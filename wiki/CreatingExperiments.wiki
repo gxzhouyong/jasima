@@ -1,4 +1,4 @@
-#summary Creating a New Experiment Using a Given Experiment Class.
+#summary Creating a New Experiment using a Given Experiment Class.
 
 = Creating a New Simulation Experiment =
 
