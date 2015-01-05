@@ -243,9 +243,16 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		};
 		form.getBody().setLayout(layout);
 
-		try {
-			IType type = getJavaProject().findType(root.getClass().getCanonicalName());
-			String doc = JavadocContentAccess2.getHTMLContent(type, true);
+		do {
+			String doc;
+			try {
+				IType type = getJavaProject().findType(root.getClass().getCanonicalName());
+				doc = JavadocContentAccess2.getHTMLContent(type, true);
+			} catch (CoreException e) {
+				break;
+			}
+			if (doc == null)
+				break;
 
 			FormTextBuilder bldr;
 
@@ -303,8 +310,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			});
 			documentation.setLayoutData(new ColumnLayoutData(0));
 			documentation.setText(summary, true, false);
-		} catch (CoreException e) {
-		}
+		} while (false); // for break
 
 		IProperty topLevelProperty = new IProperty() {
 			public void setValue(Object val) throws PropertyException {
