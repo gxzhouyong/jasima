@@ -227,9 +227,8 @@ public class LauncherParamTab extends JavaLaunchTab {
 
 			boolean hasFilename = false;
 			Arguments unparsed = new Arguments();
-			for (String arg : argsArr) {
+			for (final String arg : argsArr) {
 				String[] s = arg.split("=", 2);
-				arg = s[0];
 
 				if (s[0].equals("--log")) {
 					if (s.length > 1)
