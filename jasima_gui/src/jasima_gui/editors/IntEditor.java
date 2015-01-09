@@ -85,7 +85,7 @@ public class IntEditor extends EditorWidget implements ModifyListener {
 				type = TypeUtil.getPrimitiveWrapper(type);
 			}
 			val = type.getConstructor(String.class).newInstance(
-					String.valueOf(spinner.getSelection())); // TODO
+					String.valueOf(spinner.getSelection()));
 			if (val != null) {
 				property.setValue(val);
 			}

@@ -71,7 +71,6 @@ public class SimulationLauncher extends JavaLaunchDelegate {
 	@Override
 	public IVMRunner getVMRunner(final ILaunchConfiguration launchCfg,
 			String mode) throws CoreException {
-		// FIXME this might leave garbage if the launch is aborted
 		addDebugEventListener(launchCfg);
 		return super.getVMRunner(launchCfg, mode);
 	}
