@@ -20,6 +20,7 @@
  *******************************************************************************/
 package jasima_gui.editor;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -28,6 +29,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
 public class EditorUpdater implements IResourceChangeListener, IResourceDeltaVisitor {
@@ -57,17 +60,29 @@ public class EditorUpdater implements IResourceChangeListener, IResourceDeltaVis
 	public boolean visit(IResourceDelta delta) throws CoreException {
 		// either deleted or moved or renamed
 		if (delta.getKind() == IResourceDelta.REMOVED) {
-			IFileEditorInput inp = (IFileEditorInput) editor.getEditorInput();
+			final IFileEditorInput inp = (IFileEditorInput) editor.getEditorInput();
 			final IPath movedTo = delta.getMovedToPath();
 			if (delta.getResource().equals(inp.getFile())) {
 				editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 					@Override
 					public void run() {
+						IWorkbenchPage page = editor.getSite().getPage();
 						if (movedTo != null) {
-							editor.setFileInput(new FileEditorInput(ResourcesPlugin.getWorkspace().getRoot()
-									.getFile(movedTo)));
+							IFile newFile = ResourcesPlugin.getWorkspace().getRoot().getFile(movedTo);
+							IFileEditorInput newInput = new FileEditorInput(newFile);
+							editor.setFileInput(newInput);
+							if (!newFile.getProject().equals(inp.getFile().getProject())) {
+								if (!page.closeEditor(editor, true)) {
+									page.closeEditor(editor, false); // FIXME
+								}
+								try {
+									page.openEditor(newInput, "jasima_gui.editors.ObjectTreeEditor");
+								} catch (PartInitException e) {
+									e.printStackTrace();
+								}
+							}
 						} else {
-							editor.getSite().getPage().closeEditor(editor, false);
+							page.closeEditor(editor, false);
 						}
 					}
 				});
