@@ -121,7 +121,7 @@ public class BeanProperty implements IProperty {
 
 	@Override
 	public boolean canBeNull() {
-		return !TypeUtil.toClass(getType()).isPrimitive(); // TODO
+		return !TypeUtil.toClass(getType()).isPrimitive();
 	}
 
 	@Override
