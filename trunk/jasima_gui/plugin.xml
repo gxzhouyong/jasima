@@ -10,7 +10,6 @@
             name="jasima"
             extensions="jasima"
             icon="icons/jasima.png"
-            contributorClass="jasima_gui.editor.JasimaEditorContributor"
             class="jasima_gui.editor.TopLevelEditor"
             id="jasima_gui.editors.ObjectTreeEditor">
       </editor>
