@@ -124,6 +124,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			fei.getFile().refreshLocal(0, null);
 			InputStream is = fei.getStorage().getContents();
 			try {
+				xStream = ProjectCache.getCache(fei.getFile().getProject()).getXStream();
+				classLoader = xStream.getClassLoader();
 				root = xStream.fromXML(is);
 			} finally {
 				try {
@@ -137,11 +139,19 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		}
 	}
 
+	/**
+	 * Sets the input to this editor.
+	 * 
+	 * If the new input is contained in a different project than the old one,
+	 * the editor will not update and check the class path. In that case, the
+	 * editor should only be used to save the file and then be closed and
+	 * re-opened.
+	 * 
+	 * @param input
+	 *            the editor input
+	 */
 	protected void setFileInput(IFileEditorInput input) {
-		// FIXME moving into an incompatible project should be detected
 		project = input.getFile().getProject();
-		xStream = ProjectCache.getCache(project).getXStream();
-		classLoader = xStream.getClassLoader();
 		super.setInput(input);
 		updateHeadline();
 	}
@@ -198,7 +208,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			grid.marginTop = 10;
 			form.getBody().setLayout(grid);
 			String msg = String.format("Error reading input: %s: %s", root.getClass().getSimpleName(),
-					((Exception) root).getLocalizedMessage().replaceFirst("^ *: *", ""));
+					String.valueOf(((Exception) root).getLocalizedMessage()).replaceFirst("^ *: *", ""));
 			Label icon = toolkit.createLabel(form.getBody(), null);
 			icon.setImage(form.getDisplay().getSystemImage(SWT.ERROR));
 			toolkit.createLabel(form.getBody(), msg, SWT.WRAP);
