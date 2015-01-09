@@ -53,7 +53,7 @@ public class ProjectCache {
 
 	private final IProject project;
 	private IJavaProject javaProject = null;
-	private ClassLoader classLoader = null;
+	private Set<URL> lastClassPath = null;
 	private XStream xStream = null;
 
 	private ProjectCache(IProject project) {
@@ -67,8 +67,7 @@ public class ProjectCache {
 		return javaProject;
 	}
 
-	protected static URL toAbsolutePath(IPath path)
-			throws MalformedURLException {
+	protected static URL toAbsolutePath(IPath path) throws MalformedURLException {
 		if (path == null)
 			return null;
 		if (!path.isAbsolute() || !path.toFile().exists()) {
@@ -87,14 +86,13 @@ public class ProjectCache {
 		return path.toFile().toURI().toURL();
 	}
 
-	protected static void buildClassPath(Set<URL> cp, IJavaProject proj)
-			throws JavaModelException, MalformedURLException {
+	protected static void buildClassPath(Set<URL> cp, IJavaProject proj) throws JavaModelException,
+			MalformedURLException {
 		buildClassPath(cp, proj, false);
 	}
 
-	protected static void buildClassPath(Set<URL> cp, IJavaProject proj,
-			boolean onlyExported) throws JavaModelException,
-			MalformedURLException {
+	protected static void buildClassPath(Set<URL> cp, IJavaProject proj, boolean onlyExported)
+			throws JavaModelException, MalformedURLException {
 		IClasspathEntry[] classpath = proj.getResolvedClasspath(true);
 		cp.add(toAbsolutePath(proj.getOutputLocation()));
 		for (IClasspathEntry entry : classpath) {
@@ -107,8 +105,7 @@ public class ProjectCache {
 				// TODO should system libraries be excluded somehow?
 				cp.add(toAbsolutePath(entry.getPath()));
 			} else if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-				IProject projEntry = (IProject) ResourcesPlugin.getWorkspace()
-						.getRoot().findMember(entry.getPath());
+				IProject projEntry = (IProject) ResourcesPlugin.getWorkspace().getRoot().findMember(entry.getPath());
 				buildClassPath(cp, JavaCore.create(projEntry), true);
 			}
 		}
@@ -127,20 +124,10 @@ public class ProjectCache {
 	 * @return a class loader
 	 */
 	public ClassLoader getClassLoader() {
-		if (classLoader == null || true) {
-			// TODO until there's a good plan to detect class path changes,
-			// always rebuild classpath
-			try {
-				Set<URL> cp = new HashSet<URL>(); // we don't want duplicates
-				buildClassPath(cp, getJavaProject());
-				cp.remove(null);
-				classLoader = new URLClassLoader(cp.toArray(new URL[cp.size()]));
-			} catch (Exception e) {
-				e.printStackTrace();
-				classLoader = ClassLoader.getSystemClassLoader();
-			}
-		}
-		return classLoader;
+		XStream xs = getXStream();
+		if (xs == null)
+			return null;
+		return xs.getClassLoader();
 	}
 
 	/**
@@ -156,10 +143,19 @@ public class ProjectCache {
 	 * @return an XStream instance
 	 */
 	public XStream getXStream() {
-		// TODO see above
-		if (xStream == null || true) {
-			xStream = new XStream(new DomDriver());
-			xStream.setClassLoader(getClassLoader());
+		try {
+			Set<URL> cp = new HashSet<URL>();
+			buildClassPath(cp, getJavaProject());
+			cp.remove(null);
+			if (xStream == null || !cp.equals(lastClassPath)) {
+				xStream = new XStream(new DomDriver());
+				xStream.setClassLoader(new URLClassLoader(cp.toArray(new URL[cp.size()])));
+				lastClassPath = cp;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			xStream = null;
+			lastClassPath = null;
 		}
 		return xStream;
 	}

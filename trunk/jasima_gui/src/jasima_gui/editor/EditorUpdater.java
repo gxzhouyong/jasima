@@ -71,15 +71,17 @@ public class EditorUpdater implements IResourceChangeListener, IResourceDeltaVis
 							IFile newFile = ResourcesPlugin.getWorkspace().getRoot().getFile(movedTo);
 							IFileEditorInput newInput = new FileEditorInput(newFile);
 							editor.setFileInput(newInput);
-							if (!newFile.getProject().equals(inp.getFile().getProject())) {
-								if (!page.closeEditor(editor, true)) {
-									page.closeEditor(editor, false); // FIXME
-								}
-								try {
-									page.openEditor(newInput, "jasima_gui.editors.ObjectTreeEditor");
-								} catch (PartInitException e) {
-									e.printStackTrace();
-								}
+							if (newFile.getProject().equals(inp.getFile().getProject()))
+								return;
+
+							if (!page.closeEditor(editor, true)) {
+								if (!page.closeEditor(editor, false))
+									return;
+							}
+							try {
+								page.openEditor(newInput, "jasima_gui.editors.ObjectTreeEditor");
+							} catch (PartInitException e) {
+								e.printStackTrace();
 							}
 						} else {
 							page.closeEditor(editor, false);
