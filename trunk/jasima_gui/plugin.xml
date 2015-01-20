@@ -222,6 +222,11 @@
             name="Enum editor"
             propertyType="java.lang.Enum">
       </objectEditor>
+      <objectEditor
+            class="jasima_gui.editors.DblStreamEditor"
+            handlesLifeCycle="true"
+            propertyType="jasima.core.random.continuous.DblStream">
+      </objectEditor>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
