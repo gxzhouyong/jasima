@@ -20,18 +20,14 @@
  *******************************************************************************/
 package jasima_gui.editor;
 
-import jasima_gui.FormTextBuilder;
 import jasima_gui.JavaLinkHandler;
 import jasima_gui.ProjectCache;
+import jasima_gui.PropertyToolTip;
 import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -45,6 +41,9 @@ import org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -60,10 +59,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.ColumnLayoutData;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.EditorPart;
@@ -74,9 +69,10 @@ import com.thoughtworks.xstream.XStream;
 @SuppressWarnings("restriction")
 public class TopLevelEditor extends EditorPart implements SelectionListener {
 
-	public static final String CLASS_URL_PREFIX = "jasima-javaclass:";
-	public static final String HREF_MORE = "jasima-command:more";
-	public static final String HREF_LESS = "jasima-command:less";
+	protected static final String CLASS_URL_PREFIX = "jasima-javaclass:";
+	protected static final String HREF_MORE = "jasima-command:more";
+	protected static final String HREF_LESS = "jasima-command:less";
+	protected static final int MAX_DESCRIPTION_HEIGHT = 200;
 	private EditorUpdater updater;
 	private Object root;
 	private FormToolkit toolkit = null;
@@ -231,7 +227,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 				retVal.y += VMARGIN;
 				for (Control c : composite.getChildren()) {
 					retVal.y += SPACING;
-					retVal.y += c.computeSize(retVal.x, SWT.DEFAULT).y;
+					retVal.y += determineSize(c, SWT.DEFAULT).y;
 				}
 				retVal.y += VMARGIN - SPACING;
 				retVal.x = 0;
@@ -243,12 +239,22 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 				int w = composite.getSize().x - 2 * HMARGIN;
 				int posY = VMARGIN;
 				for (Control c : composite.getChildren()) {
-					Point size = c.computeSize(w, SWT.DEFAULT);
+					Point size = determineSize(c, w);
 					c.setSize(size);
 					c.setLocation(HMARGIN, posY);
 					posY += size.y;
 					posY += SPACING;
 				}
+			}
+
+			protected Point determineSize(Control c, int width) {
+				Object ld = c.getLayoutData();
+				if (ld instanceof Point) {
+					Point p = (Point) ld;
+					int wHint = (p.x == SWT.DEFAULT) ? width : p.x;
+					return c.computeSize(wHint, p.y);
+				}
+				return c.computeSize(width, SWT.DEFAULT);
 			}
 		};
 		form.getBody().setLayout(layout);
@@ -261,65 +267,45 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			} catch (CoreException e) {
 				break;
 			}
+
 			if (doc == null)
 				break;
 
-			FormTextBuilder bldr;
+			final Point browserLayoutData = new Point(SWT.DEFAULT, MAX_DESCRIPTION_HEIGHT);
+			final Browser browser = new Browser(form.getBody(), SWT.NONE);
+			browser.setLayoutData(browserLayoutData);
+			StringBuilder htmlDoc = new StringBuilder();
+			htmlDoc.append("<!DOCTYPE html><html><head>" //
+					+ "<title>Tooltip</title><style type='text/css'>");
+			htmlDoc.append(PropertyToolTip.getJavadocStylesheet());
+			htmlDoc.append("html {padding: 0px; margin: 0px} " //
+					+ "body {padding: 0px; margin: 0px} " //
+					+ "dl {margin: 0px} " //
+					+ "dt {margin-top: 0.5em}");
+			htmlDoc.append("</style></head><body><div>");
+			htmlDoc.append(doc);
+			htmlDoc.append("</div></body></html>");
+			browser.setText(htmlDoc.toString(), false);
 
-			bldr = new FormTextBuilder();
-			bldr.parseBadHtml(doc);
-			bldr.startParagraph();
-			bldr.startLink(HREF_LESS);
-			bldr.addText("Hide detailed description");
-			bldr.finishLink();
-			final String longDescription = bldr.finish();
-
-			bldr = new FormTextBuilder();
-			bldr.parseBadHtml(doc.substring(0, doc.indexOf('.') + 1));
-			bldr.addText(" ");
-			bldr.startLink(HREF_MORE);
-			bldr.addText("more");
-			bldr.finishLink();
-			final String summary = bldr.finish();
-
-			final FormText documentation = toolkit.createFormText(form.getBody(), true);
-			documentation.addHyperlinkListener(new IHyperlinkListener() {
-
+			browser.addProgressListener(new ProgressListener() {
 				@Override
-				public void linkExited(HyperlinkEvent evt) {
+				public void completed(ProgressEvent event) {
+					Double height = (Double) browser
+							.evaluate("return parseInt(document.body.getBoundingClientRect().height)");
+					if (height == null)
+						return;
+					browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT, (int) Math.ceil(height));
+					form.getBody().layout(true, true);
+					form.reflow(true);
 				}
 
 				@Override
-				public void linkEntered(HyperlinkEvent evt) {
-				}
-
-				@Override
-				public void linkActivated(HyperlinkEvent evt) {
-					String href = evt.getHref().toString();
-					if (href.equals(HREF_MORE)) {
-						documentation.setText(longDescription, true, false);
-						form.getBody().layout(true, true);
-						form.reflow(true);
-					} else if (href.equals(HREF_LESS)) {
-						documentation.setText(summary, true, false);
-						form.getBody().layout(true, true);
-						form.reflow(true);
-					} else {
-						try {
-							IJavaElement el = JavaElementLinks.parseURI(new URI(href));
-							if (el == null) {
-								JavaLinkHandler.openURL(new URL(href));
-							} else {
-								JavaLinkHandler.openJavadoc(el);
-							}
-						} catch (MalformedURLException e) {
-						} catch (URISyntaxException e) {
-						}
-					}
+				public void changed(ProgressEvent event) {
+					// ignore
 				}
 			});
-			documentation.setLayoutData(new ColumnLayoutData(0));
-			documentation.setText(summary, true, false);
+
+			browser.addLocationListener(JavaElementLinks.createLocationListener(new JavaLinkHandler()));
 		} while (false); // for break
 
 		IProperty topLevelProperty = new IProperty() {
