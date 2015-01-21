@@ -51,7 +51,7 @@ public class PropertyToolTip extends ToolTip {
 
 	protected static String javadocStylesheet = null;
 
-	protected static String getJavadocStylesheet() {
+	public static String getJavadocStylesheet() {
 		if (javadocStylesheet != null)
 			return javadocStylesheet;
 		try {
