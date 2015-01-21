@@ -42,6 +42,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class ProjectCache {
 	private static final Map<IProject, ProjectCache> cache = new WeakHashMap<IProject, ProjectCache>();
+	private static final boolean DISABLE_CACHE = true;
 
 	public static ProjectCache getCache(IProject project) {
 		ProjectCache retVal = cache.get(project);
@@ -147,7 +148,7 @@ public class ProjectCache {
 			Set<URL> cp = new HashSet<URL>();
 			buildClassPath(cp, getJavaProject());
 			cp.remove(null);
-			if (xStream == null || !cp.equals(lastClassPath)) {
+			if (DISABLE_CACHE || xStream == null || !cp.equals(lastClassPath)) {
 				xStream = new XStream(new DomDriver());
 				xStream.setClassLoader(new URLClassLoader(cp.toArray(new URL[cp.size()])));
 				lastClassPath = cp;
