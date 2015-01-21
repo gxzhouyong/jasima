@@ -22,6 +22,7 @@ package jasima_gui;
 
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.action.Action;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandImageService;
 import org.eclipse.ui.commands.ICommandService;
@@ -33,11 +34,13 @@ public class JasimaAction extends Action {
 			if (id.startsWith("...")) {
 				id = "jasima_gui.commands." + id.substring(3);
 			}
-			setText(((ICommandService) PlatformUI.getWorkbench().getService(
-					ICommandService.class)).getCommand(id).getName());
-			setImageDescriptor(((ICommandImageService) PlatformUI
-					.getWorkbench().getService(ICommandImageService.class))
-					.getImageDescriptor(id));
+
+			IWorkbench wb = PlatformUI.getWorkbench();
+			ICommandService commandService = (ICommandService) wb.getService(ICommandService.class);
+			ICommandImageService commandImageService = (ICommandImageService) wb.getService(ICommandImageService.class);
+
+			setText(commandService.getCommand(id).getName());
+			setImageDescriptor(commandImageService.getImageDescriptor(id));
 		} catch (NotDefinedException e) {
 			throw new RuntimeException(e);
 		}
