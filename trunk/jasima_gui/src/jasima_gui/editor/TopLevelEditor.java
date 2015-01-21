@@ -291,7 +291,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 				@Override
 				public void completed(ProgressEvent event) {
 					Double height = (Double) browser
-							.evaluate("return parseInt(document.body.getBoundingClientRect().height)");
+							.evaluate("return document.body.getBoundingClientRect().height");
 					if (height == null)
 						return;
 					browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT, (int) Math.ceil(height));
