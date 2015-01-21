@@ -154,7 +154,7 @@ public class PropertyToolTip extends ToolTip {
 		}
 
 		htmlDoc.append("</div></body></html>");
-		browser.setText(htmlDoc.toString(), true);
+		browser.setText(htmlDoc.toString(), false);
 
 		browser.addLocationListener(JavaElementLinks.createLocationListener(new JavaLinkHandler() {
 			public void linkOpened() {
