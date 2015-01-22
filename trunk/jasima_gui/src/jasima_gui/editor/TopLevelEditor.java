@@ -310,13 +310,16 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 			final Point browserLayoutData = new Point(SWT.DEFAULT, MAX_DESCRIPTION_HEIGHT);
 			final Browser browser = new Browser(form.getBody(), SWT.NONE);
+			final String getHeight = browser.getBrowserType().equals("ie") //
+					? "return document.body.getBoundingClientRect().height"
+					: "return document.documentElement.scrollHeight";
+
 			browser.setLayoutData(browserLayoutData);
 			browser.setText(buildDocument(finalSummary), false);
 
 			browser.addProgressListener(new ProgressListener() {
 				@Override
 				public void completed(ProgressEvent event) {
-					String getHeight = "return document.documentElement.scrollHeight";
 					Double height = (Double) browser.evaluate(getHeight);
 					if (height == null)
 						return;
