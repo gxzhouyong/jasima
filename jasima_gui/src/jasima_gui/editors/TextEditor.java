@@ -71,6 +71,10 @@ public class TextEditor extends EditorWidget implements FocusListener,
 
 	@Override
 	public void setEnabled(boolean enabled) {
+		if (btnNull != null) {
+			btnNull.setEnabled(enabled && property.isWritable());
+			enabled &= !btnNull.getSelection();
+		}
 		text.setEnabled(enabled);
 	}
 
