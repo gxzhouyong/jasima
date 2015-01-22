@@ -130,10 +130,11 @@ public class TextEditor extends EditorWidget implements FocusListener,
 				text.setEnabled(val != null);
 				btnNull.setSelection(val == null);
 			}
-			dirty = false;
 		} catch (PropertyException e) {
 			showError(e.getLocalizedMessage());
 			text.setText("?");
+		} finally {
+			dirty = false;
 		}
 	}
 
