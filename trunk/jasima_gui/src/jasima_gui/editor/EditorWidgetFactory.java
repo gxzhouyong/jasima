@@ -247,7 +247,7 @@ public class EditorWidgetFactory {
 			}
 
 			Composite col2 = tle.getToolkit().createComposite(parent);
-			GridLayout hdrLayout = new GridLayout(3, false);
+			GridLayout hdrLayout = new GridLayout(2, false);
 			hdrLayout.marginWidth = hdrLayout.marginHeight = 0;
 			hdrLayout.horizontalSpacing = 10;
 			col2.setLayout(hdrLayout);
@@ -265,13 +265,11 @@ public class EditorWidgetFactory {
 			Control toolBar = editor.getToolBar();
 			if (toolBar != null) {
 				toolBar.setParent(col2);
-				GridDataFactory.swtDefaults().grab(true, false)
-						.applyTo(lblStatus);
-				GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER)
-						.applyTo(toolBar);
+				GridDataFactory.swtDefaults().grab(true, false) //
+						.align(SWT.FILL, SWT.CENTER).applyTo(lblStatus);
 			} else {
-				GridDataFactory.swtDefaults().span(2, 1).grab(true, false)
-						.applyTo(lblStatus);
+				GridDataFactory.swtDefaults().grab(true, false) //
+						.align(SWT.FILL, SWT.CENTER).span(2, 1).applyTo(lblStatus);
 			}
 
 			final Composite client = tle.getToolkit().createComposite(parent);
