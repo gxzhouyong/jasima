@@ -107,12 +107,13 @@ public abstract class FormProperty {
 			error = e;
 		} else {
 			error = null;
+			if (!Objects.equals(value, newValue)) {
+				value = newValue;
+				isDirty = true;
+			}
 		}
 
-		if (owner.checkGlobalConstraints() && !Objects.equals(value, newValue)) {
-			value = newValue;
-			isDirty = true;
-		}
+		owner.checkGlobalConstraints();
 	}
 
 	public Object getValue() {
