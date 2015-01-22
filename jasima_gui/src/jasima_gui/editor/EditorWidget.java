@@ -61,7 +61,7 @@ public abstract class EditorWidget extends Composite {
 	}
 
 	/**
-	 * This method must be overriden and used to create the user interface of
+	 * This method must be overridden and used to create the user interface of
 	 * the editor. It is called after initialize.
 	 */
 	public abstract void createControls();
