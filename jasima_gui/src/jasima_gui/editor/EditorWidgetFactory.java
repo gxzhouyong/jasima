@@ -254,8 +254,7 @@ public class EditorWidgetFactory {
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(col2);
 
 			final Label lblStatus = tle.getToolkit().createLabel(col2, "", 0);
-			lblStatus.setForeground(new Color(lblStatus.getDisplay(), new RGB(
-					0x80, 0x80, 0x80)));
+			lblStatus.setForeground(lblStatus.getDisplay().getSystemColor(SWT.COLOR_GRAY));
 			editor.addEditorListener(new EditorListener() {
 				@Override
 				public void statusTextChanged(String statusText) {
