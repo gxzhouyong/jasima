@@ -290,8 +290,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			browser.addProgressListener(new ProgressListener() {
 				@Override
 				public void completed(ProgressEvent event) {
-					Double height = (Double) browser
-							.evaluate("return document.body.getBoundingClientRect().height");
+					String getHeight = "return document.documentElement.scrollHeight";
+					Double height = (Double) browser.evaluate(getHeight);
 					if (height == null)
 						return;
 					browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT, (int) Math.ceil(height));
