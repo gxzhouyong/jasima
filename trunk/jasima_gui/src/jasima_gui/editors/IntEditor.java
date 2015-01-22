@@ -24,27 +24,47 @@ import jasima_gui.editor.EditorWidget;
 import jasima_gui.editor.PropertyException;
 import jasima_gui.util.TypeUtil;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 
-public class IntEditor extends EditorWidget implements ModifyListener {
+public class IntEditor extends EditorWidget implements FocusListener, ModifyListener, SelectionListener {
 
+	private Button btnNull = null;
 	private Spinner spinner;
 	private boolean modifying = false;
+	private boolean dirty = false;
 
 	public IntEditor(Composite parent) {
 		super(parent);
 	}
 
 	public void createControls() {
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginHeight = layout.marginWidth = 0;
+		setLayout(layout);
+
 		spinner = new Spinner(this, SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(spinner);
 		spinner.setValues(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 1, 50);
 		toolkit.adapt(spinner, true, true);
+		spinner.addFocusListener(this);
 		spinner.setEnabled(property.isWritable());
 		spinner.addModifyListener(this);
+		if (property.canBeNull() && property.isWritable()) {
+			layout.numColumns = 2;
+			btnNull = toolkit.createButton(this, "null", SWT.CHECK);
+			btnNull.addSelectionListener(this);
+		}
 	}
 
 	@Override
@@ -56,7 +76,49 @@ public class IntEditor extends EditorWidget implements ModifyListener {
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		spinner.setEnabled(enabled && property.isWritable());
+		enabled &= property.isWritable();
+		if (btnNull != null) {
+			btnNull.setEnabled(enabled);
+			enabled &= !btnNull.getSelection();
+		}
+		spinner.setEnabled(enabled);
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		// ignore
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (!property.isWritable())
+			return;
+		if (!dirty)
+			return;
+		try {
+			storeValue();
+		} finally {
+			loadValue();
+		}
+	}
+
+	@Override
+	public void widgetDefaultSelected(SelectionEvent e) {
+		// ignore
+	}
+
+	@Override
+	public void widgetSelected(SelectionEvent e) {
+		assert e.widget == btnNull;
+		boolean nullSelected = btnNull.getSelection();
+		spinner.setEnabled(!nullSelected);
+		spinner.setSelection(0);
+		if (!nullSelected) {
+			dirty = true;
+			spinner.setFocus();
+		} else {
+			storeValue();
+		}
 	}
 
 	@Override
@@ -73,6 +135,7 @@ public class IntEditor extends EditorWidget implements ModifyListener {
 		} else {
 			spinner.setSelection(num.intValue());
 		}
+		dirty = false;
 		modifying = false;
 	}
 
@@ -84,11 +147,11 @@ public class IntEditor extends EditorWidget implements ModifyListener {
 			if (type.isPrimitive()) {
 				type = TypeUtil.getPrimitiveWrapper(type);
 			}
-			val = type.getConstructor(String.class).newInstance(
-					String.valueOf(spinner.getSelection()));
+			val = type.getConstructor(String.class).newInstance(String.valueOf(spinner.getSelection()));
 			if (val != null) {
 				property.setValue(val);
 			}
+			dirty = false;
 			hideError();
 		} catch (Exception ex) {
 			showError(ex.getLocalizedMessage());
