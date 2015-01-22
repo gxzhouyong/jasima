@@ -60,6 +60,8 @@ public abstract class DetailsPageBase implements IDetailsPage {
 
 	boolean disableModifyEvent = false;
 
+	protected Section section;
+
 	public DetailsPageBase() {
 		super();
 		props = new LinkedHashMap<String, FormProperty>();
@@ -93,6 +95,10 @@ public abstract class DetailsPageBase implements IDetailsPage {
 		return p;
 	}
 
+	public FormProperty getProperty(String propName) {
+		return props.get(propName);
+	}
+
 	@Override
 	public void initialize(IManagedForm form) {
 		this.mForm = form;
@@ -115,8 +121,7 @@ public abstract class DetailsPageBase implements IDetailsPage {
 	public void createContents(Composite parent) {
 		parent.setLayout(new FillLayout());
 
-		// Creating the Screen
-		Section section = toolkit.createSection(parent, Section.DESCRIPTION
+		section = toolkit.createSection(parent, Section.DESCRIPTION
 				| Section.TITLE_BAR);
 		section.setText(getTitle());
 		section.setDescription(getDescription());
@@ -175,13 +180,17 @@ public abstract class DetailsPageBase implements IDetailsPage {
 		} finally {
 			disableModifyEvent = false;
 
-			// force validating constraints
-			for (FormProperty p : props.values()) {
-				p.updateModel();
-			}
+			updateModel();
 		}
 
 		return false;
+	}
+
+	protected void updateModel() {
+		// force validating constraints
+		for (FormProperty p : props.values()) {
+			p.updateModel();
+		}
 	}
 
 	@Override
@@ -246,6 +255,8 @@ public abstract class DetailsPageBase implements IDetailsPage {
 	}
 
 	public boolean checkGlobalConstraints() {
+		hideError();
+
 		// any local error?
 		boolean anyError = false;
 		for (FormProperty p : props.values()) {
@@ -294,14 +305,17 @@ public abstract class DetailsPageBase implements IDetailsPage {
 				}
 			} else {
 				anyError = false;
-				master.getManagedForm().getForm()
-						.setMessage(null, IMessageProvider.NONE);
 			}
 		}
 
 		master.okButton.setEnabled(!anyError);
 
 		return !anyError;
+	}
+
+	private void hideError() {
+		master.getManagedForm().getForm()
+				.setMessage(null, IMessageProvider.NONE);
 	}
 
 	public MasterBlock getMaster() {

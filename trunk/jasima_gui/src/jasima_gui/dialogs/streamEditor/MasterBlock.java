@@ -4,9 +4,11 @@ import java.util.HashMap;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -60,10 +62,13 @@ public class MasterBlock extends MasterDetailsBlock {
 
 		Table t = toolkit.createTable(section, SWT.NONE);
 		section.setClient(t);
+		TableLayout tableLayout = new TableLayout();
+		tableLayout.addColumnData(new ColumnPixelData(200));
+		t.setLayout(tableLayout);
 
 		viewer = new TableViewer(t);
 		TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
-		viewerColumn.getColumn().setWidth(200);
+//		viewerColumn.getColumn().setWidth(200);
 
 		viewerColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override

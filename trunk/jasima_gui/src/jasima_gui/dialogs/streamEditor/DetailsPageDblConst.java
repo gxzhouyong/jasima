@@ -2,7 +2,7 @@ package jasima_gui.dialogs.streamEditor;
 
 public class DetailsPageDblConst extends DetailsPageBase {
 
-	public static final String TITLE = "Constant numbers";
+	public static final String TITLE = "Constant real numbers";
 	public static final String DESCRIPTION = "Defines a list of repeating real numbers.";
 	public static final String INPUT_TYPE = "jasima.shopSim.util.modelDef.streams.DblConstDef";
 

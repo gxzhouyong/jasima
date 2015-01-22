@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 
 public class StreamEditorUtil {
 
+	private static final String LIST_DELIMS = ", \t\r\n";
 	@SuppressWarnings("unchecked")
 	public static Class<DetailsPageBase>[] TYPES_ALL = new Class[] {
 			DetailsPageDblUniform.class, DetailsPageDblExp.class,
@@ -93,7 +94,7 @@ public class StreamEditorUtil {
 	 */
 	public static int[] parseIntList(String list) {
 		ArrayList<Integer> res = new ArrayList<Integer>();
-		StringTokenizer st = new StringTokenizer(list, ",");
+		StringTokenizer st = new StringTokenizer(list, LIST_DELIMS);
 		while (st.hasMoreElements()) {
 			int v = Integer.parseInt(st.nextToken().trim());
 			res.add(v);
@@ -113,7 +114,7 @@ public class StreamEditorUtil {
 	 */
 	public static double[] parseDblList(String s) {
 		ArrayList<Double> ll = new ArrayList<Double>();
-		StringTokenizer st = new StringTokenizer(s, ",");
+		StringTokenizer st = new StringTokenizer(s, LIST_DELIMS);
 		while (st.hasMoreElements()) {
 			double v = Double.parseDouble(st.nextToken().trim());
 			ll.add(v);
