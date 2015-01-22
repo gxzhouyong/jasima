@@ -26,10 +26,8 @@ import jasima_gui.editor.PropertyException;
 import jasima_gui.util.TypeUtil;
 
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Hyperlink;
@@ -88,8 +86,7 @@ public class ClassEditor extends EditorWidget implements IHyperlinkListener {
 	public void linkActivated(HyperlinkEvent evt) {
 		try {
 			Class<?> val = (Class<?>) property.getValue();
-			IJavaElement elem = topLevelEditor.getJavaProject().findType(
-					val.getCanonicalName());
+			IJavaElement elem = topLevelEditor.getJavaProject().findType(val.getCanonicalName());
 			JavaLinkHandler.openJavadoc(elem);
 		} catch (Exception e) {
 			// ignore
