@@ -72,7 +72,6 @@ import com.thoughtworks.xstream.XStream;
 public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	protected static final String CLASS_URL_PREFIX = "jasima-javaclass:";
-	protected static final String DUMMY_URL = "about:invalid";
 	protected static final String HREF_MORE = "jasima-command:more";
 	protected static final String HREF_LESS = "jasima-command:less";
 	protected static final int MAX_DESCRIPTION_HEIGHT = 200;
@@ -337,18 +336,10 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			browser.addLocationListener(new LocationListener() {
 				@Override
 				public void changing(LocationEvent event) {
-					if (event.location.equals(DUMMY_URL))
-						return;
-
-					// when calling setText, first navigate to DUMMY_URL,
-					// hopefully firing ProgressListener.completed on MSIE
-
 					if (event.location.equals(HREF_LESS)) {
-						browser.setUrl(DUMMY_URL);
 						browser.setText(buildDocument(finalSummary), false);
 						event.doit = false;
 					} else if (event.location.equals(HREF_MORE)) {
-						browser.setUrl(DUMMY_URL);
 						browser.setText(buildDocument(finalDoc), false);
 						event.doit = false;
 					} else {
