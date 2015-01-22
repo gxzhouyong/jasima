@@ -39,7 +39,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-public class TextEditor extends EditorWidget implements FocusListener, ModifyListener, SelectionListener {
+public class TextEditor extends EditorWidget implements FocusListener,
+		ModifyListener, SelectionListener {
 
 	private Text text;
 	private Button btnNull = null;
@@ -54,7 +55,8 @@ public class TextEditor extends EditorWidget implements FocusListener, ModifyLis
 		layout.marginHeight = layout.marginWidth = 0;
 		setLayout(layout);
 
-		text = toolkit.createText(this, "", property.isWritable() ? SWT.BORDER : 0);
+		text = toolkit.createText(this, "", property.isWritable() ? SWT.BORDER
+				: 0);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(text);
 		text.setEditable(property.isWritable());
 		text.addFocusListener(this);
@@ -147,12 +149,17 @@ public class TextEditor extends EditorWidget implements FocusListener, ModifyLis
 			}
 			if (Number.class.isAssignableFrom(type)) {
 				try {
-					val = type.getConstructor(String.class).newInstance(text.getText());
+					val = type.getConstructor(String.class).newInstance(
+							text.getText());
 				} catch (InvocationTargetException ex) {
 					return;
 				}
 			} else if (type == String.class) {
 				val = text.getText();
+			} else if (type == Character.class) {
+				if (text.getText().length() > 0) {
+					val = text.getText().charAt(0);
+				}
 			}
 			if (val != null) {
 				property.setValue(val);

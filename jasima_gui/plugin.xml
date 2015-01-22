@@ -213,6 +213,7 @@
       </objectEditor>
       <objectEditor
             class="jasima_gui.editors.TextEditor"
+            handlesLifeCycle="true"
             name="Number editor"
             propertyType="java.lang.Number">
       </objectEditor>
@@ -226,6 +227,12 @@
             class="jasima_gui.editors.DblStreamEditor"
             handlesLifeCycle="true"
             propertyType="jasima.core.random.continuous.DblStream">
+      </objectEditor>
+      <objectEditor
+            class="jasima_gui.editors.TextEditor"
+            handlesLifeCycle="true"
+            name="Character editor"
+            propertyType="java.lang.Character">
       </objectEditor>
    </extension>
    <extension
