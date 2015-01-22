@@ -173,6 +173,9 @@ public abstract class EditorWidget extends Composite {
 	protected void showError(String message) {
 		if (message != null && (message = message.trim()).isEmpty())
 			message = null;
+		if(message == null && getScrolledForm().getMessageType() == IMessageProvider.NONE) {
+			return;
+		}
 		getScrolledForm().setMessage(
 				message,
 				message == null ? IMessageProvider.NONE
