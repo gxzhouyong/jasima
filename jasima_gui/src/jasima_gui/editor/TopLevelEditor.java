@@ -42,6 +42,8 @@ import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -191,6 +193,21 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		toolkit.decorateFormHeading(form.getForm());
 	}
 
+	protected static String buildDocument(String javadoc) {
+		StringBuilder htmlDoc = new StringBuilder();
+		htmlDoc.append("<!DOCTYPE html><html><head>" //
+				+ "<title>Tooltip</title><style type='text/css'>");
+		htmlDoc.append(PropertyToolTip.getJavadocStylesheet());
+		htmlDoc.append("html {padding: 0px; margin: 0px} " //
+				+ "body {padding: 0px; margin: 0px} " //
+				+ "dl {margin: 0px} " //
+				+ "dt {margin-top: 0.5em}");
+		htmlDoc.append("</style></head><body><div id=\"jasima-content\">");
+		htmlDoc.append(javadoc);
+		htmlDoc.append("</div></body></html>");
+		return htmlDoc.toString();
+	}
+
 	@Override
 	public void createPartControl(Composite parent) {
 		toolkit = new FormToolkit(parent.getDisplay());
@@ -271,21 +288,30 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			if (doc == null)
 				break;
 
+			int summaryEnd = doc.indexOf(". ") + 1;
+			if (summaryEnd == 0) {
+				summaryEnd = doc.indexOf(".\n") + 1;
+			}
+			if (summaryEnd == 0) {
+				summaryEnd = doc.indexOf("<dl>");
+			}
+			String summary = doc;
+			if (summaryEnd != -1) {
+				summary = doc.substring(0, summaryEnd).trim();
+				if (summary.isEmpty()) {
+					summary = "<span style=\"color:#888\">No Javadoc summary.</span>";
+				}
+				summary += String.format(" <a href=\"%s\">%s</a>", HREF_MORE, "more");
+				doc += String.format("<br><a href=\"%s\">%s</a>", HREF_LESS, "Hide detailed description");
+			}
+
+			final String finalSummary = summary;
+			final String finalDoc = doc;
+
 			final Point browserLayoutData = new Point(SWT.DEFAULT, MAX_DESCRIPTION_HEIGHT);
 			final Browser browser = new Browser(form.getBody(), SWT.NONE);
 			browser.setLayoutData(browserLayoutData);
-			StringBuilder htmlDoc = new StringBuilder();
-			htmlDoc.append("<!DOCTYPE html><html><head>" //
-					+ "<title>Tooltip</title><style type='text/css'>");
-			htmlDoc.append(PropertyToolTip.getJavadocStylesheet());
-			htmlDoc.append("html {padding: 0px; margin: 0px} " //
-					+ "body {padding: 0px; margin: 0px} " //
-					+ "dl {margin: 0px} " //
-					+ "dt {margin-top: 0.5em}");
-			htmlDoc.append("</style></head><body><div>");
-			htmlDoc.append(doc);
-			htmlDoc.append("</div></body></html>");
-			browser.setText(htmlDoc.toString(), false);
+			browser.setText(buildDocument(finalSummary), false);
 
 			browser.addProgressListener(new ProgressListener() {
 				@Override
@@ -305,7 +331,26 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 				}
 			});
 
-			browser.addLocationListener(JavaElementLinks.createLocationListener(new JavaLinkHandler()));
+			final LocationListener linkHandler = JavaElementLinks.createLocationListener(new JavaLinkHandler());
+
+			browser.addLocationListener(new LocationListener() {
+				@Override
+				public void changing(LocationEvent event) {
+					if (event.location.equals(HREF_LESS)) {
+						browser.setText(buildDocument(finalSummary), false);
+						event.doit = false;
+					} else if (event.location.equals(HREF_MORE)) {
+						browser.setText(buildDocument(finalDoc), false);
+						event.doit = false;
+					} else {
+						linkHandler.changing(event);
+					}
+				}
+
+				public void changed(LocationEvent event) {
+					linkHandler.changed(event);
+				}
+			});
 		} while (false); // for break
 
 		IProperty topLevelProperty = new IProperty() {
