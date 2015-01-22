@@ -147,7 +147,9 @@ public class TextEditor extends EditorWidget implements FocusListener,
 			if (type.isPrimitive()) {
 				type = TypeUtil.getPrimitiveWrapper(type);
 			}
-			if (Number.class.isAssignableFrom(type)) {
+			if (type == Number.class) {
+				val = Double.valueOf(text.getText());
+			} else if (Number.class.isAssignableFrom(type)) {
 				try {
 					val = type.getConstructor(String.class).newInstance(
 							text.getText());
