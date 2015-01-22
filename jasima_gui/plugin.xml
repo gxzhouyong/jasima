@@ -213,7 +213,7 @@
       </objectEditor>
       <objectEditor
             class="jasima_gui.editors.TextEditor"
-            handlesLifeCycle="true"
+            handlesLifeCycle="false"
             name="Number editor"
             propertyType="java.lang.Number">
       </objectEditor>
@@ -233,6 +233,36 @@
             handlesLifeCycle="true"
             name="Character editor"
             propertyType="java.lang.Character">
+      </objectEditor>
+      <objectEditor
+            class="jasima_gui.editors.TextEditor"
+            handlesLifeCycle="true"
+            name="Long editor"
+            propertyType="java.lang.Long">
+      </objectEditor>
+      <objectEditor
+            class="jasima_gui.editors.TextEditor"
+            handlesLifeCycle="true"
+            name="Short editor"
+            propertyType="java.lang.Short">
+      </objectEditor>
+      <objectEditor
+            class="jasima_gui.editors.TextEditor"
+            handlesLifeCycle="true"
+            name="Byte editor"
+            propertyType="java.lang.Byte">
+      </objectEditor>
+      <objectEditor
+            class="jasima_gui.editors.TextEditor"
+            handlesLifeCycle="true"
+            name="Double editor"
+            propertyType="java.lang.Double">
+      </objectEditor>
+      <objectEditor
+            class="jasima_gui.editors.TextEditor"
+            handlesLifeCycle="true"
+            name="Float editor"
+            propertyType="java.lang.Float">
       </objectEditor>
    </extension>
    <extension
