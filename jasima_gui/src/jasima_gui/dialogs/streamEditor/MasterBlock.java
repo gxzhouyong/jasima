@@ -60,15 +60,15 @@ public class MasterBlock extends MasterDetailsBlock {
 
 		final SectionPart sectionPart = new SectionPart(section);
 
-		Table t = toolkit.createTable(section, SWT.NONE);
+		Table t = toolkit.createTable(section, SWT.BORDER);
 		section.setClient(t);
 		TableLayout tableLayout = new TableLayout();
 		tableLayout.addColumnData(new ColumnPixelData(200));
 		t.setLayout(tableLayout);
-
+		
 		viewer = new TableViewer(t);
 		TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
-//		viewerColumn.getColumn().setWidth(200);
+		viewerColumn.getColumn().setWidth(200);
 
 		viewerColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
