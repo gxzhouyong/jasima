@@ -366,16 +366,19 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		final Browser browser = new Browser(form.getBody(), SWT.NONE);
 		browser.setLayoutData(browserLayoutData);
 		browser.setText(summaryDoc, false);
-		// find out height of rendered Browser contents
+
+		final String getHeight = browser.getBrowserType().equals("webkit") //
+				? "return document.documentElement.scrollHeight" //
+				: "return document.getElementById(\"jasima-content\").scrollHeight + 1";
+
+		// automatically resize the Browser to match its contents
 		browser.addProgressListener(new ProgressListener() {
 			@Override
 			public void completed(ProgressEvent event) {
-				String getHeight = "return document.getElementById(\"jasima-content\").scrollHeight";
 				Double height = (Double) browser.evaluate(getHeight);
 				if (height == null)
 					return;
-				browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT,
-						((int) Math.ceil(height)) + 1);
+				browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT, ((int) Math.ceil(height)));
 				form.getBody().layout(true, true);
 				form.reflow(true);
 			}
