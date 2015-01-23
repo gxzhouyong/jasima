@@ -72,6 +72,7 @@ import com.thoughtworks.xstream.XStream;
 public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	protected static final String CLASS_URL_PREFIX = "jasima-javaclass:";
+	protected static final String DUMMY_URL = "about:invalid";
 	protected static final String HREF_MORE = "jasima-command:more";
 	protected static final String HREF_LESS = "jasima-command:less";
 	protected static final int MAX_DESCRIPTION_HEIGHT = 200;
@@ -114,7 +115,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
 		try {
 			IFileEditorInput fei = (IFileEditorInput) input;
 			setFileInput(fei);
@@ -122,7 +124,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			fei.getFile().refreshLocal(0, null);
 			InputStream is = fei.getStorage().getContents();
 			try {
-				xStream = ProjectCache.getCache(fei.getFile().getProject()).getXStream();
+				xStream = ProjectCache.getCache(fei.getFile().getProject())
+						.getXStream();
 				classLoader = xStream.getClassLoader();
 				root = xStream.fromXML(is);
 			} finally {
@@ -179,8 +182,10 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		headline.setBackground(null);
 		headline.setFont(form.getFont());
 		if (isValidData()) {
-			headline.setText(String.format("%s - <a href=\"%s%s\">%s</a>", getEditorInput().getName(),
-					CLASS_URL_PREFIX, root.getClass().getCanonicalName(), root.getClass().getSimpleName()));
+			headline.setText(String.format("%s - <a href=\"%s%s\">%s</a>",
+					getEditorInput().getName(), CLASS_URL_PREFIX, root
+							.getClass().getCanonicalName(), root.getClass()
+							.getSimpleName()));
 		} else {
 			headline.setText(getEditorInput().getName());
 		}
@@ -220,8 +225,10 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			GridLayout grid = new GridLayout(2, false);
 			grid.marginTop = 10;
 			form.getBody().setLayout(grid);
-			String msg = String.format("Error reading input: %s: %s", root.getClass().getSimpleName(),
-					String.valueOf(((Exception) root).getLocalizedMessage()).replaceFirst("^ *: *", ""));
+			String msg = String.format("Error reading input: %s: %s", root
+					.getClass().getSimpleName(),
+					String.valueOf(((Exception) root).getLocalizedMessage())
+							.replaceFirst("^ *: *", ""));
 			Label icon = toolkit.createLabel(form.getBody(), null);
 			icon.setImage(form.getDisplay().getSystemImage(SWT.ERROR));
 			toolkit.createLabel(form.getBody(), msg, SWT.WRAP);
@@ -234,7 +241,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			static final int HMARGIN = 5;
 
 			@Override
-			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			protected Point computeSize(Composite composite, int wHint,
+					int hHint, boolean flushCache) {
 				Point retVal = new Point(composite.getSize().x, 0);
 				if (retVal.x == 0) {
 					retVal.x = -1;
@@ -276,86 +284,12 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		};
 		form.getBody().setLayout(layout);
 
-		do {
-			String doc;
-			try {
-				IType type = getJavaProject().findType(root.getClass().getCanonicalName());
-				doc = JavadocContentAccess2.getHTMLContent(type, true);
-			} catch (CoreException e) {
-				break;
-			}
+		createJavaDocDescription();
 
-			if (doc == null)
-				break;
+		createMainEditor();
+	}
 
-			int summaryEnd = doc.indexOf(". ") + 1;
-			if (summaryEnd == 0) {
-				summaryEnd = doc.indexOf(".\n") + 1;
-			}
-			if (summaryEnd == 0) {
-				summaryEnd = doc.indexOf("<dl>");
-			}
-			String summary = doc;
-			if (summaryEnd != -1) {
-				summary = doc.substring(0, summaryEnd).trim();
-				if (summary.isEmpty()) {
-					summary = "<span style=\"color:#888\">No Javadoc summary.</span>";
-				}
-				summary += String.format(" <a href=\"%s\">%s</a>", HREF_MORE, "more");
-				doc += String.format("<br><a href=\"%s\">%s</a>", HREF_LESS, "Hide detailed description");
-			}
-
-			final String finalSummary = summary;
-			final String finalDoc = doc;
-
-			final Point browserLayoutData = new Point(SWT.DEFAULT, MAX_DESCRIPTION_HEIGHT);
-			final Browser browser = new Browser(form.getBody(), SWT.NONE);
-			final String getHeight = browser.getBrowserType().equals("ie") //
-					? "return document.body.getBoundingClientRect().height"
-					: "return document.documentElement.scrollHeight";
-
-			browser.setLayoutData(browserLayoutData);
-			browser.setText(buildDocument(finalSummary), false);
-
-			browser.addProgressListener(new ProgressListener() {
-				@Override
-				public void completed(ProgressEvent event) {
-					Double height = (Double) browser.evaluate(getHeight);
-					if (height == null)
-						return;
-					browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT, (int) Math.ceil(height));
-					form.getBody().layout(true, true);
-					form.reflow(true);
-				}
-
-				@Override
-				public void changed(ProgressEvent event) {
-					// ignore
-				}
-			});
-
-			final LocationListener linkHandler = JavaElementLinks.createLocationListener(new JavaLinkHandler());
-
-			browser.addLocationListener(new LocationListener() {
-				@Override
-				public void changing(LocationEvent event) {
-					if (event.location.equals(HREF_LESS)) {
-						browser.setText(buildDocument(finalSummary), false);
-						event.doit = false;
-					} else if (event.location.equals(HREF_MORE)) {
-						browser.setText(buildDocument(finalDoc), false);
-						event.doit = false;
-					} else {
-						linkHandler.changing(event);
-					}
-				}
-
-				public void changed(LocationEvent event) {
-					linkHandler.changed(event);
-				}
-			});
-		} while (false); // for break
-
+	protected void createMainEditor() {
 		IProperty topLevelProperty = new IProperty() {
 			public void setValue(Object val) throws PropertyException {
 				root = val;
@@ -393,9 +327,116 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			}
 		};
 
-		EditorWidget editor = EditorWidgetFactory.getInstance().createEditorWidget(this, form.getBody(),
-				topLevelProperty, null);
+		EditorWidget editor = EditorWidgetFactory.getInstance()
+				.createEditorWidget(this, form.getBody(), topLevelProperty,
+						null);
 		editor.loadValue();
+	}
+
+	protected void createJavaDocDescription() {
+		// get JavaDoc as HTML (content only)
+		String doc;
+		try {
+			IType type = getJavaProject().findType(
+					root.getClass().getCanonicalName());
+			doc = JavadocContentAccess2.getHTMLContent(type, true);
+		} catch (CoreException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		if (doc == null || doc.trim().length() == 0)
+			return;
+
+		String summary = createSummary(doc);
+		if (summary == null) {
+			summary = doc;
+		} else {
+			summary += String.format(" <a href=\"%s\">%s</a>", HREF_MORE,
+					"more");
+			doc += String.format("<br><a href=\"%s\">%s</a>", HREF_LESS,
+					"hide detailed description");
+		}
+
+		final String summaryDoc = buildDocument(summary);
+		final String mainDoc = buildDocument(doc);
+
+		final Point browserLayoutData = new Point(SWT.DEFAULT,
+				MAX_DESCRIPTION_HEIGHT);
+		final Browser browser = new Browser(form.getBody(), SWT.NONE);
+		browser.setLayoutData(browserLayoutData);
+		browser.setText(summaryDoc, false);
+		// find out height of rendered Browser contents
+		browser.addProgressListener(new ProgressListener() {
+			@Override
+			public void completed(ProgressEvent event) {
+				String getHeight = "return document.getElementById(\"jasima-content\").scrollHeight";
+				Double height = (Double) browser.evaluate(getHeight);
+				if (height == null)
+					return;
+				browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT,
+						((int) Math.ceil(height)) + 1);
+				form.getBody().layout(true, true);
+				form.reflow(true);
+			}
+
+			@Override
+			public void changed(ProgressEvent event) {
+				// ignore
+			}
+		});
+
+		final LocationListener linkHandler = JavaElementLinks
+				.createLocationListener(new JavaLinkHandler());
+
+		browser.addLocationListener(new LocationListener() {
+			@Override
+			public void changing(LocationEvent event) {
+				if (event.location.equals(DUMMY_URL))
+					return;
+
+				// when calling setText, first navigate to DUMMY_URL,
+				// hopefully firing ProgressListener.completed on MSIE
+
+				if (event.location.equals(HREF_LESS)) {
+					browser.setUrl(DUMMY_URL);
+					browser.setText(summaryDoc, false);
+					event.doit = false;
+				} else if (event.location.equals(HREF_MORE)) {
+					browser.setUrl(DUMMY_URL);
+					browser.setText(mainDoc, false);
+					event.doit = false;
+				} else {
+					linkHandler.changing(event);
+				}
+			}
+
+			public void changed(LocationEvent event) {
+				linkHandler.changed(event);
+			}
+		});
+	}
+
+	/**
+	 * Find first sentence of "doc".
+	 */
+	private String createSummary(String doc) {
+		int summaryEnd = doc.indexOf(". ") + 1;
+		if (summaryEnd == 0) {
+			summaryEnd = doc.indexOf(".\n") + 1;
+		}
+		if (summaryEnd == 0) {
+			summaryEnd = doc.indexOf("<dl>");
+		}
+
+		if (summaryEnd != -1) {
+			String summary = doc.substring(0, summaryEnd).trim();
+			if (summary.isEmpty()) {
+				summary = "<span style=\"color:#888\">No Javadoc summary.</span>";
+			}
+			return summary;
+		} else
+			return null;
 	}
 
 	@Override
@@ -405,12 +446,15 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	protected void doSaveReally() throws CoreException {
 		assert isValidData();
-		byte[] byteArr = XMLUtil.serialize(ProjectCache.getCache(project).getXStream(), root);
+		byte[] byteArr = XMLUtil.serialize(ProjectCache.getCache(project)
+				.getXStream(), root);
 		IFileEditorInput fei = (IFileEditorInput) getEditorInput();
 		if (fei.getFile().exists()) {
-			fei.getFile().setContents(new ByteArrayInputStream(byteArr), false, true, null);
+			fei.getFile().setContents(new ByteArrayInputStream(byteArr), false,
+					true, null);
 		} else {
-			fei.getFile().create(new ByteArrayInputStream(byteArr), false, null);
+			fei.getFile()
+					.create(new ByteArrayInputStream(byteArr), false, null);
 		}
 		dirty = false;
 		firePropertyChange(PROP_DIRTY);
@@ -421,7 +465,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		try {
 			doSaveReally();
 		} catch (CoreException e) {
-			ErrorDialog.openError(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell(),
+			ErrorDialog.openError(PlatformUI.getWorkbench()
+					.getModalDialogShellProvider().getShell(),
 					"Couldn't save file", null, e.getStatus());
 		}
 	}
@@ -429,13 +474,15 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	@Override
 	public void doSaveAs() {
 		// TODO compare to AbstractDecoratedTextEditor.performSaveAs
-		SaveAsDialog dlg = new SaveAsDialog(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell());
+		SaveAsDialog dlg = new SaveAsDialog(PlatformUI.getWorkbench()
+				.getModalDialogShellProvider().getShell());
 		IFileEditorInput oldInput = (IFileEditorInput) getEditorInput();
 		dlg.setOriginalFile(oldInput.getFile());
 		dlg.create();
 		if (dlg.open() == SaveAsDialog.CANCEL)
 			return;
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(dlg.getResult());
+		IFile file = ResourcesPlugin.getWorkspace().getRoot()
+				.getFile(dlg.getResult());
 		FileEditorInput input = new FileEditorInput(file);
 		setInput(input);
 		try {
@@ -444,7 +491,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			updateHeadline();
 		} catch (CoreException e) {
 			setInput(oldInput);
-			ErrorDialog.openError(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell(),
+			ErrorDialog.openError(PlatformUI.getWorkbench()
+					.getModalDialogShellProvider().getShell(),
 					"Couldn't save file", null, e.getStatus());
 		}
 	}
@@ -466,7 +514,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		try {
 			String href = evt.text;
 			if (href.startsWith(CLASS_URL_PREFIX)) {
-				IJavaElement elem = getJavaProject().findType(href.substring(CLASS_URL_PREFIX.length()));
+				IJavaElement elem = getJavaProject().findType(
+						href.substring(CLASS_URL_PREFIX.length()));
 				JavaLinkHandler.openJavadoc(elem);
 			}
 		} catch (Exception e) {
