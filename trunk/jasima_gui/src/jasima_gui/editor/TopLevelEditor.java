@@ -70,7 +70,6 @@ import com.thoughtworks.xstream.XStream;
 public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	protected static final String CLASS_URL_PREFIX = "jasima-javaclass:";
-	protected static final String DUMMY_URL = "about:invalid";
 	protected static final String HREF_MORE = "jasima-command:more";
 	protected static final String HREF_LESS = "jasima-command:less";
 	protected static final int MAX_DESCRIPTION_HEIGHT = 200;
@@ -204,7 +203,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		htmlDoc.append("html {padding: 0px; margin: 0px} " //
 				+ "body {padding: 0px; margin: 0px} " //
 				+ "dl {margin: 0px} " //
-				+ "dt {margin-top: 0.5em}");
+				+ "dt {padding-top: 0.5em}");
 		htmlDoc.append("</style></head><body><div id=\"jasima-content\">");
 		htmlDoc.append(javadoc);
 		htmlDoc.append("</div></body></html>");
@@ -365,9 +364,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		browser.setLayoutData(browserLayoutData);
 		browser.setText(summaryDoc, false);
 
-		final String getHeight = browser.getBrowserType().equals("webkit") //
-				? "return document.documentElement.scrollHeight" //
-				: "return document.getElementById(\"jasima-content\").scrollHeight + 1";
+		final String getHeight = "return document.getElementById(\"jasima-content\").scrollHeight";
 
 		// automatically resize the Browser to match its contents
 		browser.addProgressListener(new ProgressListener() {
@@ -376,7 +373,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 				Double height = (Double) browser.evaluate(getHeight);
 				if (height == null)
 					return;
-				browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT, ((int) Math.ceil(height)));
+				browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT,
+						((int) Math.ceil(height)));
 				form.getBody().layout(true, true);
 				form.reflow(true);
 			}
@@ -393,18 +391,10 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		browser.addLocationListener(new LocationListener() {
 			@Override
 			public void changing(LocationEvent event) {
-				if (event.location.equals(DUMMY_URL))
-					return;
-
-				// when calling setText, first navigate to DUMMY_URL,
-				// hopefully firing ProgressListener.completed on MSIE
-
 				if (event.location.equals(HREF_LESS)) {
-					browser.setUrl(DUMMY_URL);
 					browser.setText(summaryDoc, false);
 					event.doit = false;
 				} else if (event.location.equals(HREF_MORE)) {
-					browser.setUrl(DUMMY_URL);
 					browser.setText(mainDoc, false);
 					event.doit = false;
 				} else {
