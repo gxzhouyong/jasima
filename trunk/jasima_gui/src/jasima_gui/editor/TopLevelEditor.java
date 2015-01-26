@@ -400,7 +400,9 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		browser.setLayoutData(browserLayoutData);
 		browser.setText(summaryDoc, false);
 
-		final String getHeight = "return document.getElementById(\"jasima-content\").scrollHeight";
+		final String getHeight = "var contentElement = document.getElementById(\"jasima-content\");"
+				+ "if(!contentElement) return 0;"
+				+ "return contentElement.scrollHeight";
 
 		// automatically resize the Browser to match its contents
 		browser.addProgressListener(new ProgressListener() {
