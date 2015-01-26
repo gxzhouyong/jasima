@@ -136,6 +136,18 @@
             commandId="jasima_gui.commands.objLoad"
             icon="icons/obj_load.png">
       </image>
+      <image
+            commandId="jasima_gui.commands.runExperiment"
+            icon="icons/run_experiment.png">
+      </image>
+      <image
+            commandId="jasima_gui.commands.debugExperiment"
+            icon="icons/debug_experiment.png">
+      </image>
+      <image
+            commandId="jasima_gui.commands.openWebpage"
+            icon="icons/jasima.png">
+      </image>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -154,6 +166,18 @@
       <command
             id="jasima_gui.commands.objSave"
             name="Save">
+      </command>
+      <command
+            id="jasima_gui.commands.runExperiment"
+            name="Run Experiment">
+      </command>
+      <command
+            id="jasima_gui.commands.debugExperiment"
+            name="Debug Experiment">
+      </command>
+      <command
+            id="jasima_gui.commands.openWebpage"
+            name="Open Jasima web page">
       </command>
    </extension>
    <extension
