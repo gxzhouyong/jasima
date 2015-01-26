@@ -18,9 +18,11 @@
  *******************************************************************************/
 package jasima_gui.editor;
 
+import jasima_gui.JasimaAction;
 import jasima_gui.JavaLinkHandler;
 import jasima_gui.ProjectCache;
 import jasima_gui.PropertyToolTip;
+import jasima_gui.launcher.SimulationLaunchShortcut;
 import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
@@ -37,7 +39,10 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
@@ -48,11 +53,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
@@ -174,24 +181,53 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 		setPartName(getEditorInput().getName());
 
-		Link headline = new Link(form.getForm().getHead(), 0);
+		Composite head = new Composite(form.getForm().getHead(), SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(head);
+
+		Link headline = new Link(head, SWT.NONE);
 		headline.setForeground(form.getForeground());
 		headline.setBackground(null);
 		headline.setFont(form.getFont());
 		if (isValidData()) {
-			headline.setText(String.format("%s - <a href=\"%s%s\">%s</a>",
-					getEditorInput().getName(), CLASS_URL_PREFIX, root
-							.getClass().getCanonicalName(), root.getClass()
-							.getSimpleName()));
+			headline.setText(String.format("%s - <a href=\"%s%s\">%s</a>", getEditorInput().getName(),
+					CLASS_URL_PREFIX, root.getClass().getCanonicalName(), root.getClass().getSimpleName()));
 		} else {
 			headline.setText(getEditorInput().getName());
 		}
 		headline.addSelectionListener(this);
 
-		Control head = form.getForm().getHeadClient();
-		if (head != null)
-			head.dispose();
-		form.setHeadClient(headline);
+		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+
+		toolBarManager.add(new JasimaAction("...runExperiment") {
+			@Override
+			public void run() {
+				IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+				new SimulationLaunchShortcut().launch(file, "run");
+			}
+		});
+
+		toolBarManager.add(new JasimaAction("...debugExperiment") {
+			@Override
+			public void run() {
+				IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+				new SimulationLaunchShortcut().launch(file, "debug");
+			}
+		});
+
+		toolBarManager.add(new JasimaAction("...openWebpage") {
+			@Override
+			public void run() {
+				Program.launch("https://code.google.com/p/jasima/");
+			}
+		});
+
+		ToolBar toolBar = toolBarManager.createControl(head);
+		GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).grab(true, false).applyTo(toolBar);
+
+		Control oldHead = form.getForm().getHeadClient();
+		if (oldHead != null)
+			oldHead.dispose();
+		form.setHeadClient(head);
 		toolkit.decorateFormHeading(form.getForm());
 	}
 
