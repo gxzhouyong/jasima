@@ -23,6 +23,7 @@ import jasima_gui.JavaLinkHandler;
 import jasima_gui.ProjectCache;
 import jasima_gui.PropertyToolTip;
 import jasima_gui.launcher.SimulationLaunchShortcut;
+import jasima_gui.util.BrowserEx;
 import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
@@ -44,11 +45,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
-import org.eclipse.swt.browser.ProgressEvent;
-import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -56,9 +54,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -79,7 +79,6 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	protected static final String CLASS_URL_PREFIX = "jasima-javaclass:";
 	protected static final String HREF_MORE = "jasima-command:more";
 	protected static final String HREF_LESS = "jasima-command:less";
-	protected static final int MAX_DESCRIPTION_HEIGHT = 200;
 	private EditorUpdater updater;
 	private Object root;
 	private FormToolkit toolkit = null;
@@ -236,11 +235,12 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		htmlDoc.append("<!DOCTYPE html><html><head>" //
 				+ "<title>Tooltip</title><style type='text/css'>");
 		htmlDoc.append(PropertyToolTip.getJavadocStylesheet());
-		htmlDoc.append("html {padding: 0px; margin: 0px} " //
+		htmlDoc.append("html {padding-top: -1px; padding-bottom: -1px; margin: 0px} " //
 				+ "body {padding: 0px; margin: 0px} " //
 				+ "dl {margin: 0px} " //
-				+ "dt {padding-top: 0.5em}");
-		htmlDoc.append("</style></head><body><div id=\"jasima-content\">");
+				+ "dt {margin-top: 0.5em} " //
+				+ "#jasima-content {padding-top: 1px; padding-bottom: 1px}");
+		htmlDoc.append("</style></head><body><div id='jasima-content'>");
 		htmlDoc.append(javadoc);
 		htmlDoc.append("</div></body></html>");
 		return htmlDoc.toString();
@@ -394,32 +394,13 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		final String summaryDoc = buildDocument(summary);
 		final String mainDoc = buildDocument(doc);
 
-		final Point browserLayoutData = new Point(SWT.DEFAULT,
-				MAX_DESCRIPTION_HEIGHT);
-		final Browser browser = new Browser(form.getBody(), SWT.NONE);
-		browser.setLayoutData(browserLayoutData);
+		final BrowserEx browser = new BrowserEx(form.getBody(), SWT.NONE);
 		browser.setText(summaryDoc, false);
 
-		final String getHeight = "var contentElement = document.getElementById(\"jasima-content\");"
-				+ "if(!contentElement) return 0;"
-				+ "return contentElement.scrollHeight";
-
-		// automatically resize the Browser to match its contents
-		browser.addProgressListener(new ProgressListener() {
-			@Override
-			public void completed(ProgressEvent event) {
-				Double height = (Double) browser.evaluate(getHeight);
-				if (height == null)
-					return;
-				browserLayoutData.y = Math.min(MAX_DESCRIPTION_HEIGHT,
-						((int) Math.ceil(height)));
+		browser.addSizeListener(new Listener() {
+			public void handleEvent(Event evt) {
 				form.getBody().layout(true, true);
 				form.reflow(true);
-			}
-
-			@Override
-			public void changed(ProgressEvent event) {
-				// ignore
 			}
 		});
 
