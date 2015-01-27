@@ -2,14 +2,15 @@
 <feature
       id="jasima_feature"
       label="jasima GUI feature"
-      version="1.2.0.qualifier">
+      version="1.2.1.qualifier">
 
    <description url="http://jasima.googlecode.com/">
-      GUI component of jasima - an efficient Java simulator for manufacturing and logistics
+      GUI component of jasima - an efficient Java simulator for manufacturing
+and logistics
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+      Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
    </copyright>
 
    <license url="http://www.gnu.org/licenses/">
