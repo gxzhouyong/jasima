@@ -20,6 +20,7 @@ package jasima_gui.util;
 
 import java.util.ArrayList;
 
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
@@ -61,11 +62,23 @@ public class BrowserEx extends Browser implements ProgressListener {
 			wHint = 100;
 		setSize(wHint, oldSize.y);
 		final String getHeight = "var contentElement = document.getElementById('jasima-content');" //
-				+ "if(!contentElement) return 0;" //
-				+ "return contentElement.scrollHeight";
-		double height = (Double) evaluate(getHeight);
+				+ "return (null==contentElement ? " + Integer.MAX_VALUE + ":" //
+				+ "contentElement.scrollHeight)";
+
+		Double height;
+		try {
+			height = (Double) evaluate(getHeight);
+		} catch (SWTException ignore) {
+			ignore.printStackTrace();
+			height = null;
+		}
+
+		if (height == null) {
+			height = (double) Integer.MAX_VALUE;
+		}
 		setSize(oldSize);
-		return new Point(wHint, Math.min(maximumHeight, (int) Math.ceil(height)));
+		return new Point(wHint, Math.min(maximumHeight,
+				(int) Math.ceil(height.doubleValue())));
 	}
 
 	@Override
