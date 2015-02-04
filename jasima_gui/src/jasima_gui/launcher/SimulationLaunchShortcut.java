@@ -85,7 +85,7 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 					continue;
 
 				IResource[] res = config.getMappedResources();
-				if (res.length != 1)
+				if (res == null || res.length != 1)
 					continue; // old configuration, ignore it
 
 				if (res[0].equals(resource)) {
