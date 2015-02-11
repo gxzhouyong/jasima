@@ -177,9 +177,13 @@ public class LauncherParamTab extends JavaLaunchTab {
 		configuration.setAttribute(ATTR_MAIN_TYPE_NAME, launcherClass.getText());
 
 		Arguments args = new Arguments();
+		args.append(experimentFile.getText());
+
 		args.append("--log=" + logLevel.getText());
+		
 		if (printResults.getSelection())
 			args.append("--printres");
+		
 		if (saveXML.getSelection()) {
 			String path = saveXMLPath.getText();
 			if (path.equals(saveXMLPath.getItem(0))) { // default
@@ -188,6 +192,7 @@ public class LauncherParamTab extends JavaLaunchTab {
 				args.append("--xmlres=" + path);
 			}
 		}
+		
 		if (saveXLS.getSelection()) {
 			String path = saveXLSPath.getText();
 			if (path.equals(saveXLSPath.getItem(0))) { // default
@@ -197,7 +202,6 @@ public class LauncherParamTab extends JavaLaunchTab {
 			}
 		}
 
-		args.append(experimentFile.getText());
 		String extraArgs = additionalArgs.getText().trim();
 		if (!extraArgs.isEmpty()) {
 			args.appendUnquoted(extraArgs);
