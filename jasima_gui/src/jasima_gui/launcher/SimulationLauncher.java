@@ -32,6 +32,7 @@ import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
 
 public class SimulationLauncher extends JavaLaunchDelegate {
+	// debug listener is used to refresh project when run is complete
 	private static void addDebugEventListener(final ILaunchConfiguration conf) {
 		final DebugPlugin debugPlugin = DebugPlugin.getDefault();
 		debugPlugin.addDebugEventListener(new IDebugEventSetListener() {

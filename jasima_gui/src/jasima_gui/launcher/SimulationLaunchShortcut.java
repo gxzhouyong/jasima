@@ -52,7 +52,8 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 			if (pathArg.contains("\"") || pathArg.contains("\\")) {
 				Status status = new Status(Status.ERROR, "jasima_gui",
 						"The file name must not contain backslashes or quotation marks.");
-				ErrorDialog.openError(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell(), "Error",
+				ErrorDialog.openError(PlatformUI.getWorkbench()
+						.getModalDialogShellProvider().getShell(), "Error",
 						"Can't create launch configuration.", status);
 				return;
 			}
@@ -60,12 +61,19 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 			ILaunchConfiguration cfg = findConfiguration(resource);
 
 			if (cfg == null) {
-				String baseName = resource.getProjectRelativePath().removeFileExtension().toString();
-				ILaunchConfigurationWorkingCopy wc = getConfigurationType().newInstance(null,
-						getLaunchManager().generateLaunchConfigurationName(baseName));
+				String baseName = resource.getProjectRelativePath()
+						.removeFileExtension().toString();
+				ILaunchConfigurationWorkingCopy wc = getConfigurationType()
+						.newInstance(
+								null,
+								getLaunchManager()
+										.generateLaunchConfigurationName(
+												baseName));
 				wc.setAttribute(ATTR_MAIN_TYPE_NAME, getLauncherClass());
-				wc.setAttribute(ATTR_PROJECT_NAME, resource.getProject().getName());
-				wc.setAttribute(ATTR_PROGRAM_ARGUMENTS, getDefaultArgs() + " \"" + pathArg + "\"");
+				wc.setAttribute(ATTR_PROJECT_NAME, resource.getProject()
+						.getName());
+				wc.setAttribute(ATTR_PROGRAM_ARGUMENTS, "\"" + pathArg + "\" "
+						+ getDefaultArgs());
 				wc.setMappedResources(new IResource[] { resource });
 				cfg = wc.doSave();
 			}
@@ -79,7 +87,8 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 	protected static ILaunchConfiguration findConfiguration(IResource resource) {
 		try {
 			ILaunchConfigurationType configType = getConfigurationType();
-			ILaunchConfiguration[] configs = getLaunchManager().getLaunchConfigurations(getConfigurationType());
+			ILaunchConfiguration[] configs = getLaunchManager()
+					.getLaunchConfigurations(getConfigurationType());
 			for (ILaunchConfiguration config : configs) {
 				if (config.getType() != configType)
 					continue;
@@ -107,7 +116,8 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 	}
 
 	protected static ILaunchConfigurationType getConfigurationType() {
-		return getLaunchManager().getLaunchConfigurationType("jasima_gui.jasimaLaunchConfigurationType");
+		return getLaunchManager().getLaunchConfigurationType(
+				"jasima_gui.jasimaLaunchConfigurationType");
 	}
 
 	protected String getLauncherClass() {
@@ -121,7 +131,8 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 			if (ss.size() == 1) {
 				Object element = ss.getFirstElement();
 				if (element instanceof IAdaptable) {
-					return (IResource) ((IAdaptable) element).getAdapter(IResource.class);
+					return (IResource) ((IAdaptable) element)
+							.getAdapter(IResource.class);
 				}
 			}
 		}
