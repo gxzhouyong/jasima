@@ -52,7 +52,7 @@ public class LauncherParamTab extends JavaLaunchTab {
 	protected Text experimentFile;
 	protected Combo logLevel;
 
-	protected Button printResults;
+	protected Button printNoResults;
 	protected Button saveXML;
 	protected Combo saveXMLPath;
 	protected Button saveXLS;
@@ -128,10 +128,10 @@ public class LauncherParamTab extends JavaLaunchTab {
 
 		addTitleLabel(comp, "Results");
 
-		printResults = new Button(comp, SWT.CHECK);
-		printResults.setText("Print results to console");
-		printResults.addSelectionListener(updater);
-		indentFactory().span(2, 1).applyTo(printResults);
+		printNoResults = new Button(comp, SWT.CHECK);
+		printNoResults.setText("Do not print results to console");
+		printNoResults.addSelectionListener(updater);
+		indentFactory().span(2, 1).applyTo(printNoResults);
 
 		saveXML = new Button(comp, SWT.CHECK);
 		saveXML.setText("Save results to XML file:");
@@ -181,8 +181,8 @@ public class LauncherParamTab extends JavaLaunchTab {
 
 		args.append("--log=" + logLevel.getText());
 		
-		if (printResults.getSelection())
-			args.append("--printres");
+		if (printNoResults.getSelection())
+			args.append("--nores");
 		
 		if (saveXML.getSelection()) {
 			String path = saveXMLPath.getText();
@@ -221,7 +221,7 @@ public class LauncherParamTab extends JavaLaunchTab {
 
 			experimentFile.setText("");
 			logLevel.setText("INFO");
-			printResults.setSelection(false);
+			printNoResults.setSelection(false);
 			saveXML.setSelection(false);
 			saveXMLPath.select(0);
 			saveXLS.setSelection(false);
@@ -235,8 +235,8 @@ public class LauncherParamTab extends JavaLaunchTab {
 				if (s[0].equals("--log")) {
 					if (s.length > 1)
 						logLevel.setText(s[1]);
-				} else if (s[0].equals("--printres")) {
-					printResults.setSelection(true);
+				} else if (s[0].equals("--nores")) {
+					printNoResults.setSelection(true);
 				} else if (s[0].equals("--xmlres")) {
 					saveXML.setSelection(true);
 					if (s.length > 1)
