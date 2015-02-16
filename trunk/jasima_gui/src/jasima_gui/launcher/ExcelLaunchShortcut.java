@@ -19,6 +19,7 @@
 package jasima_gui.launcher;
 
 import jasima_gui.pref.Pref;
+import jasima_gui.util.TypeUtil;
 
 public class ExcelLaunchShortcut extends SimulationLaunchShortcut {
 
@@ -29,6 +30,6 @@ public class ExcelLaunchShortcut extends SimulationLaunchShortcut {
 
 	@Override
 	protected String getLauncherClass() {
-		return "jasima.core.util.run.ExcelExperimentRunner";
+		return TypeUtil.XLS_RUNNER_CLASS;
 	}
 }

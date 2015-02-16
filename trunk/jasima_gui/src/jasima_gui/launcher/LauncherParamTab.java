@@ -23,6 +23,7 @@ import static org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants.ATTR_P
 import static org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS;
 import jasima_gui.Activator;
 import jasima_gui.util.EnablingSelectionListener;
+import jasima_gui.util.TypeUtil;
 
 import java.util.ArrayList;
 
@@ -108,8 +109,8 @@ public class LauncherParamTab extends JavaLaunchTab {
 
 		addIndentedLabel(comp, "Launcher class:");
 		launcherClass = new Combo(comp, SWT.BORDER);
-		launcherClass.add("jasima.core.util.ExcelExperimentRunner");
-		launcherClass.add("jasima.core.util.XmlExperimentRunner");
+		launcherClass.add(TypeUtil.XLS_RUNNER_CLASS);
+		launcherClass.add(TypeUtil.XML_RUNNER_CLASS);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(launcherClass);
 		launcherClass.addModifyListener(updater);
 

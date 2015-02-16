@@ -31,6 +31,10 @@ import java.util.Locale;
  * This class contains static methods that are missing from java.lang.Class.
  */
 public class TypeUtil {
+
+	public static final String XML_RUNNER_CLASS = "jasima.core.run.ConsoleRunner";
+	public static final String XLS_RUNNER_CLASS = "jasima.core.run.ExcelExperimentRunner";
+	
 	private static final HashMap<Class<?>, Class<?>> PRIMITIVE_WRAPPERS = new HashMap<Class<?>, Class<?>>();
 	private static final HashMap<Class<?>, Object> PRIMITIVE_DEFAULTS = new HashMap<Class<?>, Object>();
 
