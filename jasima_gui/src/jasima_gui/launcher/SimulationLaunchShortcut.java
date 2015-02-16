@@ -22,6 +22,7 @@ import static org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants.ATTR_M
 import static org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS;
 import static org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME;
 import jasima_gui.pref.Pref;
+import jasima_gui.util.TypeUtil;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -121,7 +122,7 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 	}
 
 	protected String getLauncherClass() {
-		return "jasima.core.util.run.XmlExperimentRunner";
+		return TypeUtil.XML_RUNNER_CLASS;
 	}
 
 	@Override
