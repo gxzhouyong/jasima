@@ -125,6 +125,10 @@
             icon="icons/obj_new.png">
       </image>
       <image
+            commandId="jasima_gui.commands.objNewClass"
+            icon="icons/obj_new_class.png">
+      </image>
+      <image
             commandId="jasima_gui.commands.objDelete"
             icon="icons/obj_delete.png">
       </image>
@@ -154,6 +158,10 @@
       <command
             id="jasima_gui.commands.objNew"
             name="New">
+      </command>
+      <command
+            id="jasima_gui.commands.objNewClass"
+            name="New Class">
       </command>
       <command
             id="jasima_gui.commands.objDelete"
