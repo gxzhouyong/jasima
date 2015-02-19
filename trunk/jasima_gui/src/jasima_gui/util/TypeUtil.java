@@ -20,6 +20,7 @@ package jasima_gui.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -128,9 +129,7 @@ public class TypeUtil {
 		if (t instanceof ParameterizedType)
 			return (Class<?>) ((ParameterizedType) t).getRawType();
 		if (t instanceof GenericArrayType)
-			return Array.newInstance(
-					toClass(((GenericArrayType) t).getGenericComponentType()),
-					0).getClass();
+			return Array.newInstance(toClass(((GenericArrayType) t).getGenericComponentType()), 0).getClass();
 		return Object.class;
 	}
 
@@ -174,10 +173,8 @@ public class TypeUtil {
 			Formatter name = new Formatter(Locale.ROOT);
 			name.format("%s<", toString(c, abbrev));
 			for (int i = 0; i < tParams.length; ++i) {
-				name.format(
-						i == 0 ? "%s" : ", %s",
-						tParams[i] instanceof TypeVariable ? "?" : toString(
-								tParams[i], abbrev));
+				name.format(i == 0 ? "%s" : ", %s",
+						tParams[i] instanceof TypeVariable ? "?" : toString(tParams[i], abbrev));
 			}
 			name.format(">");
 			String retVal = name.toString();
@@ -189,8 +186,7 @@ public class TypeUtil {
 	}
 
 	public static Type applyParameters(Type type, Type superType) {
-		if (superType instanceof ParameterizedType
-				&& type instanceof ParameterizedType) {
+		if (superType instanceof ParameterizedType && type instanceof ParameterizedType) {
 			final ParameterizedType pSuper = (ParameterizedType) superType;
 			final ParameterizedType pType = (ParameterizedType) type;
 			return new ParameterizedType() {
@@ -230,5 +226,17 @@ public class TypeUtil {
 
 	private TypeUtil() {
 		// never called
+	}
+
+	/**
+	 * Determines whether a subclass of <code>klass</code> can be declared.
+	 * Primitives or <code>final</code> classes can not be subclassed.
+	 * 
+	 * @param klass
+	 *            the type to check
+	 * @return <code>true</code> if <code>klass</code> can be subclassed
+	 */
+	public static boolean canSubclass(Class<?> klass) {
+		return (klass.getModifiers() & Modifier.FINAL) == 0;
 	}
 }
