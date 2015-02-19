@@ -41,7 +41,8 @@ public class TextEditor extends EditorWidget implements FocusListener, ModifyLis
 
 	private Text text;
 	private Button btnNull = null;
-	private boolean dirty = false;
+	private boolean hasError = false;
+	private boolean modifyingSelf = false;
 
 	public TextEditor(Composite parent) {
 		super(parent);
@@ -76,7 +77,9 @@ public class TextEditor extends EditorWidget implements FocusListener, ModifyLis
 
 	@Override
 	public void modifyText(ModifyEvent e) {
-		dirty = true;
+		if(!modifyingSelf) {
+			storeValue();
+		}
 	}
 
 	@Override
@@ -88,11 +91,8 @@ public class TextEditor extends EditorWidget implements FocusListener, ModifyLis
 	public void focusLost(FocusEvent e) {
 		if (!property.isWritable())
 			return;
-		if (!dirty)
-			return;
-		try {
-			storeValue();
-		} finally {
+		if (hasError) {
+			hideError();
 			loadValue(); // reformat numbers, for example
 		}
 	}
@@ -108,11 +108,9 @@ public class TextEditor extends EditorWidget implements FocusListener, ModifyLis
 		boolean nullSelected = btnNull.getSelection();
 		text.setEnabled(!nullSelected);
 		text.setText(nullSelected ? String.valueOf((Object) null) : "");
+		storeValue();
 		if (!nullSelected) {
-			dirty = true;
 			text.setFocus();
-		} else {
-			storeValue();
 		}
 	}
 
@@ -121,25 +119,30 @@ public class TextEditor extends EditorWidget implements FocusListener, ModifyLis
 		try {
 			Object val = property.getValue();
 			// val might be null if IProperty.canBeNull returned false...
+			modifyingSelf = true;
 			text.setText(String.valueOf(val));
+			modifyingSelf = false;
 			if (btnNull != null) {
 				text.setEnabled(val != null);
 				btnNull.setSelection(val == null);
 			}
 		} catch (PropertyException e) {
 			showError(e.getLocalizedMessage());
+			modifyingSelf = true;
 			text.setText("?");
+			modifyingSelf = false;
 		} finally {
-			dirty = false;
+			hasError = false;
 		}
 	}
 
 	@Override
 	public void storeValue() {
+		hasError = true;
 		try {
 			if (btnNull != null && btnNull.getSelection()) {
 				property.setValue(null);
-				dirty = false;
+				hasError = false;
 				hideError();
 				return;
 			}
@@ -154,6 +157,11 @@ public class TextEditor extends EditorWidget implements FocusListener, ModifyLis
 				try {
 					val = type.getConstructor(String.class).newInstance(text.getText());
 				} catch (InvocationTargetException ex) {
+					if (ex.getCause() instanceof NumberFormatException) {
+						showError("Input has to be numeric.");
+					} else {
+						showError(ex.getCause().getLocalizedMessage());
+					}
 					return;
 				}
 			} else if (type == String.class) {
@@ -166,7 +174,7 @@ public class TextEditor extends EditorWidget implements FocusListener, ModifyLis
 			if (val != null) {
 				property.setValue(val);
 			}
-			dirty = false;
+			hasError = false;
 			hideError();
 		} catch (PropertyException ex) {
 			showError(ex.getLocalizedMessage());
