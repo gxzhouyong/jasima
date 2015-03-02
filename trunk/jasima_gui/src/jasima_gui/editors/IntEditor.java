@@ -20,6 +20,7 @@ package jasima_gui.editors;
 
 import jasima_gui.editor.EditorWidget;
 import jasima_gui.editor.PropertyException;
+import jasima_gui.util.DiscardingListener;
 import jasima_gui.util.TypeUtil;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -52,6 +53,11 @@ public class IntEditor extends EditorWidget implements FocusListener, ModifyList
 		setLayout(layout);
 
 		spinner = new Spinner(this, SWT.BORDER);
+		if (SWT.getPlatform().equals("gtk")) {
+			// by default, GTK's spinner uses the mouse wheel to change value,
+			// which interacts badly with ScrolledForm's scrolling
+			spinner.addListener(SWT.MouseVerticalWheel, new DiscardingListener());
+		}
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(spinner);
 		spinner.setValues(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 1, 50);
 		toolkit.adapt(spinner, true, true);
