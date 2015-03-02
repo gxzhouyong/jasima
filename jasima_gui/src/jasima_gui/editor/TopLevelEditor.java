@@ -18,6 +18,8 @@
  *******************************************************************************/
 package jasima_gui.editor;
 
+import jasima_gui.ClassLoaderStateListener;
+import jasima_gui.EclipseProjectClassLoader;
 import jasima_gui.JasimaAction;
 import jasima_gui.JavaLinkHandler;
 import jasima_gui.ProjectCache;
@@ -42,6 +44,7 @@ import org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -54,6 +57,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
@@ -118,8 +122,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		try {
 			IFileEditorInput fei = (IFileEditorInput) input;
 			setFileInput(fei);
@@ -127,9 +130,20 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			fei.getFile().refreshLocal(0, null);
 			InputStream is = fei.getStorage().getContents();
 			try {
-				xStream = ProjectCache.getCache(fei.getFile().getProject())
-						.getXStream();
+				xStream = ProjectCache.getCache(fei.getFile().getProject()).getXStream();
 				classLoader = xStream.getClassLoader();
+				EclipseProjectClassLoader epcl = (EclipseProjectClassLoader) classLoader;
+				epcl.getState().addListener(new ClassLoaderStateListener() {
+					@Override
+					public void dirtyChanged(final boolean newValue) {
+						Display.getDefault().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								classpathDirtyChanged(newValue);
+							};
+						});
+					}
+				});
 				root = xStream.fromXML(is);
 			} finally {
 				try {
@@ -143,6 +157,19 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		} catch (Exception e) {
 			root = e;
 		}
+	}
+
+	protected void classpathDirtyChanged(boolean newValue) {
+		if (form.isDisposed())
+			return;
+
+		if (newValue) {
+			form.setMessage("Class files have changed. Reopen the editor before making changes.",
+					IMessageProvider.WARNING);
+		} else {
+			form.setMessage(null, 0);
+		}
+		form.getBody().setEnabled(!newValue);
 	}
 
 	/**
@@ -274,8 +301,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			static final int HMARGIN = 5;
 
 			@Override
-			protected Point computeSize(Composite composite, int wHint,
-					int hHint, boolean flushCache) {
+			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
 				Point retVal = new Point(composite.getSize().x, 0);
 				if (retVal.x == 0) {
 					retVal.x = -1;
@@ -360,9 +386,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			}
 		};
 
-		EditorWidget editor = EditorWidgetFactory.getInstance()
-				.createEditorWidget(this, form.getBody(), topLevelProperty,
-						null);
+		EditorWidget editor = EditorWidgetFactory.getInstance().createEditorWidget(this, form.getBody(),
+				topLevelProperty, null);
 		editor.loadValue();
 	}
 
@@ -370,8 +395,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		// get JavaDoc as HTML (content only)
 		String doc;
 		try {
-			IType type = getJavaProject().findType(
-					root.getClass().getCanonicalName());
+			IType type = getJavaProject().findType(root.getClass().getCanonicalName());
 			doc = JavadocContentAccess2.getHTMLContent(type, true);
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -385,10 +409,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		if (summary == null) {
 			summary = doc;
 		} else {
-			summary += String.format(" <a href=\"%s\">%s</a>", HREF_MORE,
-					"more");
-			doc += String.format("<br><a href=\"%s\">%s</a>", HREF_LESS,
-					"hide detailed description");
+			summary += String.format(" <a href=\"%s\">%s</a>", HREF_MORE, "more");
+			doc += String.format("<br><a href=\"%s\">%s</a>", HREF_LESS, "hide detailed description");
 		}
 
 		final String summaryDoc = buildDocument(summary);
@@ -404,8 +426,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			}
 		});
 
-		final LocationListener linkHandler = JavaElementLinks
-				.createLocationListener(new JavaLinkHandler());
+		final LocationListener linkHandler = JavaElementLinks.createLocationListener(new JavaLinkHandler());
 
 		browser.addLocationListener(new LocationListener() {
 			@Override
@@ -456,15 +477,12 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	protected void doSaveReally() throws CoreException {
 		assert isValidData();
-		byte[] byteArr = XMLUtil.serialize(ProjectCache.getCache(project)
-				.getXStream(), root);
+		byte[] byteArr = XMLUtil.serialize(ProjectCache.getCache(project).getXStream(), root);
 		IFileEditorInput fei = (IFileEditorInput) getEditorInput();
 		if (fei.getFile().exists()) {
-			fei.getFile().setContents(new ByteArrayInputStream(byteArr), false,
-					true, null);
+			fei.getFile().setContents(new ByteArrayInputStream(byteArr), false, true, null);
 		} else {
-			fei.getFile()
-					.create(new ByteArrayInputStream(byteArr), false, null);
+			fei.getFile().create(new ByteArrayInputStream(byteArr), false, null);
 		}
 		dirty = false;
 		firePropertyChange(PROP_DIRTY);
@@ -475,8 +493,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		try {
 			doSaveReally();
 		} catch (CoreException e) {
-			ErrorDialog.openError(PlatformUI.getWorkbench()
-					.getModalDialogShellProvider().getShell(),
+			ErrorDialog.openError(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell(),
 					"Couldn't save file", null, e.getStatus());
 		}
 	}
@@ -484,15 +501,13 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	@Override
 	public void doSaveAs() {
 		// TODO compare to AbstractDecoratedTextEditor.performSaveAs
-		SaveAsDialog dlg = new SaveAsDialog(PlatformUI.getWorkbench()
-				.getModalDialogShellProvider().getShell());
+		SaveAsDialog dlg = new SaveAsDialog(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell());
 		IFileEditorInput oldInput = (IFileEditorInput) getEditorInput();
 		dlg.setOriginalFile(oldInput.getFile());
 		dlg.create();
 		if (dlg.open() == SaveAsDialog.CANCEL)
 			return;
-		IFile file = ResourcesPlugin.getWorkspace().getRoot()
-				.getFile(dlg.getResult());
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(dlg.getResult());
 		FileEditorInput input = new FileEditorInput(file);
 		setInput(input);
 		try {
@@ -501,8 +516,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			updateHeadline();
 		} catch (CoreException e) {
 			setInput(oldInput);
-			ErrorDialog.openError(PlatformUI.getWorkbench()
-					.getModalDialogShellProvider().getShell(),
+			ErrorDialog.openError(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell(),
 					"Couldn't save file", null, e.getStatus());
 		}
 	}
@@ -524,8 +538,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		try {
 			String href = evt.text;
 			if (href.startsWith(CLASS_URL_PREFIX)) {
-				IJavaElement elem = getJavaProject().findType(
-						href.substring(CLASS_URL_PREFIX.length()));
+				IJavaElement elem = getJavaProject().findType(href.substring(CLASS_URL_PREFIX.length()));
 				JavaLinkHandler.openJavadoc(elem);
 			}
 		} catch (Exception e) {
