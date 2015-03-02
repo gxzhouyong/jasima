@@ -18,6 +18,8 @@
  *******************************************************************************/
 package jasima_gui;
 
+import jasima_gui.editor.TopLevelEditor;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -137,7 +139,8 @@ public class ProjectCache {
 	 * This method shares {@link #getClassLoader()}'s behavior regarding
 	 * incompatible class definitions.
 	 * 
-	 * It's usually a good idea to use the ObjectTreeEditor's XStream instance.
+	 * It's usually a good idea to use the {@link TopLevelEditor}'s XStream
+	 * instance.
 	 * 
 	 * @return an XStream instance
 	 */
