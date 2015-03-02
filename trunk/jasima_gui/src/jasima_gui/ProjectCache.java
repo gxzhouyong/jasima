@@ -38,6 +38,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class ProjectCache {
@@ -146,14 +147,9 @@ public class ProjectCache {
 	 */
 	public XStream getXStream() {
 		try {
-			Set<URL> cp = new HashSet<URL>();
-			buildClassPath(cp, getJavaProject());
-			cp.remove(null);
-			if (DISABLE_CACHE || xStream == null || !cp.equals(lastClassPath)) {
-				xStream = new XStream(new DomDriver());
-				xStream.setClassLoader(new URLClassLoader(cp.toArray(new URL[cp.size()])));
-				lastClassPath = cp;
-			}
+			xStream = new XStream(new DomDriver());
+			xStream.registerConverter(new JavaBeanConverter(xStream.getMapper()), -10);
+			xStream.setClassLoader(new EclipseProjectClassLoader(getJavaProject()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			xStream = null;
