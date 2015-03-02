@@ -138,6 +138,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 					e.printStackTrace();
 				}
 			}
+		} catch (LinkageError e) {
+			root = e;
 		} catch (Exception e) {
 			root = e;
 		}
@@ -161,7 +163,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	}
 
 	protected boolean isValidData() {
-		return !(root instanceof Exception);
+		return !(root instanceof Throwable);
 	}
 
 	@Override
@@ -258,10 +260,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			GridLayout grid = new GridLayout(2, false);
 			grid.marginTop = 10;
 			form.getBody().setLayout(grid);
-			String msg = String.format("Error reading input: %s: %s", root
-					.getClass().getSimpleName(),
-					String.valueOf(((Exception) root).getLocalizedMessage())
-							.replaceFirst("^ *: *", ""));
+			String msg = String.format("Error reading input: %s: %s", root.getClass().getSimpleName(),
+					String.valueOf(((Throwable) root).getLocalizedMessage()).replaceFirst("^ *: *", ""));
 			Label icon = toolkit.createLabel(form.getBody(), null);
 			icon.setImage(form.getDisplay().getSystemImage(SWT.ERROR));
 			toolkit.createLabel(form.getBody(), msg, SWT.WRAP);
