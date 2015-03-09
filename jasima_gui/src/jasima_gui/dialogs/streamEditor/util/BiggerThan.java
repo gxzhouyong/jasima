@@ -27,7 +27,7 @@ public class BiggerThan extends SmallerThan {
 		super(p1, p2, strict);
 	}
 
-	public BiggerThan(FormProperty p1, Comparable constant, boolean strict) {
+	public BiggerThan(FormProperty p1, Comparable<?> constant, boolean strict) {
 		super(p1, constant, strict);
 	}
 

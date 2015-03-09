@@ -26,7 +26,7 @@ public class SmallerThan extends ConstraintValidator {
 
 	protected final FormProperty p1;
 	protected final FormProperty p2;
-	protected final Comparable constant;
+	protected final Comparable<?> constant;
 	protected final boolean strict;
 
 	public SmallerThan(FormProperty p1, FormProperty p2, boolean strict) {
@@ -37,7 +37,7 @@ public class SmallerThan extends ConstraintValidator {
 		this.strict = strict;
 	}
 
-	public SmallerThan(FormProperty p1, Comparable constant, boolean strict) {
+	public SmallerThan(FormProperty p1, Comparable<?> constant, boolean strict) {
 		super();
 		this.p1 = p1;
 		this.p2 = null;
