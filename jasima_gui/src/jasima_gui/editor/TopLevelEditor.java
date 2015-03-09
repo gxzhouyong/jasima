@@ -18,7 +18,7 @@
  *******************************************************************************/
 package jasima_gui.editor;
 
-import jasima_gui.ClassLoaderStateListener;
+import jasima_gui.ClassLoaderListener;
 import jasima_gui.EclipseProjectClassLoader;
 import jasima_gui.JasimaAction;
 import jasima_gui.JavaLinkHandler;
@@ -29,7 +29,6 @@ import jasima_gui.util.BrowserEx;
 import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
@@ -43,7 +42,6 @@ import org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -52,13 +50,11 @@ import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
@@ -84,10 +80,25 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	protected static final String HREF_LESS = "jasima-command:less";
 	private EditorUpdater updater;
 	private Object root;
-	private FormToolkit toolkit = null;
+	private Throwable loadError;
+	private FormToolkit toolkit;
 	private ScrolledForm form;
-	private boolean dirty = false;
+	private boolean dirty;
 	private Serialization serialization;
+	private ClassLoaderListener classLoaderListener = new ClassLoaderListener() {
+		@Override
+		public void classesChanged() {
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					TopLevelEditor.this.classesChanged();
+				};
+			});
+		}
+	};
+
+	// exactly one of these is always shown:
+	private Object mainControl;
 
 	public TopLevelEditor() {
 		updater = new EditorUpdater(this);
@@ -120,52 +131,76 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+		IFileEditorInput fei = (IFileEditorInput) input;
+		setFileInput(fei);
+		setSite(site);
 		try {
-			IFileEditorInput fei = (IFileEditorInput) input;
-			setFileInput(fei);
-			setSite(site);
 			fei.getFile().refreshLocal(0, null);
-			InputStream is = fei.getStorage().getContents();
-			try {
+			try (InputStream is = fei.getStorage().getContents()) {
 				serialization = new Serialization(fei.getFile().getProject());
-				EclipseProjectClassLoader epcl = (EclipseProjectClassLoader) serialization.getClassLoader();
-				epcl.getState().addListener(new ClassLoaderStateListener() {
-					@Override
-					public void dirtyChanged(final boolean newValue) {
-						Display.getDefault().asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								classpathDirtyChanged(newValue);
-							};
-						});
-					}
-				});
+				serialization.getClassLoader().addListener(classLoaderListener);
 				root = getXStream().fromXML(is);
-			} finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
+			loadError = null;
 		} catch (LinkageError e) {
-			root = e;
+			loadError = e;
 		} catch (Exception e) {
-			root = e;
+			loadError = e;
 		}
 	}
 
-	protected void classpathDirtyChanged(boolean newValue) {
+	protected void migrateClassLoader() {
+		assert isValidData();
+
+		Serialization newSer;
+		if (serialization.getClassLoader().getState().isDirty()) {
+			newSer = new Serialization(serialization.getProject());
+		} else {
+			newSer = serialization;
+		}
+
+		if (!isDirty()) {
+			// if there are no unsaved changes, there's no need to keep root
+			// around
+			root = null;
+		}
+
+		try {
+			if (root != null) {
+				String xml = serialization.getXStream().toXML(root);
+				root = newSer.getXStream().fromXML(xml);
+			} else {
+				IFileEditorInput fei = (IFileEditorInput) getEditorInput();
+				fei.getFile().refreshLocal(0, null);
+				try (InputStream is = fei.getStorage().getContents()) {
+					root = newSer.getXStream().fromXML(is);
+				}
+			}
+
+			if (serialization != newSer) {
+				serialization.getClassLoader().dispose();
+				serialization = newSer;
+			}
+			newSer.getClassLoader().addListener(classLoaderListener);
+			loadError = null;
+		} catch (LinkageError e) {
+			loadError = e;
+		} catch (Exception e) {
+			loadError = e;
+		}
+	}
+
+	protected void classesChanged() {
 		if (form.isDisposed())
 			return;
 
-		if (newValue) {
-			form.setMessage("Class files have changed. Reopen the editor before making changes.",
-					IMessageProvider.WARNING);
-		} else {
-			form.setMessage(null, 0);
+		if (!getClassLoader().getState().isDirty() && isValidData()) {
+			// class loader isn't dirty and root was successfully loaded
+			// no need to do anything
+			return;
 		}
-		form.getBody().setEnabled(!newValue);
+		migrateClassLoader();
+		createBody();
 	}
 
 	/**
@@ -185,7 +220,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	}
 
 	protected boolean isValidData() {
-		return !(root instanceof Throwable);
+		return loadError == null;
 	}
 
 	@Override
@@ -278,18 +313,6 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		form.setExpandHorizontal(true);
 		updateHeadline();
 
-		if (!isValidData()) {
-			GridLayout grid = new GridLayout(2, false);
-			grid.marginTop = 10;
-			form.getBody().setLayout(grid);
-			String msg = String.format("Error reading input: %s: %s", root.getClass().getSimpleName(),
-					String.valueOf(((Throwable) root).getLocalizedMessage()).replaceFirst("^ *: *", ""));
-			Label icon = toolkit.createLabel(form.getBody(), null);
-			icon.setImage(form.getDisplay().getSystemImage(SWT.ERROR));
-			toolkit.createLabel(form.getBody(), msg, SWT.WRAP);
-			return;
-		}
-
 		Layout layout = new Layout() {
 			static final int SPACING = 10;
 			static final int VMARGIN = 10;
@@ -336,11 +359,42 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 				return c.computeSize(width, SWT.DEFAULT);
 			}
 		};
+
 		form.getBody().setLayout(layout);
 
-		createJavaDocDescription();
+		createBody();
+	}
 
-		createMainEditor();
+	protected void wipeBody() {
+		for (Control ctrl : form.getBody().getChildren()) {
+			ctrl.dispose();
+		}
+	}
+
+	protected void createBody() {
+		if (!isValidData()) {
+			if (!(mainControl instanceof DeserializationFailure)) {
+				wipeBody();
+				mainControl = new DeserializationFailure(form.getBody());
+			}
+
+			DeserializationFailure failure = (DeserializationFailure) mainControl;
+			failure.setException(loadError);
+		} else if (getClassLoader().getState().isDirty()) {
+			if (!(mainControl instanceof OutdatedClassesInfo)) {
+				wipeBody();
+				mainControl = new OutdatedClassesInfo(form.getBody());
+			}
+
+			OutdatedClassesInfo oci = (OutdatedClassesInfo) mainControl;
+			oci.setState(getClassLoader().getState());
+		} else {
+			mainControl = null;
+			wipeBody();
+			createJavaDocDescription();
+			createMainEditor();
+		}
+		form.reflow(true);
 	}
 
 	protected void createMainEditor() {
@@ -388,11 +442,12 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	protected void createJavaDocDescription() {
 		// get JavaDoc as HTML (content only)
+
 		String doc;
 		try {
 			IType type = getJavaProject().findType(root.getClass().getCanonicalName());
 			doc = JavadocContentAccess2.getHTMLContent(type, true);
-		} catch (CoreException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
