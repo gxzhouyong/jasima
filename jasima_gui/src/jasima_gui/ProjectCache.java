@@ -22,8 +22,6 @@ import jasima_gui.editor.TopLevelEditor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -41,6 +39,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
+@Deprecated
 public class ProjectCache {
 	private static final Map<IProject, ProjectCache> cache = new WeakHashMap<IProject, ProjectCache>();
 	private static final boolean DISABLE_CACHE = true;

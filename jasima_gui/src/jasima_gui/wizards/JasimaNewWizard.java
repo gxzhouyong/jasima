@@ -18,7 +18,7 @@
  *******************************************************************************/
 package jasima_gui.wizards;
 
-import jasima_gui.ProjectCache;
+import jasima_gui.Serialization;
 import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
@@ -130,10 +130,10 @@ public class JasimaNewWizard extends Wizard implements INewWizard {
 		IContainer container = (IContainer) resource;
 		final IFile file = container.getFile(new Path(fileName));
 		byte[] byteArr;
-		ProjectCache cache = ProjectCache.getCache(container.getProject());
+		Serialization ser = new Serialization(container.getProject());
 		try {
-			byteArr = XMLUtil.serialize(cache.getXStream(), cache
-					.getClassLoader().loadClass(typeName).newInstance());
+			byteArr = XMLUtil.serialize(ser.getXStream(),
+					ser.getClassLoader().loadClass(typeName).newInstance());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			byteArr = new byte[0];
