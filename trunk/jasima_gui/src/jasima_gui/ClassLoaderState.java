@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IPath;
-
 public class ClassLoaderState {
 	protected ArrayList<ClassLoaderStateListener> listeners = new ArrayList<>();
 	protected Set<String> dirtyClasses = new HashSet<>();
