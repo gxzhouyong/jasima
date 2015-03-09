@@ -22,8 +22,8 @@ import jasima_gui.ClassLoaderStateListener;
 import jasima_gui.EclipseProjectClassLoader;
 import jasima_gui.JasimaAction;
 import jasima_gui.JavaLinkHandler;
-import jasima_gui.ProjectCache;
 import jasima_gui.PropertyToolTip;
+import jasima_gui.Serialization;
 import jasima_gui.launcher.SimulationLaunchShortcut;
 import jasima_gui.util.BrowserEx;
 import jasima_gui.util.XMLUtil;
@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -88,24 +87,22 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	private FormToolkit toolkit = null;
 	private ScrolledForm form;
 	private boolean dirty = false;
-	private IProject project;
-	private XStream xStream;
-	private ClassLoader classLoader;
+	private Serialization serialization;
 
 	public TopLevelEditor() {
 		updater = new EditorUpdater(this);
 	}
 
 	public IJavaProject getJavaProject() {
-		return ProjectCache.getCache(project).getJavaProject();
+		return serialization.getProject();
 	}
 
 	public XStream getXStream() {
-		return xStream;
+		return serialization.getXStream();
 	}
 
-	public ClassLoader getClassLoader() {
-		return classLoader;
+	public EclipseProjectClassLoader getClassLoader() {
+		return serialization.getClassLoader();
 	}
 
 	public FormToolkit getToolkit() {
@@ -130,9 +127,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			fei.getFile().refreshLocal(0, null);
 			InputStream is = fei.getStorage().getContents();
 			try {
-				xStream = ProjectCache.getCache(fei.getFile().getProject()).getXStream();
-				classLoader = xStream.getClassLoader();
-				EclipseProjectClassLoader epcl = (EclipseProjectClassLoader) classLoader;
+				serialization = new Serialization(fei.getFile().getProject());
+				EclipseProjectClassLoader epcl = (EclipseProjectClassLoader) serialization.getClassLoader();
 				epcl.getState().addListener(new ClassLoaderStateListener() {
 					@Override
 					public void dirtyChanged(final boolean newValue) {
@@ -144,7 +140,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 						});
 					}
 				});
-				root = xStream.fromXML(is);
+				root = getXStream().fromXML(is);
 			} finally {
 				try {
 					is.close();
@@ -184,7 +180,6 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	 *            the editor input
 	 */
 	protected void setFileInput(IFileEditorInput input) {
-		project = input.getFile().getProject();
 		super.setInput(input);
 		updateHeadline();
 	}
@@ -477,7 +472,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	protected void doSaveReally() throws CoreException {
 		assert isValidData();
-		byte[] byteArr = XMLUtil.serialize(ProjectCache.getCache(project).getXStream(), root);
+		byte[] byteArr = XMLUtil.serialize(serialization.getXStream(), root);
 		IFileEditorInput fei = (IFileEditorInput) getEditorInput();
 		if (fei.getFile().exists()) {
 			fei.getFile().setContents(new ByteArrayInputStream(byteArr), false, true, null);

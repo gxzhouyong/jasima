@@ -18,7 +18,7 @@
  *******************************************************************************/
 package jasima_gui.wizards;
 
-import jasima_gui.ProjectCache;
+import jasima_gui.Serialization;
 
 import java.lang.reflect.Modifier;
 
@@ -283,8 +283,7 @@ public class JasimaNewWizardPage extends WizardPage {
 			return;
 		}
 		int dotLoc = fileName.lastIndexOf('.');
-		if (dotLoc < 0
-				|| !fileName.substring(dotLoc + 1).equalsIgnoreCase("jasima")) {
+		if (dotLoc < 0 || !fileName.substring(dotLoc + 1).equalsIgnoreCase("jasima")) {
 			updateStatus("File extension must be \"jasima\"");
 			return;
 		}
@@ -293,8 +292,8 @@ public class JasimaNewWizardPage extends WizardPage {
 			return;
 		}
 
-		ClassLoader ldr = ProjectCache.getCache(container.getProject())
-				.getClassLoader();
+		Serialization ser = new Serialization(container.getProject());
+		ClassLoader ldr = ser.getClassLoader();
 		Class<?> experiment;
 		try {
 			experiment = ldr.loadClass("jasima.core.experiment.Experiment");
