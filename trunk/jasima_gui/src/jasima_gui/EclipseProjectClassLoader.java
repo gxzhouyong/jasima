@@ -44,9 +44,11 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
 public class EclipseProjectClassLoader extends ClassLoader implements IResourceChangeListener {
+	protected ArrayList<ClassLoaderListener> listeners = new ArrayList<>();
 	protected IJavaProject project;
 	protected HashMap<IPath, ArrayList<WatchedClass>> watchedResources = new HashMap<>();
 	protected ClassLoaderState state = new ClassLoaderState();
+	protected boolean classesChanged = false;
 
 	public EclipseProjectClassLoader(IJavaProject project) {
 		this.project = project;
@@ -59,6 +61,14 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 
 	public void dispose() {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+	}
+
+	public void addListener(ClassLoaderListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeListener(ClassLoaderListener listener) {
+		listeners.remove(listener);
 	}
 
 	@Override
@@ -76,6 +86,7 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 								return false; // ignore disappearing classes
 							long newsum = checksum(content);
 							state.markDirty(wc.name, newsum != wc.checksum);
+							classesChanged = true;
 						}
 						return false; // doesn't matter, path points to a file
 					}
@@ -91,6 +102,13 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 			});
 		} catch (CoreException e) {
 			// ignore
+		}
+
+		if (classesChanged) {
+			classesChanged = false;
+			for (ClassLoaderListener listener : listeners) {
+				listener.classesChanged();
+			}
 		}
 	}
 
