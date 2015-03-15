@@ -364,5 +364,16 @@
          </perspectiveShortcut>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="jasima_gui.intro.Intro"
+            id="jasima_gui.intro">
+      </intro>
+      <introProductBinding
+            introId="jasima_gui.intro"
+            productId="org.eclipse.platform.ide">
+      </introProductBinding>
+   </extension>
 
 </plugin>
