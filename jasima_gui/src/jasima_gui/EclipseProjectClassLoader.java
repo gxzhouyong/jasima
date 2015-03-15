@@ -18,12 +18,12 @@
  *******************************************************************************/
 package jasima_gui;
 
-import java.io.ByteArrayOutputStream;
+import jasima_gui.util.IOUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,14 +159,14 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 			if (!f.exists())
 				return null;
 			try {
-				return readFully(new FileInputStream(f));
+				return IOUtil.readFully(new FileInputStream(f));
 			} catch (FileNotFoundException e) {
 			}
 		} else if (f.exists()) {
 			try (ZipFile zf = new ZipFile(f)) {
 				ZipEntry e = zf.getEntry(name);
 				if (e != null) {
-					return readFully(zf.getInputStream(e));
+					return IOUtil.readFully(zf.getInputStream(e));
 				}
 			} catch (IOException e) {
 			}
@@ -200,31 +200,6 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 			return retVal;
 		} catch (CoreException e) {
 			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Reads from <code>is</code> until either an error occurs or EOF is
-	 * reached.
-	 * 
-	 * @param is
-	 *            the stream to read from
-	 * @return all data read from <code>is</code>, or <code>null</code> if an
-	 *         error occurred
-	 */
-	public static byte[] readFully(InputStream is) {
-		final int BUFFER_SIZE = 65000;
-		try {
-			// could be improved by using an ArrayList<byte[]>
-			ByteArrayOutputStream bos = new ByteArrayOutputStream(is.available());
-			byte[] buffer = new byte[BUFFER_SIZE];
-			int r;
-			while ((r = is.read(buffer)) != -1) {
-				bos.write(buffer, 0, r);
-			}
-			return bos.toByteArray();
-		} catch (IOException e) {
 			return null;
 		}
 	}
