@@ -23,7 +23,7 @@
       <wizard
             category="jasima_gui"
             class="jasima_gui.wizards.JasimaNewWizard"
-            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
+            finalPerspective="jasima_gui.jasimaPerspective"
             icon="icons/jasima.png"
             id="jasima_gui.wizards.JasimaNewWizard"
             name="Jasima Experiment">
@@ -34,7 +34,7 @@
       <wizard
             category="jasima_gui"
             class="jasima_gui.wizards.JasimaNewProjectWizard"
-            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
+            finalPerspective="jasima_gui.jasimaPerspective"
             icon="icons/jasima.png"
             id="jasima_gui.wizards.JasimaNewProjectWizard"
             name="Jasima Project"
@@ -300,7 +300,7 @@
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
-            targetID="org.eclipse.jdt.ui.JavaPerspective">
+            targetID="jasima_gui.jasimaPerspective">
          <newWizardShortcut
                id="jasima_gui.wizards.JasimaNewProjectWizard">
          </newWizardShortcut>
@@ -345,6 +345,24 @@
       <initializer
             class="jasima_gui.pref.Initializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="jasima_gui.perspective.JasimaPerspectiveFactory"
+            icon="icons/jasima.png"
+            id="jasima_gui.jasimaPerspective"
+            name="Jasima">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="*">
+         <perspectiveShortcut
+               id="jasima_gui.jasimaPerspective">
+         </perspectiveShortcut>
+      </perspectiveExtension>
    </extension>
 
 </plugin>

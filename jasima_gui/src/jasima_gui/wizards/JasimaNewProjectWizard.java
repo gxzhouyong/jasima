@@ -28,6 +28,9 @@ import java.io.OutputStreamWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageOne;
@@ -43,9 +46,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
-public class JasimaNewProjectWizard extends Wizard implements INewWizard {
+public class JasimaNewProjectWizard extends Wizard implements INewWizard, IExecutableExtension {
 
+	private IConfigurationElement extensionConfigElement;
 	private NewJavaProjectWizardPageOne mainPage;
 	private NewJavaProjectWizardPageTwo lastPage;
 
@@ -53,6 +58,12 @@ public class JasimaNewProjectWizard extends Wizard implements INewWizard {
 		mainPage = new NewJavaProjectWizardPageOne();
 		lastPage = new NewJavaProjectWizardPageTwo(mainPage);
 		setWindowTitle("New Jasima Project");
+	}
+
+	@Override
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
+		extensionConfigElement = config;
 	}
 
 	public void addPages() {
@@ -116,6 +127,8 @@ public class JasimaNewProjectWizard extends Wizard implements INewWizard {
 					new NullProgressMonitor());
 			IClasspathManager bpm = MavenJdtPlugin.getDefault().getBuildpathManager();
 			bpm.scheduleDownload(proj.getProject(), true, true);
+
+			BasicNewProjectResourceWizard.updatePerspective(extensionConfigElement);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
