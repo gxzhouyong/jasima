@@ -26,7 +26,7 @@
             finalPerspective="jasima_gui.jasimaPerspective"
             icon="icons/jasima.png"
             id="jasima_gui.wizards.JasimaNewWizard"
-            name="Jasima Experiment">
+            name="jasima Experiment">
          <description>
             Create a new Jasima experiment in XML format
          </description>
@@ -37,7 +37,7 @@
             finalPerspective="jasima_gui.jasimaPerspective"
             icon="icons/jasima.png"
             id="jasima_gui.wizards.JasimaNewProjectWizard"
-            name="Jasima Project"
+            name="jasima Project"
             project="true">
          <description>
             Create a new Maven Project including all Jasima dependencies
@@ -352,7 +352,7 @@
             class="jasima_gui.perspective.JasimaPerspectiveFactory"
             icon="icons/jasima.png"
             id="jasima_gui.jasimaPerspective"
-            name="Jasima">
+            name="jasima">
       </perspective>
    </extension>
    <extension
