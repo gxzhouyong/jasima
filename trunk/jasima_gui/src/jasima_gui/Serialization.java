@@ -23,13 +23,13 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class Serialization {
 	protected IJavaProject project;
 	protected XStream xStream;
 	protected EclipseProjectClassLoader epcl;
+	protected PermissiveBeanConverter converter;
 
 	public Serialization(IProject project) {
 		this(JavaCore.create(project));
@@ -39,19 +39,28 @@ public class Serialization {
 		this.project = project;
 		epcl = new EclipseProjectClassLoader(project);
 		xStream = new XStream(new DomDriver());
-		xStream.registerConverter(new JavaBeanConverter(xStream.getMapper()), -10);
+		converter = new PermissiveBeanConverter(xStream.getMapper());
+		xStream.registerConverter(converter, -10);
 		xStream.setClassLoader(epcl);
 	}
-	
+
 	public EclipseProjectClassLoader getClassLoader() {
 		return epcl;
 	}
-	
+
 	public IJavaProject getProject() {
 		return project;
 	}
-	
+
 	public XStream getXStream() {
 		return xStream;
+	}
+
+	public void startConversionReport() {
+		converter.startConversionReport();
+	}
+
+	public ConversionReport finishConversionReport() {
+		return converter.finishConversionReport();
 	}
 }

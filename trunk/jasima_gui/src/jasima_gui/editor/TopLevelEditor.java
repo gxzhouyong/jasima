@@ -19,6 +19,7 @@
 package jasima_gui.editor;
 
 import jasima_gui.ClassLoaderListener;
+import jasima_gui.ConversionReport;
 import jasima_gui.EclipseProjectClassLoader;
 import jasima_gui.JasimaAction;
 import jasima_gui.JavaLinkHandler;
@@ -32,6 +33,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -81,6 +83,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	private EditorUpdater updater;
 	private Object root;
 	private Throwable loadError;
+	private ConversionReport conversionReport;
 	private FormToolkit toolkit;
 	private ScrolledForm form;
 	private boolean dirty;
@@ -136,16 +139,22 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		setSite(site);
 		try {
 			fei.getFile().refreshLocal(0, null);
+			IProject project = fei.getFile().getProject();
 			try (InputStream is = fei.getStorage().getContents()) {
-				serialization = new Serialization(fei.getFile().getProject());
+				serialization = new Serialization(project);
+				serialization.startConversionReport();
 				serialization.getClassLoader().addListener(classLoaderListener);
 				root = getXStream().fromXML(is);
+			} finally {
+				conversionReport = serialization.finishConversionReport();
 			}
 			loadError = null;
 		} catch (LinkageError e) {
 			loadError = e;
+			conversionReport = null;
 		} catch (Exception e) {
 			loadError = e;
+			conversionReport = null;
 		}
 	}
 
@@ -166,12 +175,22 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		try {
 			if (root != null) {
 				String xml = serialization.getXStream().toXML(root);
-				root = newSer.getXStream().fromXML(xml);
+				try {
+					newSer.startConversionReport();
+					root = newSer.getXStream().fromXML(xml);
+				} finally {
+					conversionReport = newSer.finishConversionReport();
+				}
 			} else {
 				IFileEditorInput fei = (IFileEditorInput) getEditorInput();
 				fei.getFile().refreshLocal(0, null);
 				try (InputStream is = fei.getStorage().getContents()) {
-					root = newSer.getXStream().fromXML(is);
+					try {
+						newSer.startConversionReport();
+						root = newSer.getXStream().fromXML(is);
+					} finally {
+						conversionReport = newSer.finishConversionReport();
+					}
 				}
 			}
 
@@ -183,8 +202,10 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			loadError = null;
 		} catch (LinkageError e) {
 			loadError = e;
+			conversionReport = null;
 		} catch (Exception e) {
 			loadError = e;
+			conversionReport = null;
 		}
 	}
 
@@ -378,7 +399,16 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 			DeserializationFailure failure = (DeserializationFailure) mainControl;
 			failure.setException(loadError);
+		} else if(conversionReport != null) {
+			if (!(mainControl instanceof ConversionReportView)) {
+				wipeBody();
+				mainControl = new ConversionReportView(form.getBody(), this);
+			}
+
+			ConversionReportView crv = (ConversionReportView) mainControl;
+			crv.setReport(conversionReport);
 		} else if (getClassLoader().getState().isDirty()) {
+			assert false; // reloads automatically
 			if (!(mainControl instanceof OutdatedClassesInfo)) {
 				wipeBody();
 				mainControl = new OutdatedClassesInfo(form.getBody());
@@ -593,5 +623,12 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		} catch (Exception e) {
 			// ignore
 		}
+	}
+
+	public void confirmConversionReport() {
+		makeDirty();
+		conversionReport = null;
+		createBody();
+		setFocus();
 	}
 }
