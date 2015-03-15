@@ -18,33 +18,35 @@
  *******************************************************************************/
 package jasima_gui.editor;
 
+import jasima_gui.ConversionReport;
+
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-public class DeserializationFailure {
-	protected Label label;
+public class ConversionReportView {
 
-	public DeserializationFailure(Composite parent) {
+	protected FormText message;
+
+	public ConversionReportView(Composite parent, final TopLevelEditor editor) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		Composite comp = toolkit.createComposite(parent);
-		GridLayout grid = new GridLayout(2, false);
-		grid.marginTop = 10;
-		comp.setLayout(grid);
-		Label icon = toolkit.createLabel(comp, null);
-		icon.setImage(icon.getDisplay().getSystemImage(SWT.ERROR));
-		label = toolkit.createLabel(comp, null, SWT.WRAP);
-		label.setFont(JFaceResources.getTextFont());
+		message = toolkit.createFormText(parent, true);
+		message.setFont("code", JFaceResources.getTextFont());
+		message.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				if(e.getHref().toString().equals(ConversionReport.HREF_CONFIRM)) {
+					editor.confirmConversionReport();
+				}
+			}
+		});
 	}
 
-	public void setException(Throwable exception) {
-		String type = exception.getClass().getSimpleName();
-		String details = String.valueOf(exception.getLocalizedMessage()).replaceFirst("^ *: *", "");
-		String message = String.format("Error reading input: %s: %s", type, details);
-		label.setText(message);
+	public void setReport(ConversionReport report) {
+		System.err.println(report.toString());
+		message.setText(report.toString(), true, false);
 	}
-
 }
