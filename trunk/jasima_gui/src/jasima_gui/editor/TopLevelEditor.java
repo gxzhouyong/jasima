@@ -150,8 +150,6 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	}
 
 	protected void migrateClassLoader() {
-		assert isValidData();
-
 		Serialization newSer;
 		if (serialization.getClassLoader().getState().isDirty()) {
 			newSer = new Serialization(serialization.getProject());
