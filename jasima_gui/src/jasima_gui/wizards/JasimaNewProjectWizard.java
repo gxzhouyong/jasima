@@ -36,6 +36,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.ResolverConfiguration;
+import org.eclipse.m2e.jdt.IClasspathManager;
+import org.eclipse.m2e.jdt.MavenJdtPlugin;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -112,6 +114,8 @@ public class JasimaNewProjectWizard extends Wizard implements INewWizard {
 			MavenPlugin.getProjectConfigurationManager().enableMavenNature(
 					proj.getProject(), new ResolverConfiguration(),
 					new NullProgressMonitor());
+			IClasspathManager bpm = MavenJdtPlugin.getDefault().getBuildpathManager();
+			bpm.scheduleDownload(proj.getProject(), true, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
