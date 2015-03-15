@@ -392,6 +392,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			createJavaDocDescription();
 			createMainEditor();
 		}
+		form.getBody().layout(true, true);
 		form.reflow(true);
 	}
 
