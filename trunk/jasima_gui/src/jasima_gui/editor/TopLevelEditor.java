@@ -407,16 +407,9 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 			ConversionReportView crv = (ConversionReportView) mainControl;
 			crv.setReport(conversionReport);
-		} else if (getClassLoader().getState().isDirty()) {
-			assert false; // reloads automatically
-			if (!(mainControl instanceof OutdatedClassesInfo)) {
-				wipeBody();
-				mainControl = new OutdatedClassesInfo(form.getBody());
-			}
-
-			OutdatedClassesInfo oci = (OutdatedClassesInfo) mainControl;
-			oci.setState(getClassLoader().getState());
 		} else {
+			// we should never show an editor based on old class definitions
+			assert !getClassLoader().getState().isDirty();
 			mainControl = null;
 			wipeBody();
 			createJavaDocDescription();
