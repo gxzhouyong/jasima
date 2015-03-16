@@ -45,7 +45,7 @@ public class ConversionReport {
 		if (fmt == null) {
 			fmt = new Formatter();
 			fmt.format("<form>");
-			fmt.format("<p>The following changes occured to classes since the file was saved:</p>");
+			fmt.format("<p>The following changes occured since the file was last edited:</p>");
 		}
 	}
 
