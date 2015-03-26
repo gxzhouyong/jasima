@@ -365,15 +365,15 @@
       </perspectiveExtension>
    </extension>
    <extension
-         point="org.eclipse.ui.intro">
-      <intro
-            class="jasima_gui.intro.Intro"
-            id="jasima_gui.intro">
-      </intro>
-      <introProductBinding
-            introId="jasima_gui.intro"
-            productId="org.eclipse.platform.ide">
-      </introProductBinding>
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="src/jasima_gui/intro/welcome.xml">
+      </configExtension>
+      <action
+            name="jasima_gui.intro.OpenPerspective"
+            replaces="jasima:open-perspective">
+      </action>
    </extension>
 
 </plugin>

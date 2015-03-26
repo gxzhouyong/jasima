@@ -1,0 +1,7 @@
+a#jasima-perspective img {
+	background-image: url('jasima.png');
+}
+
+a#jasima-perspective:hover img {
+	background-image: url('jasima_hover.png');
+}
