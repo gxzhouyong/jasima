@@ -144,7 +144,6 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 
 	@Override
 	protected URL findResource(String name) {
-		System.err.printf("findResource: %s%n", name);
 		return super.findResource(name);
 	}
 
