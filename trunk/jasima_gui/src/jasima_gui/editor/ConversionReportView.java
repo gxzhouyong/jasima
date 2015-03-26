@@ -46,7 +46,6 @@ public class ConversionReportView {
 	}
 
 	public void setReport(ConversionReport report) {
-		System.err.println(report.toString());
 		message.setText(report.toString(), true, false);
 	}
 }
