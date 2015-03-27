@@ -42,6 +42,7 @@ public class IntEditor extends EditorWidget implements FocusListener, ModifyList
 	private Spinner spinner;
 	private boolean modifying = false;
 	private boolean dirty = false;
+	private boolean enabled = true;
 
 	public IntEditor(Composite parent) {
 		super(parent);
@@ -62,9 +63,8 @@ public class IntEditor extends EditorWidget implements FocusListener, ModifyList
 		spinner.setValues(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 1, 50);
 		toolkit.adapt(spinner, true, true);
 		spinner.addFocusListener(this);
-		spinner.setEnabled(property.isWritable());
 		spinner.addModifyListener(this);
-		if (property.canBeNull() && property.isWritable()) {
+		if (property.canBeNull()) {
 			layout.numColumns = 2;
 			btnNull = toolkit.createButton(this, "null", SWT.CHECK);
 			btnNull.addSelectionListener(this);
@@ -80,12 +80,18 @@ public class IntEditor extends EditorWidget implements FocusListener, ModifyList
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		enabled &= property.isWritable();
+		this.enabled = enabled;
+		updateEnabled();
+	}
+
+	protected void updateEnabled() {
+		boolean writable = property.isWritable();
+		boolean isNull = false;
 		if (btnNull != null) {
-			btnNull.setEnabled(enabled);
-			enabled &= !btnNull.getSelection();
+			btnNull.setEnabled(enabled && writable);
+			isNull = btnNull.getSelection();
 		}
-		spinner.setEnabled(enabled);
+		spinner.setEnabled(enabled && writable && !isNull);
 	}
 
 	@Override
@@ -115,7 +121,7 @@ public class IntEditor extends EditorWidget implements FocusListener, ModifyList
 	public void widgetSelected(SelectionEvent e) {
 		assert e.widget == btnNull;
 		boolean nullSelected = btnNull.getSelection();
-		spinner.setEnabled(!nullSelected);
+		updateEnabled();
 		spinner.setSelection(0);
 		if (!nullSelected) {
 			dirty = true;
@@ -133,12 +139,13 @@ public class IntEditor extends EditorWidget implements FocusListener, ModifyList
 			num = (Number) property.getValue();
 		} catch (PropertyException e) {
 			showError(e.getLocalizedMessage());
+			// pretend the value is null
 		}
-		if (num == null) {
-			spinner.setSelection(0);
-		} else {
-			spinner.setSelection(num.intValue());
+		spinner.setSelection(num == null ? 0 : num.intValue());
+		if (btnNull != null) {
+			btnNull.setSelection(num == null);
 		}
+		updateEnabled();
 		dirty = false;
 		modifying = false;
 	}
@@ -146,15 +153,17 @@ public class IntEditor extends EditorWidget implements FocusListener, ModifyList
 	@Override
 	public void storeValue() {
 		try {
-			Object val = null;
-			Class<?> type = TypeUtil.toClass(property.getType());
-			if (type.isPrimitive()) {
-				type = TypeUtil.getPrimitiveWrapper(type);
+			Object val;
+			if (btnNull != null && btnNull.getSelection()) {
+				val = null;
+			} else {
+				Class<?> type = TypeUtil.toClass(property.getType());
+				if (type.isPrimitive()) {
+					type = TypeUtil.getPrimitiveWrapper(type);
+				}
+				val = type.getConstructor(String.class).newInstance(String.valueOf(spinner.getSelection()));
 			}
-			val = type.getConstructor(String.class).newInstance(String.valueOf(spinner.getSelection()));
-			if (val != null) {
-				property.setValue(val);
-			}
+			property.setValue(val);
 			dirty = false;
 			hideError();
 		} catch (Exception ex) {
