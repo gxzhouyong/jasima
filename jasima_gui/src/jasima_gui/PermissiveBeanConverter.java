@@ -18,9 +18,12 @@
  *******************************************************************************/
 package jasima_gui;
 
+import jasima_gui.util.TypeUtil;
+
 import java.util.HashSet;
 import java.util.Set;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
@@ -117,10 +120,29 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 						value = null;
 					} else {
 						Class<?> type = determineType(reader, result, propertyName);
-						value = context.convertAnother(result, type);
-					}
+						Class<?> propType = beanProvider.getPropertyType(result, propertyName);
 
-					beanProvider.writeProperty(result, propertyName, value);
+						if (type.isPrimitive())
+							type = TypeUtil.getPrimitiveWrapper(type);
+
+						if (propType.isPrimitive())
+							propType = TypeUtil.getPrimitiveWrapper(propType);
+
+						if (!propType.isAssignableFrom(type)) {
+							report.propertyTypeChanged(resultType, propertyName);
+						} else {
+							try {
+								value = context.convertAnother(result, type);
+								try {
+									beanProvider.writeProperty(result, propertyName, value);
+								} catch (Exception e) {
+									report.propertyRangeChanged(resultType, propertyName);
+								}
+							} catch (ConversionException e) {
+								report.propertyTypeChanged(resultType, propertyName);
+							}
+						}
+					}
 				} else {
 					report.propertyDisappeared(resultType, propertyName);
 				}

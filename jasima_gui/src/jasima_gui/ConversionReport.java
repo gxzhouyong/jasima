@@ -62,4 +62,18 @@ public class ConversionReport {
 		fmt.format("<li><span font='code'>%s</span> no longer has the property “<span font='code'>%s</span>”</li>", st,
 				propertyName);
 	}
+
+	public void propertyTypeChanged(Class<?> type, String propertyName) {
+		ensureFormatterExists();
+		String st = TypeUtil.toString(type, true);
+		fmt.format("<li><span font='code'>%s.%s</span>'s type changed, making the old value invalid</li>", st,
+				propertyName);
+	}
+
+	public void propertyRangeChanged(Class<?> type, String propertyName) {
+		ensureFormatterExists();
+		String st = TypeUtil.toString(type, true);
+		fmt.format("<li><span font='code'>%s.%s</span>'s allowed value range changed, "
+				+ "making the old value invalid</li>", st, propertyName);
+	}
 }
