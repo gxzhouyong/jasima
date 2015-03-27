@@ -68,12 +68,9 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 					writer.endNode();
 				} else {
 					Class<?> actualType = newObj.getClass();
-					Class<?> defaultType = mapper.defaultImplementationOf(fieldType);
 					String serializedMember = mapper.serializedMember(source.getClass(), propertyName);
 					ExtendedHierarchicalStreamWriterHelper.startNode(writer, serializedMember, actualType);
-					if (!actualType.equals(defaultType) && classAttributeName != null) {
-						writer.addAttribute(classAttributeName, mapper.serializedClass(actualType));
-					}
+					writer.addAttribute(classAttributeName, mapper.serializedClass(actualType));
 					context.convertAnother(newObj);
 
 					writer.endNode();
@@ -163,6 +160,7 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 		if (classAttribute != null) {
 			return mapper.realClass(classAttribute);
 		} else {
+			// doesn't happen when the file was saved with this Converter
 			return mapper.defaultImplementationOf(beanProvider.getPropertyType(result, fieldName));
 		}
 	}
