@@ -20,60 +20,65 @@ package jasima_gui;
 
 import jasima_gui.util.TypeUtil;
 
+import java.util.EnumMap;
 import java.util.Formatter;
+import java.util.Map;
+import java.util.TreeSet;
 
 public class ConversionReport {
 	public static final String HREF_CONFIRM = "jasima-command:confirm-conversion-report";
-	protected Formatter fmt = null;
+	protected EnumMap<ConversionReportCategory, TreeSet<String>> messages = new EnumMap<>(ConversionReportCategory.class);
+	protected String result;
 
 	public void finish() {
-		if (fmt != null) {
-			fmt.format("<p><a href='%s'>Confirm</a> and continue editing</p>", HREF_CONFIRM);
-			fmt.format("</form>");
+		@SuppressWarnings("resource")
+		Formatter fmt = new Formatter();
+
+		fmt.format("<form><p>Some changes to the referenced classes occured since this file was last edited.</p>");
+		for (Map.Entry<ConversionReportCategory, TreeSet<String>> entry : messages.entrySet()) {
+			fmt.format("<p>%s</p>", entry.getKey().introText);
+			for (String s : entry.getValue()) {
+				fmt.format("<li>%s</li>", s);
+			}
 		}
+		fmt.format("<p><a href='%s'>Confirm</a> and continue editing</p>", HREF_CONFIRM);
+		fmt.format("</form>");
+		result = fmt.toString();
 	}
 
 	public boolean isEmpty() {
-		return fmt == null;
+		return messages.isEmpty();
 	}
 
 	public String toString() {
-		return fmt.toString();
+		return result;
 	}
 
-	protected void ensureFormatterExists() {
-		if (fmt == null) {
-			fmt = new Formatter();
-			fmt.format("<form>");
-			fmt.format("<p>The following changes occured since the file was last edited:</p>");
+	protected void putMessage(ConversionReportCategory msgType, String format, Object... args) {
+		TreeSet<String> val = messages.get(msgType);
+		if (val == null) {
+			messages.put(msgType, val = new TreeSet<String>());
 		}
+		val.add(String.format(format, args));
 	}
 
 	public void newProperty(Class<?> type, String propertyName) {
-		ensureFormatterExists();
 		String st = TypeUtil.toString(type, true);
-		fmt.format("<li><span font='code'>%s</span> now has the new property “<span font='code'>%s</span>”</li>", st,
-				propertyName);
+		putMessage(ConversionReportCategory.NEW_PROPERTY, "<span color='light'>%s.</span>%s", st, propertyName);
 	}
 
 	public void propertyDisappeared(Class<?> type, String propertyName) {
-		ensureFormatterExists();
 		String st = TypeUtil.toString(type, true);
-		fmt.format("<li><span font='code'>%s</span> no longer has the property “<span font='code'>%s</span>”</li>", st,
-				propertyName);
+		putMessage(ConversionReportCategory.PROPERTY_DISAPPEARED, "<span color='light'>%s.</span>%s", st, propertyName);
 	}
 
 	public void propertyTypeChanged(Class<?> type, String propertyName) {
-		ensureFormatterExists();
 		String st = TypeUtil.toString(type, true);
-		fmt.format("<li><span font='code'>%s.%s</span>'s type changed, making the old value invalid</li>", st,
-				propertyName);
+		putMessage(ConversionReportCategory.TYPE_CHANGED, "<span color='light'>%s.</span>%s", st, propertyName);
 	}
 
 	public void propertyRangeChanged(Class<?> type, String propertyName) {
-		ensureFormatterExists();
 		String st = TypeUtil.toString(type, true);
-		fmt.format("<li><span font='code'>%s.%s</span>'s allowed value range changed, "
-				+ "making the old value invalid</li>", st, propertyName);
+		putMessage(ConversionReportCategory.ALLOWED_VALUES_CHANGED, "<span color='light'>%s.</span>%s", st, propertyName);
 	}
 }

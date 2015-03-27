@@ -21,6 +21,7 @@ package jasima_gui.editor;
 import jasima_gui.ConversionReport;
 
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -35,6 +36,7 @@ public class ConversionReportView {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 		message = toolkit.createFormText(parent, true);
 		message.setFont("code", JFaceResources.getTextFont());
+		message.setColor("light", parent.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
 		message.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
