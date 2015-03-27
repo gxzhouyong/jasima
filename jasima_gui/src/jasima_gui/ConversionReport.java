@@ -77,8 +77,8 @@ public class ConversionReport {
 		putMessage(ConversionReportCategory.TYPE_CHANGED, "<span color='light'>%s.</span>%s", st, propertyName);
 	}
 
-	public void propertyRangeChanged(Class<?> type, String propertyName) {
+	public void propertyRangeChanged(Class<?> type, String propertyName, String message) {
 		String st = TypeUtil.toString(type, true);
-		putMessage(ConversionReportCategory.ALLOWED_VALUES_CHANGED, "<span color='light'>%s.</span>%s", st, propertyName);
+		putMessage(ConversionReportCategory.ALLOWED_VALUES_CHANGED, "<span color='light'>%s.</span>%s (%s)", st, propertyName, message);
 	}
 }

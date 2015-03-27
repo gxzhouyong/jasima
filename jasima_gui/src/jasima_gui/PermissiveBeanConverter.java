@@ -20,6 +20,7 @@ package jasima_gui;
 
 import jasima_gui.util.TypeUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -136,7 +137,11 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 								try {
 									beanProvider.writeProperty(result, propertyName, value);
 								} catch (Exception e) {
-									report.propertyRangeChanged(resultType, propertyName);
+									Throwable t = e.getCause();
+									if(t instanceof InvocationTargetException) {
+										t = t.getCause();
+									}
+									report.propertyRangeChanged(resultType, propertyName, t.toString());
 								}
 							} catch (ConversionException e) {
 								report.propertyTypeChanged(resultType, propertyName);
