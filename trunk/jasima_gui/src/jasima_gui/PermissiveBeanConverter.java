@@ -24,12 +24,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
 import com.thoughtworks.xstream.converters.javabean.JavaBeanProvider;
 import com.thoughtworks.xstream.converters.reflection.MissingFieldException;
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -120,31 +120,28 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 					if (NULL_ATTRIBUTE_VALUE.equals(reader.getAttribute(NULL_ATTRIBUTE_NAME))) {
 						value = null;
 					} else {
-						Class<?> type = determineType(reader, result, propertyName);
+						Class<?> serializedType = determineType(reader, result, propertyName);
 						Class<?> propType = beanProvider.getPropertyType(result, propertyName);
 
-						if (type.isPrimitive())
-							type = TypeUtil.getPrimitiveWrapper(type);
+						if (serializedType.isPrimitive())
+							serializedType = TypeUtil.getPrimitiveWrapper(serializedType);
 
 						if (propType.isPrimitive())
 							propType = TypeUtil.getPrimitiveWrapper(propType);
 
-						if (!propType.isAssignableFrom(type)) {
-							report.propertyTypeChanged(resultType, propertyName);
+						if (!propType.isAssignableFrom(serializedType)) {
+							report.propertyTypeChanged(resultType, propertyName, propType, serializedType);
 						} else {
 							try {
-								value = context.convertAnother(result, type);
-								try {
-									beanProvider.writeProperty(result, propertyName, value);
-								} catch (Exception e) {
-									Throwable t = e.getCause();
-									if(t instanceof InvocationTargetException) {
-										t = t.getCause();
-									}
-									report.propertyRangeChanged(resultType, propertyName, t.toString());
-								}
-							} catch (ConversionException e) {
-								report.propertyTypeChanged(resultType, propertyName);
+								value = context.convertAnother(result, serializedType);
+								beanProvider.writeProperty(result, propertyName, value);
+							} catch (ObjectAccessException e) {
+								Throwable t = e.getCause();
+
+								if (t instanceof InvocationTargetException)
+									t = t.getCause();
+
+								report.propertyRangeChanged(resultType, propertyName, t.toString());
 							}
 						}
 					}

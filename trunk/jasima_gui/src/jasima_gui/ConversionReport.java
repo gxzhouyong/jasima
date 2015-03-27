@@ -72,9 +72,11 @@ public class ConversionReport {
 		putMessage(ConversionReportCategory.PROPERTY_DISAPPEARED, "<span color='light'>%s.</span>%s", st, propertyName);
 	}
 
-	public void propertyTypeChanged(Class<?> type, String propertyName) {
+	public void propertyTypeChanged(Class<?> type, String propertyName, Class<?> needed, Class<?> actual) {
 		String st = TypeUtil.toString(type, true);
-		putMessage(ConversionReportCategory.TYPE_CHANGED, "<span color='light'>%s.</span>%s", st, propertyName);
+		String sn = TypeUtil.toString(needed, true);
+		String sa = TypeUtil.toString(actual, true);
+		putMessage(ConversionReportCategory.TYPE_CHANGED, "<span color='light'>%s.</span>%s (%s → %s)", st, propertyName, sa, sn);
 	}
 
 	public void propertyRangeChanged(Class<?> type, String propertyName, String message) {
