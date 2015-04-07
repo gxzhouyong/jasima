@@ -82,9 +82,7 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 					if (res != null) {
 						for (WatchedClass wc : res) {
 							byte[] content = readResource(path, wc.name);
-							if (content == null)
-								return false; // ignore disappearing classes
-							long newsum = checksum(content);
+							long newsum = content == null ? 0xFFFFFFFF : checksum(content);
 							state.markDirty(wc.name, newsum != wc.checksum);
 							classesChanged = true;
 						}
