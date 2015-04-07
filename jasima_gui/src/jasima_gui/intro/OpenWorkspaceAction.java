@@ -40,9 +40,9 @@ public class OpenWorkspaceAction implements IIntroAction {
 		IIntroManager im = wb.getIntroManager();
 		im.closeIntro(im.getIntro());
 		try {
-			wb.showPerspective("jasima_gui.perspective", wbw);
+			wb.showPerspective("jasima_gui.jasimaPerspective", wbw);
 		} catch (WorkbenchException ex) {
-			// ignore
+			throw new RuntimeException(ex);
 		}
 	}
 }
