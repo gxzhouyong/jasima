@@ -273,11 +273,11 @@ public class TypeConverterJavaBean extends TypeToStringConverter {
 		if (o == null)
 			return NULL;
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(o.getClass().getName());
 		Map<String, PropertyDescriptor> props = TypeUtil.writableProperties(o
 				.getClass());
 		if (!props.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(o.getClass().getName());
 			sb.append('(');
 
 			for (PropertyDescriptor p : props.values()) {
@@ -292,8 +292,11 @@ public class TypeConverterJavaBean extends TypeToStringConverter {
 			} else {
 				sb.append(')');
 			}
+			return sb.toString();
+		} else {
+			// for objects without any bean properties, simply use "toString"
+			return o.toString();
 		}
-		return sb.toString();
 	}
 
 	public static String exceptionMessage(Throwable t) {
@@ -311,10 +314,6 @@ public class TypeConverterJavaBean extends TypeToStringConverter {
 					e.getFileName(), e.getCause().getMessage());
 		}
 		return msg;
-	}
-
-	static {
-		registerConverter(new TypeConverterJavaBean());
 	}
 
 }

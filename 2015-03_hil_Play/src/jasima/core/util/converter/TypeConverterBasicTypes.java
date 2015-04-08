@@ -1,10 +1,9 @@
 package jasima.core.util.converter;
 
 import jasima.core.util.ArgListTokenizer;
-import jasima.core.util.TypeUtil;
-import jasima.core.util.Util;
 import jasima.core.util.ArgListTokenizer.TokenType;
 import jasima.core.util.TypeUtil.TypeConversionException;
+import jasima.core.util.Util;
 
 public class TypeConverterBasicTypes extends TypeToStringConverter {
 
@@ -74,10 +73,6 @@ public class TypeConverterBasicTypes extends TypeToStringConverter {
 		}
 
 		throw new AssertionError(); // should never be reached
-	}
-
-	static {
-		registerConverter(new TypeConverterBasicTypes());
 	}
 
 }
