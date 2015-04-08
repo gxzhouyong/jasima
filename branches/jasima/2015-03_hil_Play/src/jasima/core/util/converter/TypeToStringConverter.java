@@ -1,10 +1,10 @@
 package jasima.core.util.converter;
 
 import jasima.core.util.ArgListTokenizer;
-import jasima.core.util.TypeUtil;
-import jasima.core.util.Util;
 import jasima.core.util.ArgListTokenizer.ParseException;
+import jasima.core.util.TypeUtil;
 import jasima.core.util.TypeUtil.TypeConversionException;
+import jasima.core.util.Util;
 
 import java.util.HashMap;
 
@@ -89,8 +89,9 @@ public abstract class TypeToStringConverter {
 	 *            Type of returned object.
 	 * @return The object as specified in the parse tree.
 	 */
-	public static <T> T convertFromString(ArgListTokenizer tk, Class<T> requiredType,
-			String context, ClassLoader loader, String[] packageSearchPath) {
+	public static <T> T convertFromString(ArgListTokenizer tk,
+			Class<T> requiredType, String context, ClassLoader loader,
+			String[] packageSearchPath) {
 		TypeToStringConverter conv = lookupConverter(requiredType);
 		return conv.fromString(tk, requiredType, context, loader,
 				packageSearchPath);
@@ -124,12 +125,8 @@ public abstract class TypeToStringConverter {
 	static {
 		converterReg = new HashMap<>();
 
-		@SuppressWarnings("unused")
-		Class<? extends TypeToStringConverter> c;
-
-		// trigger class load, so sub-classes can register themselves
-		c = TypeConverterBasicTypes.class;
-		c = TypeConverterJavaBean.class;
+		registerConverter(new TypeConverterBasicTypes());
+		registerConverter(new TypeConverterJavaBean());
 	}
 
 }
