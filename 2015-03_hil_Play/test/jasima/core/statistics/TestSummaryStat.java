@@ -154,4 +154,62 @@ public class TestSummaryStat {
 		assertEquals(manualCombine.mean(), cmb3.mean(), 1e-10);
 		assertEquals(manualCombine.variance(), cmb3.variance(), 1e-6);
 	}
+
+	@Test
+	public void testTimeweighted1() {
+		TimeWeightedSummaryStat s = new TimeWeightedSummaryStat();
+		s.value(1, 100.0);
+		s.value(2, 200.0);
+		assertEquals(0.5, s.mean(), 1e-10);
+		assertEquals(0.0, s.min(), 1e-10);
+		assertEquals(1.0, s.max(), 1e-10);
+		assertEquals(2.0, s.lastValue(), 1e-10);
+		assertEquals(200.0, s.lastTime(), 1e-10);
+	}
+
+	@Test
+	public void testTimeweighted2() {
+		TimeWeightedSummaryStat s = new TimeWeightedSummaryStat();
+		s.clear();
+		s.value(1, 100.0);
+		s.value(2, 200.0);
+		assertEquals(0.5, s.mean(), 1e-10);
+		assertEquals(0.0, s.min(), 1e-10);
+		assertEquals(1.0, s.max(), 1e-10);
+		assertEquals(2.0, s.lastValue(), 1e-10);
+		assertEquals(200.0, s.lastTime(), 1e-10);
+	}
+
+	@Test
+	public void testZeroWeight() {
+		SummaryStat s = new SummaryStat();
+		s.value(1, 0);
+		s.value(10, 0);
+		s.value(0, 0);
+		s.value(1, 100.0);
+		s.value(2, 200.0);
+		assertEquals((1.0*100+2.0*200)/300, s.mean(), 1e-10);
+		assertEquals(0.472192165, s.stdDev(), 1e-8);
+		assertEquals(0.0, s.min(), 1e-10);
+		assertEquals(10.0, s.max(), 1e-10);
+		assertEquals(2.0, s.lastValue(), 1e-10);
+		assertEquals(5, s.numObs());
+		assertEquals(300.0, s.weightSum(), 1e-10);
+	}
+
+	@Test
+	public void testZeroWeight2() {
+		TimeWeightedSummaryStat s = new TimeWeightedSummaryStat(1.0,0.0);
+		s.value(10, 0);
+		s.value(0, 0);
+		s.value(1, 100.0);
+		s.value(2, 300.0);
+		assertEquals(0.6666666666666, s.mean(), 1e-10);
+		assertEquals(0.0, s.min(), 1e-10);
+		assertEquals(10.0, s.max(), 1e-10);
+		assertEquals(2.0, s.lastValue(), 1e-10);
+		assertEquals(4, s.numObs());
+		assertEquals(300.0, s.weightSum(), 1e-10);
+	}
+
 }
