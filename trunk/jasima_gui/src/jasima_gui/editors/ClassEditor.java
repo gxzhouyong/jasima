@@ -85,7 +85,7 @@ public class ClassEditor extends EditorWidget implements IHyperlinkListener {
 		try {
 			Class<?> val = (Class<?>) property.getValue();
 			IJavaElement elem = topLevelEditor.getJavaProject().findType(val.getCanonicalName());
-			JavaLinkHandler.openJavadoc(elem);
+			JavaLinkHandler.openInEditor(elem);
 		} catch (Exception e) {
 			// ignore
 		}
