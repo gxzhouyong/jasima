@@ -19,14 +19,16 @@
 package jasima_gui;
 
 public enum ConversionReportCategory {
-	NEW_PROPERTY("The following properties are new and will be set to their default values:"), //
-	PROPERTY_DISAPPEARED("The following properties no longer exist and will be discarded:"), //
-	ALLOWED_VALUES_CHANGED("The following properties could not be set to their previously saved values:"), //
-	TYPE_CHANGED("The following properties have changed their types and will be set to their default values:");
+	NEW_PROPERTY("New properties", "These properties are new and will be set to their default values:"), //
+	PROPERTY_DISAPPEARED("Deleted properties", "These properties no longer exist and will be discarded:"), //
+	ALLOWED_VALUES_CHANGED("Invalid values", "These properties could not be set to their previously saved values:"), //
+	TYPE_CHANGED("Invalid types", "These properties have changed their types and will be set to their default values:");
 
-	private ConversionReportCategory(String introText) {
+	private ConversionReportCategory(String headline, String introText) {
+		this.headline = headline;
 		this.introText = introText;
 	}
 
+	public String headline;
 	public String introText;
 }
