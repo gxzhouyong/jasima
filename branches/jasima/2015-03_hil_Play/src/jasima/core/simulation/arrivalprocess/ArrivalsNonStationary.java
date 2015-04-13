@@ -65,6 +65,7 @@ public class ArrivalsNonStationary extends ArrivalProcess {
 		super.init();
 
 		unitMeanDblStream.setRndGen(rndGen);
+		unitMeanDblStream.init();
 	}
 
 	@Override
