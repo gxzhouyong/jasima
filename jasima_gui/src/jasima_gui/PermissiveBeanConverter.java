@@ -118,33 +118,35 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 
 				if (propertyExistsInClass) {
 					Object value;
+					Class<?> serializedType = determineType(reader, result, propertyName);
+					Class<?> propType = beanProvider.getPropertyType(result, propertyName);
+
+					if (serializedType.isPrimitive())
+						serializedType = TypeUtil.getPrimitiveWrapper(serializedType);
+
+					if (propType.isPrimitive())
+						propType = TypeUtil.getPrimitiveWrapper(propType);
+
+					if (!propType.isAssignableFrom(serializedType)) {
+						report.propertyTypeChanged(resultType, propertyName, propType, serializedType);
+						continue;
+					}
+
 					if (NULL_ATTRIBUTE_VALUE.equals(reader.getAttribute(NULL_ATTRIBUTE_NAME))) {
 						value = null;
 					} else {
-						Class<?> serializedType = determineType(reader, result, propertyName);
-						Class<?> propType = beanProvider.getPropertyType(result, propertyName);
+						value = context.convertAnother(result, serializedType);
+					}
 
-						if (serializedType.isPrimitive())
-							serializedType = TypeUtil.getPrimitiveWrapper(serializedType);
+					try {
+						beanProvider.writeProperty(result, propertyName, value);
+					} catch (ObjectAccessException e) {
+						Throwable t = e.getCause();
 
-						if (propType.isPrimitive())
-							propType = TypeUtil.getPrimitiveWrapper(propType);
+						if (t instanceof InvocationTargetException)
+							t = t.getCause();
 
-						if (!propType.isAssignableFrom(serializedType)) {
-							report.propertyTypeChanged(resultType, propertyName, propType, serializedType);
-						} else {
-							try {
-								value = context.convertAnother(result, serializedType);
-								beanProvider.writeProperty(result, propertyName, value);
-							} catch (ObjectAccessException e) {
-								Throwable t = e.getCause();
-
-								if (t instanceof InvocationTargetException)
-									t = t.getCause();
-
-								report.propertyRangeChanged(resultType, propertyName, t.toString());
-							}
-						}
+						report.propertyRangeChanged(resultType, propertyName, t.toString());
 					}
 				} else {
 					report.propertyDisappeared(resultType, propertyName);
