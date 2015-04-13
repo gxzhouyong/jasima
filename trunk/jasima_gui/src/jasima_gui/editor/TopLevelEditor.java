@@ -42,6 +42,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -99,6 +100,8 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			});
 		}
 	};
+	private Action runExperiment;
+	private Action debugExperiment;
 
 	// exactly one of these is always shown:
 	private Object mainControl;
@@ -275,7 +278,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
 
-		toolBarManager.add(new JasimaAction("...runExperiment") {
+		toolBarManager.add(runExperiment = new JasimaAction("...runExperiment") {
 			@Override
 			public void run() {
 				IFile file = ((IFileEditorInput) getEditorInput()).getFile();
@@ -283,7 +286,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			}
 		});
 
-		toolBarManager.add(new JasimaAction("...debugExperiment") {
+		toolBarManager.add(debugExperiment = new JasimaAction("...debugExperiment") {
 			@Override
 			public void run() {
 				IFile file = ((IFileEditorInput) getEditorInput()).getFile();
@@ -392,6 +395,9 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	protected void createBody() {
 		if (!isValidData()) {
+			runExperiment.setEnabled(false);
+			debugExperiment.setEnabled(false);
+
 			if (!(mainControl instanceof DeserializationFailure)) {
 				wipeBody();
 				mainControl = new DeserializationFailure(form.getBody());
@@ -399,7 +405,10 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 			DeserializationFailure failure = (DeserializationFailure) mainControl;
 			failure.setException(loadError);
-		} else if(conversionReport != null) {
+		} else if (conversionReport != null) {
+			runExperiment.setEnabled(false);
+			debugExperiment.setEnabled(false);
+
 			if (!(mainControl instanceof ConversionReportView)) {
 				wipeBody();
 				mainControl = new ConversionReportView(form.getBody(), this);
@@ -408,6 +417,9 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			ConversionReportView crv = (ConversionReportView) mainControl;
 			crv.setReport(conversionReport);
 		} else {
+			runExperiment.setEnabled(true);
+			debugExperiment.setEnabled(true);
+
 			// we should never show an editor based on old class definitions
 			assert !getClassLoader().getState().isDirty();
 			mainControl = null;
