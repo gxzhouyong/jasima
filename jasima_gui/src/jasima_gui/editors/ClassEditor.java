@@ -56,7 +56,7 @@ public class ClassEditor extends EditorWidget implements IHyperlinkListener {
 			hyperlink.setText("(null)");
 		} else {
 			hyperlink.setEnabled(true);
-			String unAbbr = TypeUtil.toString(val);
+			String unAbbr = TypeUtil.toString(val, false);
 			String abbr = TypeUtil.toString(val, true);
 			if (!unAbbr.equals(abbr)) {
 				hyperlink.setToolTipText(unAbbr);

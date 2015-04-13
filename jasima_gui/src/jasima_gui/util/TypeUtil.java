@@ -133,10 +133,6 @@ public class TypeUtil {
 		return Object.class;
 	}
 
-	public static String toString(Class<?> c) {
-		return toString(c, false);
-	}
-
 	public static String toString(Class<?> c, boolean abbrev) {
 		String name = c.getCanonicalName();
 		if (!abbrev)
