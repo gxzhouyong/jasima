@@ -68,6 +68,7 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 			public void visit(String propertyName, Class fieldType, Class definedIn, Object newObj) {
 				if (newObj == null) {
 					writer.startNode(propertyName);
+					writer.addAttribute(classAttributeName, mapper.serializedClass(fieldType));
 					writer.addAttribute(NULL_ATTRIBUTE_NAME, NULL_ATTRIBUTE_VALUE);
 					writer.endNode();
 				} else {
