@@ -22,21 +22,28 @@ import jasima_gui.util.TypeUtil;
 
 import java.util.EnumMap;
 import java.util.Formatter;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class ConversionReport {
 	public static final String HREF_CONFIRM = "jasima-command:confirm-conversion-report";
-	protected EnumMap<ConversionReportCategory, TreeSet<String>> messages = new EnumMap<>(ConversionReportCategory.class);
+	protected EnumMap<ConversionReportCategory, TreeSet<String>> messages = new EnumMap<>(
+			ConversionReportCategory.class);
+	protected Set<Class<?>> affectedClasses = new HashSet<Class<?>>();
 	protected String result;
 
 	public void finish() {
 		@SuppressWarnings("resource")
 		Formatter fmt = new Formatter();
 
-		fmt.format("<form><p>Some changes to the referenced classes occured since this file was last edited.</p>");
+		fmt.format("<form><p>Some changes to the referenced classes occured since this file was last edited. The following classes are affected:</p>");
+		for (Class<?> affectedClass : affectedClasses) {
+			fmt.format("<li>%s</li>", TypeUtil.toString(affectedClass, false));
+		}
 		for (Map.Entry<ConversionReportCategory, TreeSet<String>> entry : messages.entrySet()) {
-			fmt.format("<p>%s</p>", entry.getKey().introText);
+			fmt.format("<p><b>%s</b>: %s</p>", entry.getKey().headline, entry.getKey().introText);
 			for (String s : entry.getValue()) {
 				fmt.format("<li>%s</li>", s);
 			}
@@ -64,11 +71,13 @@ public class ConversionReport {
 
 	public void newProperty(Class<?> type, String propertyName) {
 		String st = TypeUtil.toString(type, true);
+		affectedClasses.add(type);
 		putMessage(ConversionReportCategory.NEW_PROPERTY, "<span color='light'>%s.</span>%s", st, propertyName);
 	}
 
 	public void propertyDisappeared(Class<?> type, String propertyName) {
 		String st = TypeUtil.toString(type, true);
+		affectedClasses.add(type);
 		putMessage(ConversionReportCategory.PROPERTY_DISAPPEARED, "<span color='light'>%s.</span>%s", st, propertyName);
 	}
 
@@ -76,11 +85,15 @@ public class ConversionReport {
 		String st = TypeUtil.toString(type, true);
 		String sn = TypeUtil.toString(needed, true);
 		String sa = TypeUtil.toString(actual, true);
-		putMessage(ConversionReportCategory.TYPE_CHANGED, "<span color='light'>%s.</span>%s (%s → %s)", st, propertyName, sa, sn);
+		affectedClasses.add(type);
+		putMessage(ConversionReportCategory.TYPE_CHANGED, "<span color='light'>%s.</span>%s (%s → %s)", st,
+				propertyName, sa, sn);
 	}
 
 	public void propertyRangeChanged(Class<?> type, String propertyName, String message) {
 		String st = TypeUtil.toString(type, true);
-		putMessage(ConversionReportCategory.ALLOWED_VALUES_CHANGED, "<span color='light'>%s.</span>%s (%s)", st, propertyName, message);
+		affectedClasses.add(type);
+		putMessage(ConversionReportCategory.ALLOWED_VALUES_CHANGED, "<span color='light'>%s.</span>%s (%s)", st,
+				propertyName, message);
 	}
 }
