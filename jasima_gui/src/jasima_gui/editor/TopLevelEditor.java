@@ -611,7 +611,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			String href = evt.text;
 			if (href.startsWith(CLASS_URL_PREFIX)) {
 				IJavaElement elem = getJavaProject().findType(href.substring(CLASS_URL_PREFIX.length()));
-				JavaLinkHandler.openJavadoc(elem);
+				JavaLinkHandler.openInEditor(elem);
 			}
 		} catch (Exception e) {
 			// ignore

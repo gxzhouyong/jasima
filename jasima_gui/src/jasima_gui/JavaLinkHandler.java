@@ -42,21 +42,23 @@ public class JavaLinkHandler implements JavaElementLinks.ILinkHandler {
 			URL location = JavaUI.getJavadocLocation(target, true);
 			if (location != null) {
 				openURL(location);
-				return;
 			}
 		} catch (Exception e) {
-			// ignore
+			throw new RuntimeException(e);
 		}
 
+	}
+
+	public static void openInEditor(IJavaElement target) {
 		try {
 			JavaUI.openInEditor(target);
 		} catch (Exception e) {
-			// ignore
+			throw new RuntimeException(e);
 		}
 	}
 
 	public void linkOpened() {
-
+		// ignore, override to do things like closing popups
 	}
 
 	public void handleTextSet() {
