@@ -30,17 +30,17 @@ public class IOUtil {
 	}
 
 	/**
-	 * Reads from <code>is</code> until either an error occurs or EOF is
-	 * reached.
+	 * Reads from <code>inputStream</code> until either an error occurs or EOF
+	 * is reached. <code>inputStream</code> is closed in either case.
 	 * 
-	 * @param is
+	 * @param inputStream
 	 *            the stream to read from
 	 * @return all data read from <code>is</code>, or <code>null</code> if an
 	 *         error occurred
 	 */
-	public static byte[] readFully(InputStream is) {
+	public static byte[] readFully(InputStream inputStream) {
 		final int BUFFER_SIZE = 65000;
-		try {
+		try (InputStream is = inputStream) {
 			// could be improved by using an ArrayList<byte[]>
 			ByteArrayOutputStream bos = new ByteArrayOutputStream(is.available());
 			byte[] buffer = new byte[BUFFER_SIZE];
