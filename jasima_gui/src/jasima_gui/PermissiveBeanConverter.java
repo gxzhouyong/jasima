@@ -129,6 +129,7 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 
 					if (!propType.isAssignableFrom(serializedType)) {
 						report.propertyTypeChanged(resultType, propertyName, propType, serializedType);
+						reader.moveUp();
 						continue;
 					}
 
