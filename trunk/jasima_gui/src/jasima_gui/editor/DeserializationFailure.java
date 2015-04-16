@@ -18,33 +18,40 @@
  *******************************************************************************/
 package jasima_gui.editor;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class DeserializationFailure {
-	protected Label label;
+	protected FormText label;
 
 	public DeserializationFailure(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 		Composite comp = toolkit.createComposite(parent);
+
 		GridLayout grid = new GridLayout(2, false);
 		grid.marginTop = 10;
 		comp.setLayout(grid);
+
 		Label icon = toolkit.createLabel(comp, null);
 		icon.setImage(icon.getDisplay().getSystemImage(SWT.ERROR));
-		label = toolkit.createLabel(comp, null, SWT.WRAP);
+
+		label = toolkit.createFormText(comp, false);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(label);
 		label.setFont(JFaceResources.getTextFont());
+		label.setWhitespaceNormalized(false);
 	}
 
 	public void setException(Throwable exception) {
 		String type = exception.getClass().getSimpleName();
 		String details = String.valueOf(exception.getLocalizedMessage()).replaceFirst("^ *: *", "");
 		String message = String.format("Error reading input: %s: %s", type, details);
-		label.setText(message);
+		label.setText(message, false, false);
 	}
 
 }
