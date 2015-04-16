@@ -20,18 +20,21 @@ package jasima_gui;
 
 import jasima_gui.util.TypeUtil;
 
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.Formatter;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class ConversionReport {
 	public static final String HREF_CONFIRM = "jasima-command:confirm-conversion-report";
 	protected EnumMap<ConversionReportCategory, TreeSet<String>> messages = new EnumMap<>(
 			ConversionReportCategory.class);
-	protected Set<Class<?>> affectedClasses = new HashSet<Class<?>>();
+	protected TreeSet<Class<?>> affectedClasses = new TreeSet<>(new Comparator<Class<?>>() {
+		public int compare(Class<?> a, Class<?> b) {
+			return a.getCanonicalName().compareTo(b.getCanonicalName());
+		}
+	});
 	protected String result;
 
 	public void finish() {
