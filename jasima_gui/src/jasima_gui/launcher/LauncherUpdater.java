@@ -46,6 +46,8 @@ public class LauncherUpdater implements IResourceChangeListener, IResourceDeltaV
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
+		if (delta == null)
+			return;
 		try {
 			delta.accept(this);
 		} catch (CoreException e) {

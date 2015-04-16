@@ -47,6 +47,8 @@ public class EditorUpdater implements IResourceChangeListener, IResourceDeltaVis
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
+		if (delta == null)
+			return;
 		try {
 			delta.accept(this);
 		} catch (CoreException e) {
