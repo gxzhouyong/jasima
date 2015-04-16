@@ -41,12 +41,13 @@ public class ConversionReport {
 		@SuppressWarnings("resource")
 		Formatter fmt = new Formatter();
 
-		fmt.format("<form><p>Some changes to the referenced classes occured since this file was last edited. The following classes are affected:</p>");
+		fmt.format("<form><p>Some changes to the referenced classes occured since this file was last edited.</p>"
+				+ "<p><b>Affected classes</b></p>");
 		for (Class<?> affectedClass : affectedClasses) {
 			fmt.format("<li>%s</li>", TypeUtil.toString(affectedClass, false));
 		}
 		for (Map.Entry<ConversionReportCategory, TreeSet<String>> entry : messages.entrySet()) {
-			fmt.format("<p><b>%s</b>: %s</p>", entry.getKey().headline, entry.getKey().introText);
+			fmt.format("<p><b>%s</b></p><p>%s</p>", entry.getKey().headline, entry.getKey().introText);
 			for (String s : entry.getValue()) {
 				fmt.format("<li>%s</li>", s);
 			}
