@@ -99,6 +99,10 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 				};
 			});
 		}
+
+		public void classPathChanged() {
+			classesChanged();
+		}
 	};
 	private Action runExperiment;
 	private Action debugExperiment;
