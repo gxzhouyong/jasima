@@ -22,4 +22,6 @@ public interface ClassLoaderListener {
 
 	public void classesChanged();
 
+	public void classPathChanged();
+
 }

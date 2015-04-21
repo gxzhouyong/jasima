@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.Adler32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -39,11 +40,15 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IElementChangedListener;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
-public class EclipseProjectClassLoader extends ClassLoader implements IResourceChangeListener {
+public class EclipseProjectClassLoader extends ClassLoader implements IResourceChangeListener, IElementChangedListener {
 	protected ArrayList<ClassLoaderListener> listeners = new ArrayList<>();
 	protected IJavaProject project;
 	protected HashMap<IPath, ArrayList<WatchedClass>> watchedResources = new HashMap<>();
@@ -53,6 +58,7 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 	public EclipseProjectClassLoader(IJavaProject project) {
 		this.project = project;
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
+		JavaCore.addElementChangedListener(this, ElementChangedEvent.POST_CHANGE);
 	}
 
 	public ClassLoaderState getState() {
@@ -69,6 +75,30 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 
 	public void removeListener(ClassLoaderListener listener) {
 		listeners.remove(listener);
+	}
+
+	@Override
+	public void elementChanged(ElementChangedEvent event) {
+		if (hasClasspathChanged(event.getDelta())) {
+			for (ClassLoaderListener listener : listeners) {
+				listener.classPathChanged();
+			}
+		}
+	}
+
+	protected boolean hasClasspathChanged(IJavaElementDelta delta) {
+		int t = delta.getElement().getElementType();
+		if (t == IJavaElement.JAVA_PROJECT) {
+			if ((delta.getFlags() & IJavaElementDelta.F_RESOLVED_CLASSPATH_CHANGED) != 0) {
+				return true;
+			}
+		} else if (t == IJavaElement.JAVA_MODEL) {
+			for (IJavaElementDelta d : delta.getAffectedChildren()) {
+				if (hasClasspathChanged(d))
+					return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
