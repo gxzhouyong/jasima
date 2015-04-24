@@ -25,9 +25,10 @@ import org.eclipse.ui.forms.widgets.FormText;
 
 public class ClassLoaderState {
 	protected Set<String> dirtyClasses = new HashSet<>();
+	protected boolean classPathChanged = false;
 
 	public boolean isDirty() {
-		return !dirtyClasses.isEmpty();
+		return classPathChanged || !dirtyClasses.isEmpty();
 	}
 
 	public void markDirty(String klass, boolean dirty) {
@@ -36,6 +37,10 @@ public class ClassLoaderState {
 		} else {
 			dirtyClasses.remove(klass);
 		}
+	}
+
+	public void setClassPathChanged(boolean value) {
+		classPathChanged = value;
 	}
 
 	/**
