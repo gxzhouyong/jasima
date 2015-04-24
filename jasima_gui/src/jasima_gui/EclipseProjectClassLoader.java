@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.zip.Adler32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -80,6 +79,7 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 	@Override
 	public void elementChanged(ElementChangedEvent event) {
 		if (hasClasspathChanged(event.getDelta())) {
+			state.setClassPathChanged(true);
 			for (ClassLoaderListener listener : listeners) {
 				listener.classPathChanged();
 			}
