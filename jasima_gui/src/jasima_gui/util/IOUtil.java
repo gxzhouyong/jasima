@@ -54,9 +54,9 @@ public class IOUtil {
 		}
 	}
 
-	public static String readFully(Reader rdr) {
+	public static String readFully(Reader reader) {
 		final int BUFFER_SIZE = 32000;
-		try {
+		try (Reader rdr = reader) {
 			StringBuffer buf = new StringBuffer();
 			char[] buffer = new char[BUFFER_SIZE];
 			int r;
