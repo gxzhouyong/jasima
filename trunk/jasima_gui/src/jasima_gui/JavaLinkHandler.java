@@ -31,9 +31,17 @@ public class JavaLinkHandler implements JavaElementLinks.ILinkHandler {
 
 	public static void openURL(URL url) {
 		try {
+			if (url.getProtocol().equals("jar")) {
+				// convert jar: URLs to http://127.0.0.1:.../help/nftopic/... so
+				// the browser can read them
+				url = PlatformUI.getWorkbench().getHelpSystem().resolve(url.toExternalForm(), true);
+				if (url == null)
+					throw new RuntimeException("help UI unavailable");
+			}
+
 			PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null).openURL(url);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -46,7 +54,6 @@ public class JavaLinkHandler implements JavaElementLinks.ILinkHandler {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
 	}
 
 	public static void openInEditor(IJavaElement target) {
