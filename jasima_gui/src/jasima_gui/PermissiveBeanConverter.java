@@ -33,7 +33,10 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.Mapper;
+
+// TODO deal with deleted *classes*
 
 public class PermissiveBeanConverter extends JavaBeanConverter {
 	protected static final String NULL_ATTRIBUTE_NAME = "is-null";
@@ -118,7 +121,14 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 
 				if (propertyExistsInClass) {
 					Object value;
-					Class<?> serializedType = determineType(reader, result, propertyName);
+					Class<?> serializedType;
+					try {
+						serializedType = determineType(reader, result, propertyName);
+					} catch (CannotResolveClassException ex) {
+						report.propertyTypeUnknown(resultType, propertyName, ex.getMessage());
+						reader.moveUp();
+						continue;
+					}
 					Class<?> propType = beanProvider.getPropertyType(result, propertyName);
 
 					if (serializedType.isPrimitive())

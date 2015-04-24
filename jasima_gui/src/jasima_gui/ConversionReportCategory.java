@@ -22,7 +22,8 @@ public enum ConversionReportCategory {
 	NEW_PROPERTY("New properties", "These properties are new and will be set to their default values:"), //
 	PROPERTY_DISAPPEARED("Deleted properties", "These properties no longer exist and will be discarded:"), //
 	ALLOWED_VALUES_CHANGED("Invalid values", "These properties could not be set to their previously saved values:"), //
-	TYPE_CHANGED("Invalid types", "These properties have changed their types and will be set to their default values:");
+	TYPE_CHANGED("Invalid types", "These properties have changed their types and will be set to their default values:"), //
+	TYPE_UNKNOWN("Unknown types", "These properties have an unknown type and will be ignored:");
 
 	private ConversionReportCategory(String headline, String introText) {
 		this.headline = headline;

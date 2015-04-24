@@ -100,4 +100,11 @@ public class ConversionReport {
 		putMessage(ConversionReportCategory.ALLOWED_VALUES_CHANGED, "<span color='light'>%s.</span>%s (%s)", st,
 				propertyName, message);
 	}
+
+	public void propertyTypeUnknown(Class<?> type, String propertyName, String message) {
+		String st = TypeUtil.toString(type, true);
+		affectedClasses.add(type);
+		putMessage(ConversionReportCategory.TYPE_UNKNOWN, "<span color='light'>%s.</span>%s (%s)", st,
+				propertyName, message);
+	}
 }
