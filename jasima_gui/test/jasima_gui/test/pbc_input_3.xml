@@ -1,0 +1,6 @@
+<!-- Changed one type -->
+<jasima__gui.test.TestBean>
+  <int class="int">0</int>
+  <integer class="int" is-null="yes"/>
+  <string class="object" is-null="yes"/>
+</jasima__gui.test.TestBean>

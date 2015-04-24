@@ -1,0 +1,9 @@
+<!-- Changed one type -->
+<jasima__gui.test.TestBean>
+  <int class="java.lang.DoesNotExist">
+	  <prop1 class="int" is-null="yes"/>
+	  <prop2 class="int" is-null="yes"/>
+  </int>
+  <integer class="int" is-null="yes"/>
+  <string class="string" is-null="yes"/>
+</jasima__gui.test.TestBean>
