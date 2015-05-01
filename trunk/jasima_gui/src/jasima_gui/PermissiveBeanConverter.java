@@ -36,8 +36,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-// TODO deal with deleted *classes*
-
 public class PermissiveBeanConverter extends JavaBeanConverter {
 	protected static final String NULL_ATTRIBUTE_NAME = "is-null";
 	protected static final String NULL_ATTRIBUTE_VALUE = "yes";
