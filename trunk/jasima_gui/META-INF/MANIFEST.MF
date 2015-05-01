@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-ClassPath: xstream-1.4.7.jar,
+Bundle-ClassPath: xstream-1.4.8.jar,
  .
 Export-Package: com.thoughtworks.xstream,
  jasima_gui,
