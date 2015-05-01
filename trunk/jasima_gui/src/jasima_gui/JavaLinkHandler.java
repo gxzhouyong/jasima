@@ -50,6 +50,8 @@ public class JavaLinkHandler implements JavaElementLinks.ILinkHandler {
 			URL location = JavaUI.getJavadocLocation(target, true);
 			if (location != null) {
 				openURL(location);
+			} else {
+				openInEditor(target);
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
