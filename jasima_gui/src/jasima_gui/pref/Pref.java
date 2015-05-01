@@ -24,14 +24,13 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public abstract class Pref {
 
-	public static final StrPref EXP_RES_FMT = new StrPref(
-			"default-experiment-result-format", "--xlsres");
+	public static final BoolPref FIRST_RUN = new BoolPref("first-run-with-plugin", true);
 
-	public static final StrPref XLS_EXP_RES_FMT = new StrPref(
-			"default-excel-experiment-result-format", "--xlsres");
+	public static final StrPref EXP_RES_FMT = new StrPref("default-experiment-result-format", "--xlsres");
 
-	public static final StrPref JASIMA_VERSION = new StrPref(
-			"default-jasima-version", "1.2.0");
+	public static final StrPref XLS_EXP_RES_FMT = new StrPref("default-excel-experiment-result-format", "--xlsres");
+
+	public static final StrPref JASIMA_VERSION = new StrPref("default-jasima-version", "1.2.0");
 
 	public final String key;
 
