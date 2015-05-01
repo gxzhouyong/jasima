@@ -23,7 +23,7 @@
       <wizard
             category="jasima_gui"
             class="jasima_gui.wizards.JasimaNewWizard"
-            finalPerspective="jasima_gui.jasimaPerspective"
+            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
             icon="icons/jasima.png"
             id="jasima_gui.wizards.JasimaNewWizard"
             name="jasima Experiment">
@@ -34,7 +34,7 @@
       <wizard
             category="jasima_gui"
             class="jasima_gui.wizards.JasimaNewProjectWizard"
-            finalPerspective="jasima_gui.jasimaPerspective"
+            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
             icon="icons/jasima.png"
             id="jasima_gui.wizards.JasimaNewProjectWizard"
             name="jasima Project"
@@ -300,15 +300,6 @@
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
-            targetID="jasima_gui.jasimaPerspective">
-         <newWizardShortcut
-               id="jasima_gui.wizards.JasimaNewProjectWizard">
-         </newWizardShortcut>
-         <newWizardShortcut
-               id="jasima_gui.wizards.JasimaNewWizard">
-         </newWizardShortcut>
-      </perspectiveExtension>
-      <perspectiveExtension
             targetID="org.eclipse.jdt.ui.JavaPerspective">
          <newWizardShortcut
                id="jasima_gui.wizards.JasimaNewProjectWizard">
@@ -355,34 +346,4 @@
             class="jasima_gui.pref.Initializer">
       </initializer>
    </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="jasima_gui.perspective.JasimaPerspectiveFactory"
-            icon="icons/jasima.png"
-            id="jasima_gui.jasimaPerspective"
-            name="jasima">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-            targetID="*">
-         <perspectiveShortcut
-               id="jasima_gui.jasimaPerspective">
-         </perspectiveShortcut>
-      </perspectiveExtension>
-   </extension>
-   <extension
-         point="org.eclipse.ui.intro.configExtension">
-      <configExtension
-            configId="org.eclipse.ui.intro.universalConfig"
-            content="src/jasima_gui/intro/welcome.xml">
-      </configExtension>
-      <action
-            name="jasima_gui.intro.OpenPerspective"
-            replaces="jasima:open-perspective">
-      </action>
-   </extension>
-
 </plugin>
