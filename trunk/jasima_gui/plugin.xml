@@ -346,4 +346,9 @@
             class="jasima_gui.pref.Initializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="jasima_gui.ResetPerspective"></startup>
+   </extension>
 </plugin>
