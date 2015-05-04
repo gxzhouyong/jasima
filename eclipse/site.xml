@@ -15,8 +15,5 @@
    <feature url="features/jasima_feature_1.2.1.201501270948.jar" id="jasima_feature" version="1.2.1.201501270948">
       <category name="jasima_gui_cat"/>
    </feature>
-   <feature url="features/jasima_feature_1.2.5.201504291527.jar" id="jasima_feature" version="1.2.5.201504291527">
-      <category name="jasima_gui_cat"/>
-   </feature>
    <category-def name="jasima_gui_cat" label="jasima GUI"/>
 </site>
