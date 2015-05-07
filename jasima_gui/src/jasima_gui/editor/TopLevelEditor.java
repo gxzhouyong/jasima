@@ -27,7 +27,6 @@ import jasima_gui.PropertyToolTip;
 import jasima_gui.Serialization;
 import jasima_gui.launcher.SimulationLaunchShortcut;
 import jasima_gui.util.BrowserEx;
-import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -73,8 +72,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
-import com.thoughtworks.xstream.XStream;
-
 @SuppressWarnings("restriction")
 public class TopLevelEditor extends EditorPart implements SelectionListener {
 
@@ -118,10 +115,6 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		return serialization.getProject();
 	}
 
-	public XStream getXStream() {
-		return serialization.getXStream();
-	}
-
 	public EclipseProjectClassLoader getClassLoader() {
 		return serialization.getClassLoader();
 	}
@@ -149,11 +142,13 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			IProject project = fei.getFile().getProject();
 			try (InputStream is = fei.getStorage().getContents()) {
 				serialization = new Serialization(project);
-				serialization.startConversionReport();
-				serialization.getClassLoader().addListener(classLoaderListener);
-				root = getXStream().fromXML(is);
-			} finally {
-				conversionReport = serialization.finishConversionReport();
+				try {
+					serialization.startConversionReport();
+					serialization.getClassLoader().addListener(classLoaderListener);
+					root = serialization.deserialize(is);
+				} finally {
+					conversionReport = serialization.finishConversionReport();
+				}
 			}
 			loadError = null;
 		} catch (LinkageError e) {
@@ -181,10 +176,10 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 		try {
 			if (root != null) {
-				String xml = serialization.getXStream().toXML(root);
+				String xml = serialization.convertToString(root);
 				try {
 					newSer.startConversionReport();
-					root = newSer.getXStream().fromXML(xml);
+					root = newSer.convertFromString(xml);
 				} finally {
 					conversionReport = newSer.finishConversionReport();
 				}
@@ -194,7 +189,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 				try (InputStream is = fei.getStorage().getContents()) {
 					try {
 						newSer.startConversionReport();
-						root = newSer.getXStream().fromXML(is);
+						root = newSer.deserialize(is);
 					} finally {
 						conversionReport = newSer.finishConversionReport();
 					}
@@ -565,7 +560,7 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 
 	protected void doSaveReally() throws CoreException {
 		assert isValidData();
-		byte[] byteArr = XMLUtil.serialize(serialization.getXStream(), root);
+		byte[] byteArr = serialization.serialize(root);
 		IFileEditorInput fei = (IFileEditorInput) getEditorInput();
 		if (fei.getFile().exists()) {
 			fei.getFile().setContents(new ByteArrayInputStream(byteArr), false, true, null);
@@ -639,5 +634,9 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 		conversionReport = null;
 		createBody();
 		setFocus();
+	}
+
+	public Serialization getSerialization() {
+		return serialization;
 	}
 }
