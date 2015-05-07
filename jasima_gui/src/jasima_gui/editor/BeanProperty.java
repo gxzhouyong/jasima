@@ -112,6 +112,8 @@ public class BeanProperty implements IProperty {
 		} catch (InvocationTargetException e) {
 			throw PropertyException.newSetException(this,
 					e.getTargetException());
+		} catch (IllegalArgumentException e) {
+			throw PropertyException.newSetException(this, e);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
