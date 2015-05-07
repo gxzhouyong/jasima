@@ -18,6 +18,7 @@
  *******************************************************************************/
 package jasima_gui.editors;
 
+import jasima_gui.Serialization;
 import jasima_gui.editor.EditorDialog;
 import jasima_gui.editor.EditorWidget;
 import jasima_gui.editor.INoExceptProperty;
@@ -46,8 +47,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
-
-import com.thoughtworks.xstream.XStream;
 
 public class ListEditor extends EditorWidget implements SelectionListener {
 
@@ -417,8 +416,8 @@ public class ListEditor extends EditorWidget implements SelectionListener {
 					}
 				} else {
 					// we need a generic way to clone objects
-					XStream xstr = topLevelEditor.getXStream();
-					value = xstr.fromXML(xstr.toXML(objects.get(selection[0])));
+					Serialization ser = topLevelEditor.getSerialization();
+					value = ser.convertFromString(ser.convertToString(objects.get(selection[0])));
 				}
 			}
 

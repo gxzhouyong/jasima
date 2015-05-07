@@ -19,7 +19,6 @@
 package jasima_gui.wizards;
 
 import jasima_gui.Serialization;
-import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -132,8 +131,7 @@ public class JasimaNewWizard extends Wizard implements INewWizard {
 		byte[] byteArr;
 		Serialization ser = new Serialization(container.getProject());
 		try {
-			byteArr = XMLUtil.serialize(ser.getXStream(),
-					ser.getClassLoader().loadClass(typeName).newInstance());
+			byteArr = ser.serialize(ser.getClassLoader().loadClass(typeName).newInstance());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			byteArr = new byte[0];

@@ -18,6 +18,8 @@
  *******************************************************************************/
 package jasima_gui.editor;
 
+import jasima_gui.Serialization;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.IShellProvider;
@@ -28,8 +30,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-
-import com.thoughtworks.xstream.XStream;
 
 public class EditorDialog extends Dialog {
 
@@ -57,8 +57,8 @@ public class EditorDialog extends Dialog {
 
 			if (oldValue != null) {
 				// we need a generic way to clone objects
-				XStream xstr = tle.getXStream();
-				oldValue = xstr.fromXML(xstr.toXML(oldValue));
+				Serialization ser = tle.getSerialization();
+				oldValue = ser.convertFromString(ser.convertToString(oldValue));
 			}
 		} catch (PropertyException e) {
 			e.printStackTrace();

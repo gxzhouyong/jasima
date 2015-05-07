@@ -24,10 +24,10 @@ import jasima_gui.editor.EditorWidgetFactory;
 import jasima_gui.editor.IProperty;
 import jasima_gui.editor.PropertyException;
 import jasima_gui.util.TypeUtil;
-import jasima_gui.util.XMLUtil;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -492,11 +492,13 @@ public class ReferenceEditor extends EditorWidget {
 		String path = dlg.open();
 		if (path == null)
 			return;
-		try {
-			Object obj = topLevelEditor.getXStream().fromXML(new File(path));
+		try (FileInputStream is = new FileInputStream(path)) {
+			Object obj = topLevelEditor.getSerialization().deserialize(is);
 			property.setValue(obj);
 			object = obj;
 			rebuildEditors();
+		} catch (IOException ex) {
+			showErrorDialog("Can't read file: %s", ex.getLocalizedMessage());
 		} catch (XStreamException ex) {
 			showErrorDialog("Can't load file: %s", ex.getLocalizedMessage());
 		} catch (PropertyException ex) {
@@ -515,7 +517,7 @@ public class ReferenceEditor extends EditorWidget {
 			return;
 
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(dlg.getResult());
-		byte[] byteArr = XMLUtil.serialize(topLevelEditor.getXStream(), object);
+		byte[] byteArr = topLevelEditor.getSerialization().serialize(object);
 		try {
 			if (file.exists()) {
 				file.setContents(new ByteArrayInputStream(byteArr), false, true, null);

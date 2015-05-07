@@ -19,6 +19,7 @@
 package jasima_gui.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -66,6 +67,14 @@ public class IOUtil {
 			return buf.toString();
 		} catch (IOException e) {
 			return null;
+		}
+	}
+
+	public static void tryClose(Closeable c) {
+		try {
+			c.close();
+		} catch(IOException e) {
+			// ignore
 		}
 	}
 
