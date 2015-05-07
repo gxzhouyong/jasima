@@ -487,8 +487,8 @@ public class ReferenceEditor extends EditorWidget {
 		// TODO make it non-modal (how?)
 		FileDialog dlg = new FileDialog(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell(), SWT.OPEN);
 		dlg.setFilterPath(getDefaultPath().toOSString());
-		dlg.setFilterExtensions(new String[] { "*.xml", "*.jasima" });
-		dlg.setFilterNames(new String[] { "XML files", "Jasima experiments" });
+		dlg.setFilterExtensions(new String[] { "*.jasima", "*.xml" });
+		dlg.setFilterNames(new String[] { "jasima files (*.jasima)", "XML files (*.xml)" });
 		String path = dlg.open();
 		if (path == null)
 			return;
@@ -510,7 +510,7 @@ public class ReferenceEditor extends EditorWidget {
 		// TODO make it non-modal (how?)
 		SaveAsDialog dlg = new SaveAsDialog(PlatformUI.getWorkbench().getModalDialogShellProvider().getShell());
 		IPath path = getDefaultPath();
-		path = path.append(property.getName() + ".xml"); // suggest file name
+		path = path.append(property.getName() + ".jasima"); // suggest file name
 		dlg.setOriginalFile(ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path));
 		dlg.create();
 		if (dlg.open() == SaveAsDialog.CANCEL)
