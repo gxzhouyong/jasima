@@ -127,23 +127,26 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 						reader.moveUp();
 						continue;
 					}
-					Class<?> propType = beanProvider.getPropertyType(result, propertyName);
-
-					if (serializedType.isPrimitive())
-						serializedType = TypeUtil.getPrimitiveWrapper(serializedType);
-
-					if (propType.isPrimitive())
-						propType = TypeUtil.getPrimitiveWrapper(propType);
-
-					if (!propType.isAssignableFrom(serializedType)) {
-						report.propertyTypeChanged(resultType, propertyName, propType, serializedType);
-						reader.moveUp();
-						continue;
-					}
 
 					if (NULL_ATTRIBUTE_VALUE.equals(reader.getAttribute(NULL_ATTRIBUTE_NAME))) {
 						value = null;
+					} else if (serializedType == Mapper.Null.class) {
+						value = null;
 					} else {
+						Class<?> propType = beanProvider.getPropertyType(result, propertyName);
+
+						if (serializedType.isPrimitive())
+							serializedType = TypeUtil.getPrimitiveWrapper(serializedType);
+
+						if (propType.isPrimitive())
+							propType = TypeUtil.getPrimitiveWrapper(propType);
+
+						if (!propType.isAssignableFrom(serializedType)) {
+							report.propertyTypeChanged(resultType, propertyName, propType, serializedType);
+							reader.moveUp();
+							continue;
+						}
+
 						value = context.convertAnother(result, serializedType);
 					}
 
