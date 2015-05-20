@@ -20,7 +20,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.search,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.ui.intro,
- org.junit
+ org.junit,
+ org.eclipse.swtbot.eclipse.finder;resolution:=optional,
+ org.eclipse.swtbot.junit4_x;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: xstream-1.4.8.jar,
