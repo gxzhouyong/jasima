@@ -20,6 +20,9 @@ package jasima_gui;
 
 import jasima_gui.pref.Pref;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
@@ -40,13 +43,18 @@ public class ResetPerspective implements IStartup {
 			wb.getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					IWorkbenchWindow wbw = wb.getActiveWorkbenchWindow();
-					if (!MessageDialog.openConfirm(wbw.getShell(), "Reset perspective",
-							"To complete installation of the jasima plugin, the Java perspective will be reset.")) {
-						return;
-					}
 					try {
+						IWorkbenchWindow wbw = wb.getActiveWorkbenchWindow();
 						wb.showPerspective("org.eclipse.jdt.ui.JavaPerspective", wbw);
+						List<String> wizardShortcuts = Arrays.asList(wbw.getActivePage().getNewWizardShortcuts());
+						if (wizardShortcuts.contains("jasima_gui.wizards.JasimaNewProjectWizard")) {
+							// the perspective already has the jasima wizards, no need to do anything
+							return;
+						}
+						if (!MessageDialog.openConfirm(wbw.getShell(), "Reset perspective",
+								"To complete installation of the jasima plugin, the Java perspective will be reset.")) {
+							return;
+						}
 						wbw.getActivePage().resetPerspective();
 					} catch (WorkbenchException e) {
 						e.printStackTrace();
