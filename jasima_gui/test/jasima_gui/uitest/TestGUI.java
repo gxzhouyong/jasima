@@ -16,16 +16,18 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestGUI {
 	private static SWTWorkbenchBot bot;
+	private static SWTBotShell eclipseShell;
 	private static SWTBotTreeItem projectItem;
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		bot = new SWTWorkbenchBot();
+		eclipseShell = bot.activeShell();
 		SWTBotPreferences.TIMEOUT = 30000L;
 		bot.viewByTitle("Welcome").close();
 		bot.menu("File").menu("New").menu("jasima Project").click();
 		bot.shell("New Jasima Project").activate();
-		bot.textWithLabel("&Project name:").setText("jasima_gui_test_001");
+		bot.textWithLabel("Project name:").setText("jasima_gui_test_001");
 		bot.button("Finish").click();
 		projectItem = bot.tree().getTreeItem("jasima_gui_test_001");
 		projectItem.select();
@@ -75,12 +77,13 @@ public class TestGUI {
 
 	@Test
 	public void canUseCustomClass() {
+		eclipseShell.activate();
 		projectItem.select();
 		bot.menu("File").menu("New").menu("Class").click();
 		SWTBotShell newClass = bot.shell("New Java Class");
 		newClass.activate();
-		bot.textWithLabel("Na&me:").setText("TestPR");
-		bot.textWithLabel("&Superclass:").setText("jasima.shopSim.core.PR");
+		bot.textWithLabel("Name:").setText("TestPR");
+		bot.textWithLabel("Superclass:").setText("jasima.shopSim.core.PR");
 		bot.button("Finish").click();
 		bot.waitUntil(Conditions.shellCloses(newClass));
 		
