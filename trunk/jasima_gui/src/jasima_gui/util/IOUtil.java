@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 
 public class IOUtil {
@@ -40,18 +41,38 @@ public class IOUtil {
 	 *         error occurred
 	 */
 	public static byte[] readFully(InputStream inputStream) {
-		final int BUFFER_SIZE = 65000;
-		try (InputStream is = inputStream) {
-			// could be improved by using an ArrayList<byte[]>
-			ByteArrayOutputStream bos = new ByteArrayOutputStream(is.available());
-			byte[] buffer = new byte[BUFFER_SIZE];
-			int r;
-			while ((r = is.read(buffer)) != -1) {
-				bos.write(buffer, 0, r);
-			}
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream(inputStream.available());
+			copyFully(inputStream, bos);
 			return bos.toByteArray();
 		} catch (IOException e) {
 			return null;
+		}
+	}
+
+	/**
+	 * Reads from <code>inputStream</code> and writes to
+	 * <code>outputStream</code> until either an error occurs or EOF is reached.
+	 * <code>inputStream</code> is closed in either case, while
+	 * <code>outputStream</code> is never closed.
+	 * 
+	 * @param inputStream
+	 *            the stream to read from
+	 * @param outputStream
+	 *            the stream to write to
+	 * @throws IOException
+	 *             if an error occurred
+	 */
+	public static void copyFully(InputStream inputStream, OutputStream outputStream) throws IOException {
+		final int BUFFER_SIZE = 65000;
+		try {
+			byte[] buffer = new byte[BUFFER_SIZE];
+			int r;
+			while ((r = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, r);
+			}
+		} finally {
+			inputStream.close();
 		}
 	}
 
@@ -73,7 +94,7 @@ public class IOUtil {
 	public static void tryClose(Closeable c) {
 		try {
 			c.close();
-		} catch(IOException e) {
+		} catch (IOException e) {
 			// ignore
 		}
 	}
