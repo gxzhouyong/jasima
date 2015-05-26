@@ -2,6 +2,6 @@
 <jasima__gui.test.TestBean>
   <unknown class="double">3.5</unknown>
   <int class="int">0</int>
-  <integer class="int" is-null="yes"/>
-  <string class="string" is-null="yes"/>
+  <integer class="null"/>
+  <string class="null"/>
 </jasima__gui.test.TestBean>
