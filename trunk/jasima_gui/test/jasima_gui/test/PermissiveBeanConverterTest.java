@@ -36,8 +36,17 @@ public class PermissiveBeanConverterTest extends TestCase {
 	}
 
 	@Test
-	public void testEmptyReport() throws Exception {
-		String input = readFile("pbc_clean_input.xml");
+	public void testEmptyReport1() throws Exception {
+		testEmptyReport("pbc_clean_input_1.xml");
+	}
+
+	@Test
+	public void testEmptyReport2() throws Exception {
+		testEmptyReport("pbc_clean_input_2.xml");
+	}
+
+	public void testEmptyReport(String name) throws Exception {
+		String input = readFile(name);
 
 		converter.startConversionReport();
 		xStream.fromXML(input); // ignore result
