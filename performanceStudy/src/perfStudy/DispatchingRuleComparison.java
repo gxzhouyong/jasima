@@ -38,6 +38,9 @@ public class DispatchingRuleComparison {
 		// use FullFactorialExperiment to test various parameter combinations,
 		// each running a MultipleReplicationExperiment
 		FullFactorialExperiment ffe = new FullFactorialExperiment();
+
+		// set parameters before we define the factor combinations to test using
+		// addFactor()/addFactors()
 		ffe.setBaseExperiment(mre);
 		ffe.setInitialSeed(1234567890);
 
