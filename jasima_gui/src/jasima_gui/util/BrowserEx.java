@@ -31,10 +31,19 @@ import org.eclipse.swt.widgets.Listener;
 
 public class BrowserEx extends Browser implements ProgressListener {
 
-	public static final int DEFAULT_MAXIMUM_HEIGHT = 200;
+	/**
+	 * If the content is higher than {@link #MAXIMUM_HEIGHT}, the height of this
+	 * control will be set to this value to prevent a scroll bar being shown
+	 * when there's very little to scroll.
+	 */
+	public static final int OVERFLOW_HEIGHT = 200;
+
+	/**
+	 * The absolute maximum height of this control.
+	 */
+	public static final int MAXIMUM_HEIGHT = 250;
 
 	protected ArrayList<Listener> sizeListeners = new ArrayList<>();
-	protected int maximumHeight = DEFAULT_MAXIMUM_HEIGHT;
 
 	public BrowserEx(Composite parent, int style) {
 		super(parent, style);
@@ -76,9 +85,14 @@ public class BrowserEx extends Browser implements ProgressListener {
 		if (height == null) {
 			height = (double) Integer.MAX_VALUE;
 		}
+
+		int h = (int) Math.ceil(height.doubleValue());
+		if (h > MAXIMUM_HEIGHT) {
+			h = OVERFLOW_HEIGHT;
+		}
+
 		setSize(oldSize);
-		return new Point(wHint, Math.min(maximumHeight,
-				(int) Math.ceil(height.doubleValue())));
+		return new Point(wHint, h);
 	}
 
 	@Override
