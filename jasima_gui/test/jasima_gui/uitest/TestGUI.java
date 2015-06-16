@@ -1,5 +1,12 @@
 package jasima_gui.uitest;
 
+import jasima_gui.util.IOUtil;
+import jasima_gui.util.Pointer;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -10,53 +17,57 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestGUI {
+	@Rule
+	public TestName testName = new TestName();
+
 	private static SWTWorkbenchBot bot;
 	private static SWTBotShell eclipseShell;
-	private static SWTBotTreeItem projectItem;
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		bot = new SWTWorkbenchBot();
 		eclipseShell = bot.activeShell();
 		SWTBotPreferences.TIMEOUT = 30000L;
+		SWTBotPreferences.PLAYBACK_DELAY = 100L;
 		bot.viewByTitle("Welcome").close();
-		bot.menu("File").menu("New").menu("jasima Project").click();
-		bot.shell("New Jasima Project").activate();
-		bot.textWithLabel("Project name:").setText("jasima_gui_test_001");
-		bot.button("Finish").click();
-		projectItem = bot.tree().getTreeItem("jasima_gui_test_001");
-		projectItem.select();
-		projectItem.expand();
-
-		bot.menu("File").menu("New").menu("jasima Experiment").click();
-		SWTBotShell newExp = bot.shell("New Jasima experiment");
-		newExp.activate();
-		bot.button("Finish").click();
-		bot.waitUntil(Conditions.shellCloses(newExp));
 	}
 
 	@AfterClass
 	public static void afterClass() {
-		bot.sleep(1000L); 
+		bot.sleep(1000L);
 	}
 
-	@Test
-	public void canRunExperiment() {
-		projectItem.getNode("new_experiment.jasima").doubleClick();
-		bot.toolbarButtonWithTooltip("Run Experiment").click();
+	SWTBotTreeItem createJasimaProject() {
+		return createJasimaProject(testName.getMethodName());
+	}
+
+	SWTBotTreeItem createJasimaProject(String name) {
+		eclipseShell.activate();
+		bot.menu("File").menu("New").menu("jasima Project").click();
+		bot.shell("New Jasima Project").activate();
+		bot.textWithLabel("Project name:").setText(name);
+		bot.button("Finish").click();
+		SWTBotTreeItem projectItem = bot.tree().getTreeItem(name);
+		projectItem.select();
+		projectItem.expand();
+		return projectItem;
+	}
+
+	public SWTBotTreeItem waitForRunResults(final SWTBotTreeItem projectItem) {
+		final Pointer<SWTBotTreeItem> retVal = new Pointer<>();
 		bot.waitUntil(new ICondition() {
 			@Override
 			public boolean test() throws Exception {
 				for (SWTBotTreeItem item : projectItem.getItems()) {
 					if (item.getText().startsWith("runResults_")) {
-						item.contextMenu("Delete").click();
-						bot.shell("Delete").activate();
-						bot.button("OK").click();
+						retVal.value = item;
 						return true;
 					}
 				}
@@ -73,12 +84,33 @@ public class TestGUI {
 				return "No run results found!";
 			}
 		});
+		return retVal.value;
+	}
+
+	public void deleteProject(SWTBotTreeItem item) {
+		item.contextMenu("Delete").click();
+		bot.shell("Delete Resources").activate();
+		bot.button("OK").click();
 	}
 
 	@Test
-	public void canUseCustomClass() {
+	public void testSimpleExperiment() {
+		final SWTBotTreeItem projectItem = createJasimaProject();
+		bot.menu("File").menu("New").menu("jasima Experiment").click();
+		bot.shell("New Jasima experiment").activate();
+		bot.button("Finish").click();
+
 		eclipseShell.activate();
-		projectItem.select();
+		projectItem.getNode("new_experiment.jasima").doubleClick();
+		bot.toolbarButtonWithTooltip("Run Experiment").click();
+		waitForRunResults(projectItem);
+
+		deleteProject(projectItem);
+	}
+
+	@Test
+	public void testCustomClass() throws Exception {
+		final SWTBotTreeItem projectItem = createJasimaProject();
 		bot.menu("File").menu("New").menu("Class").click();
 		SWTBotShell newClass = bot.shell("New Java Class");
 		newClass.activate();
@@ -86,7 +118,11 @@ public class TestGUI {
 		bot.textWithLabel("Superclass:").setText("jasima.shopSim.core.PR");
 		bot.button("Finish").click();
 		bot.waitUntil(Conditions.shellCloses(newClass));
-		
+
+		projectItem.select();
+		bot.menu("File").menu("New").menu("jasima Experiment").click();
+		bot.shell("New Jasima experiment").activate();
+		bot.button("Finish").click();
 		projectItem.getNode("new_experiment.jasima").doubleClick();
 		bot.toolbarButtonWithTooltip("New", 2).click();
 		bot.shell("Types compatible with jasima.shopSim.core.PR").activate();
@@ -94,6 +130,42 @@ public class TestGUI {
 		bot.waitUntil(Conditions.tableHasRows(bot.table(), 1));
 		bot.button("OK").click();
 		bot.activeEditor().save();
-		canRunExperiment();
+
+		projectItem.getNode("new_experiment.jasima").doubleClick();
+		bot.toolbarButtonWithTooltip("Run Experiment").click();
+		waitForRunResults(projectItem);
+
+		deleteProject(projectItem);
+	}
+
+	@Test
+	public void testImportProject() throws Exception {
+		eclipseShell.activate();
+		bot.menu("File").menu("Import...").click();
+		bot.shell("Import").activate();
+		bot.tree().getTreeItem("General").expand();
+		bot.tree().getTreeItem("General").getNode("Existing Projects into Workspace").doubleClick();
+
+		File tmp = File.createTempFile("jasima_gui_", ".zip");
+		try (OutputStream str = new FileOutputStream(tmp)) {
+			IOUtil.copyFully(TestGUI.class.getResourceAsStream("test002.zip"), str);
+		}
+
+		bot.radio("Select archive file:").click();
+		bot.comboBox(1).setText(tmp.getAbsolutePath());
+		bot.comboBox(1).pressShortcut(0, '\n');
+		bot.button("Finish").click();
+		eclipseShell.activate();
+		SWTBotTreeItem projectItem = bot.tree().getTreeItem("test002");
+		projectItem.select();
+		projectItem.expand();
+
+		tmp.delete();
+
+		projectItem.getNode("new_experiment.jasima").doubleClick();
+		//bot.toolbarButtonWithTooltip("Run Experiment").click();
+		//waitForRunResults(projectItem);
+
+		deleteProject(projectItem);
 	}
 }
