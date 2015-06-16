@@ -208,7 +208,7 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 			String fileName = name.replace('.', '/').concat(".class");
 			Resource res = findResource(fileName, project, false);
 			if (res == null) {
-				return null;
+				throw new ClassNotFoundException(name);
 			}
 
 			byte[] data = res.data;
@@ -226,8 +226,7 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 
 			return retVal;
 		} catch (CoreException e) {
-			e.printStackTrace();
-			return null;
+			throw new ClassNotFoundException(name, e);
 		}
 	}
 

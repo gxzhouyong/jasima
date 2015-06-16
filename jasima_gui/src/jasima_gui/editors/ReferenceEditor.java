@@ -439,6 +439,8 @@ public class ReferenceEditor extends EditorWidget {
 			property.setValue(obj);
 			object = obj;
 			rebuildEditors();
+		} catch(ClassNotFoundException e) {
+			showErrorDialog("Can't load class %s.", className);
 		} catch (NoSuchMethodException e) {
 			showErrorDialog("Can't instantiate a class without a public default constructor.");
 		} catch (InvocationTargetException e) {
