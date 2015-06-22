@@ -25,7 +25,11 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -34,6 +38,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 public abstract class EditorWidget extends Composite {
+
+	protected final static Image decoImg;
+	static {
+		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(
+				FieldDecorationRegistry.DEC_ERROR);
+		decoImg = fieldDecoration.getImage();
+	}
 
 	public interface EditorListener {
 		public void statusTextChanged(String statusText);
@@ -44,16 +55,19 @@ public abstract class EditorWidget extends Composite {
 	protected IProperty property;
 	protected TopLevelEditor topLevelEditor;
 	protected String statusText = "";
+	protected ControlDecoration decoration;
 
 	public EditorWidget(Composite parent) {
 		super(parent, 0);
 		toolkit = new FormToolkit(getDisplay());
 		toolkit.adapt(this);
 		setLayout(new FillLayout());
+		decoration = new ControlDecoration(this, SWT.LEFT);
+		decoration.setImage(decoImg);
+		decoration.hide();
 	}
 
-	public final void initialize(IProperty property,
-			TopLevelEditor topLevelEditor) {
+	public final void initialize(IProperty property, TopLevelEditor topLevelEditor) {
 		this.property = property;
 		this.topLevelEditor = topLevelEditor;
 	}
@@ -156,8 +170,8 @@ public abstract class EditorWidget extends Composite {
 	 *            arguments for the format string
 	 */
 	protected void showErrorDialog(String format, Object... args) {
-		ErrorDialog.openError(getShell(), null, null, new Status(IStatus.ERROR,
-				Activator.PLUGIN_ID, String.format(format, args)));
+		ErrorDialog.openError(getShell(), null, null,
+				new Status(IStatus.ERROR, Activator.PLUGIN_ID, String.format(format, args)));
 	}
 
 	/**
@@ -171,13 +185,14 @@ public abstract class EditorWidget extends Composite {
 	protected void showError(String message) {
 		if (message != null && (message = message.trim()).isEmpty())
 			message = null;
-		if(message == null && getScrolledForm().getMessageType() == IMessageProvider.NONE) {
-			return;
+
+		if (message == null) {
+			decoration.hide();
+		} else {
+			decoration.setDescriptionText(message);
+			decoration.show();
+			decoration.showHoverText(message);
 		}
-		getScrolledForm().setMessage(
-				message,
-				message == null ? IMessageProvider.NONE
-						: IMessageProvider.ERROR);
 	}
 
 	/**
