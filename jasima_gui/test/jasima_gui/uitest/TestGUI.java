@@ -35,7 +35,7 @@ public class TestGUI {
 		bot = new SWTWorkbenchBot();
 		eclipseShell = bot.activeShell();
 		SWTBotPreferences.TIMEOUT = 30000L;
-		SWTBotPreferences.PLAYBACK_DELAY = 100L;
+		// SWTBotPreferences.PLAYBACK_DELAY = 100L;
 		bot.viewByTitle("Welcome").close();
 	}
 
@@ -89,16 +89,20 @@ public class TestGUI {
 
 	public void deleteProject(SWTBotTreeItem item) {
 		item.contextMenu("Delete").click();
-		bot.shell("Delete Resources").activate();
+		SWTBotShell sh = bot.shell("Delete Resources");
+		sh.activate();
 		bot.button("OK").click();
+		bot.waitUntil(Conditions.shellCloses(sh));
 	}
 
 	@Test
 	public void testSimpleExperiment() {
 		final SWTBotTreeItem projectItem = createJasimaProject();
 		bot.menu("File").menu("New").menu("jasima Experiment").click();
-		bot.shell("New Jasima experiment").activate();
+		SWTBotShell sh = bot.shell("New Jasima experiment");
+		sh.activate();
 		bot.button("Finish").click();
+		bot.waitUntil(Conditions.shellCloses(sh));
 
 		eclipseShell.activate();
 		projectItem.getNode("new_experiment.jasima").doubleClick();
@@ -121,8 +125,11 @@ public class TestGUI {
 
 		projectItem.select();
 		bot.menu("File").menu("New").menu("jasima Experiment").click();
-		bot.shell("New Jasima experiment").activate();
+		SWTBotShell sh = bot.shell("New Jasima experiment");
+		sh.activate();
 		bot.button("Finish").click();
+		bot.waitUntil(Conditions.shellCloses(sh));
+
 		projectItem.getNode("new_experiment.jasima").doubleClick();
 		bot.toolbarButtonWithTooltip("New", 2).click();
 		bot.shell("Types compatible with jasima.shopSim.core.PR").activate();
@@ -142,8 +149,26 @@ public class TestGUI {
 	public void testImportProject() throws Exception {
 		eclipseShell.activate();
 		bot.menu("File").menu("Import...").click();
-		bot.shell("Import").activate();
+		SWTBotShell sh = bot.shell("Import");
+		sh.activate();
 		bot.tree().getTreeItem("General").expand();
+		bot.waitUntil(new ICondition() {
+			@Override
+			public void init(SWTBot bot) {
+				// empty
+			}
+
+			@Override
+			public boolean test() throws Exception {
+				return !bot.tree().getTreeItem("General").getNodes().isEmpty();
+			}
+
+			@Override
+			public String getFailureMessage() {
+				return "tree item has no nodes";
+			}
+		});
+		System.err.println(bot.tree().getTreeItem("General").getNodes());
 		bot.tree().getTreeItem("General").getNode("Existing Projects into Workspace").doubleClick();
 
 		File tmp = File.createTempFile("jasima_gui_", ".zip");
@@ -154,7 +179,9 @@ public class TestGUI {
 		bot.radio("Select archive file:").click();
 		bot.comboBox(1).setText(tmp.getAbsolutePath());
 		bot.comboBox(1).pressShortcut(0, '\n');
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Finish")));
 		bot.button("Finish").click();
+		bot.waitUntil(Conditions.shellCloses(sh));
 		eclipseShell.activate();
 		SWTBotTreeItem projectItem = bot.tree().getTreeItem("test002");
 		projectItem.select();
@@ -163,8 +190,8 @@ public class TestGUI {
 		tmp.delete();
 
 		projectItem.getNode("new_experiment.jasima").doubleClick();
-		//bot.toolbarButtonWithTooltip("Run Experiment").click();
-		//waitForRunResults(projectItem);
+		// bot.toolbarButtonWithTooltip("Run Experiment").click();
+		// waitForRunResults(projectItem);
 
 		deleteProject(projectItem);
 	}
