@@ -180,6 +180,10 @@ public class EclipseProjectClassLoader extends ClassLoader implements IResourceC
 			path = ResourcesPlugin.getWorkspace().getRoot().getFolder(path).getLocation();
 		}
 
+		if(path == null) {
+			return null;
+		}
+
 		File f = path.toFile();
 		if (f.isDirectory()) {
 			f = new File(f, name);
