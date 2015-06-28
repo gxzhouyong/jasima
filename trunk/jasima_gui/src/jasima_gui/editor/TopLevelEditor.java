@@ -215,15 +215,16 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 	}
 
 	protected void classesChanged() {
-		if (form.isDisposed())
-			return;
-
 		if (!getClassLoader().getState().isDirty() && isValidData()) {
 			// class loader isn't dirty and root was successfully loaded
 			// no need to do anything
 			return;
 		}
 		migrateClassLoader();
+
+		if (form == null || form.isDisposed())
+			return;
+
 		createBody();
 	}
 
