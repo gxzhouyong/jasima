@@ -51,9 +51,11 @@ public class TestGUI {
 	SWTBotTreeItem createJasimaProject(String name) {
 		eclipseShell.activate();
 		bot.menu("File").menu("New").menu("jasima Project").click();
-		bot.shell("New Jasima Project").activate();
+		SWTBotShell newProjectShell = bot.shell("New Jasima Project");
+		newProjectShell.activate();
 		bot.textWithLabel("Project name:").setText(name);
 		bot.button("Finish").click();
+		bot.waitUntil(Conditions.shellCloses(newProjectShell));
 		SWTBotTreeItem projectItem = bot.tree().getTreeItem(name);
 		projectItem.select();
 		projectItem.expand();
