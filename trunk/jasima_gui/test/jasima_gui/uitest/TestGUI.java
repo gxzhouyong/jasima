@@ -170,7 +170,6 @@ public class TestGUI {
 				return "tree item has no nodes";
 			}
 		});
-		System.err.println(bot.tree().getTreeItem("General").getNodes());
 		bot.tree().getTreeItem("General").getNode("Existing Projects into Workspace").doubleClick();
 
 		File tmp = File.createTempFile("jasima_gui_", ".zip");
