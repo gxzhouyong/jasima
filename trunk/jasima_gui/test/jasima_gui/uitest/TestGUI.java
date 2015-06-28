@@ -35,7 +35,7 @@ public class TestGUI {
 		bot = new SWTWorkbenchBot();
 		eclipseShell = bot.activeShell();
 		SWTBotPreferences.TIMEOUT = 30000L;
-		// SWTBotPreferences.PLAYBACK_DELAY = 100L;
+		SWTBotPreferences.PLAYBACK_DELAY = 100L;
 		bot.viewByTitle("Welcome").close();
 	}
 
