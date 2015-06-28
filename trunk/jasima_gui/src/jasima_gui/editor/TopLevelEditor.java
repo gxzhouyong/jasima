@@ -202,10 +202,13 @@ public class TopLevelEditor extends EditorPart implements SelectionListener {
 			}
 			newSer.getClassLoader().addListener(classLoaderListener);
 			loadError = null;
-		} catch (LinkageError e) {
-			loadError = e;
-			conversionReport = null;
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			// While catching only Exception subclasses would be nice,
+			// LinkageError and plain Error (unresolved compilation problem) can
+			// also be thrown during deserialization.
+			if (e instanceof VirtualMachineError)
+				throw (VirtualMachineError) e;
+
 			loadError = e;
 			conversionReport = null;
 		}
