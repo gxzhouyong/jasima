@@ -18,6 +18,7 @@
  *******************************************************************************/
 package jasima_gui;
 
+import jasima_gui.editor.PropertyException;
 import jasima_gui.util.TypeUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -179,7 +180,7 @@ public class PermissiveBeanConverter extends JavaBeanConverter {
 						if (t instanceof InvocationTargetException)
 							t = t.getCause();
 
-						report.propertyRangeChanged(resultType, propertyName, t.toString());
+						report.propertyRangeChanged(resultType, propertyName, PropertyException.formatException(t));
 					}
 				} else {
 					report.propertyDisappeared(resultType, propertyName);
