@@ -30,21 +30,26 @@ public class PropertyException extends Exception {
 		super(message, cause);
 	}
 
-	public static PropertyException newGetException(IProperty prop,
-			Throwable cause) {
-		return new PropertyException(String.format(
-				"Couldn't get value of property %s.", prop), cause);
+	public static String formatException(Throwable t) {
+		String message = String.valueOf(t.getLocalizedMessage()).trim();
+		String fmt;
+		if(message.isEmpty() || message.equals("null")) {
+			fmt = "%s";
+		} else {
+			fmt = "%s: %s";
+		}
+		return String.format(fmt, t.getClass().getSimpleName(), message);
 	}
 
-	public static PropertyException newSetException(IProperty prop,
-			Throwable cause) {
+	public static PropertyException newGetException(IProperty prop, Throwable cause) {
+		return new PropertyException(String.format("Exception in getter: %s", formatException(cause)), cause);
+	}
+
+	public static PropertyException newSetException(IProperty prop, Throwable cause) {
 		if (cause instanceof IllegalArgumentException) {
-			return new PropertyException(String.format(
-					"Bad property value: %s", cause.getLocalizedMessage()),
-					cause);
+			return new PropertyException(String.format("Bad property value: %s", cause.getLocalizedMessage()), cause);
 		}
-		return new PropertyException(String.format(
-				"Couldn't set value of property %s.", prop), cause);
+		return new PropertyException(String.format("Exception in setter: %s", formatException(cause)), cause);
 	}
 
 }
