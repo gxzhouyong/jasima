@@ -30,7 +30,7 @@ public abstract class Pref {
 
 	public static final StrPref XLS_EXP_RES_FMT = new StrPref("default-excel-experiment-result-format", "--xlsres");
 
-	public static final StrPref JASIMA_VERSION = new StrPref("default-jasima-version", "1.2.0");
+	public static final StrPref JASIMA_VERSION = new StrPref("default-jasima-version", "1.3.0");
 
 	public final String key;
 
