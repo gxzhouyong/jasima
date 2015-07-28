@@ -2,7 +2,8 @@
 <feature
       id="jasima_feature"
       label="jasima GUI feature"
-      version="1.2.5.qualifier">
+      version="1.3.0.qualifier"
+      provider-name="jasima solutions UG">
 
    <description url="http://jasima.googlecode.com/">
       GUI component of jasima - an efficient Java simulator for manufacturing
