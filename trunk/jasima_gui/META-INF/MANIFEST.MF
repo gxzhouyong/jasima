@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: jasima GUI
 Bundle-SymbolicName: jasima_gui; singleton:=true
-Bundle-Version: 1.2.5.qualifier
+Bundle-Version: 1.3.0
 Bundle-Activator: jasima_gui.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
@@ -30,3 +30,4 @@ Bundle-ClassPath: xstream-1.4.8.jar,
 Export-Package: com.thoughtworks.xstream,
  jasima_gui,
  jasima_gui.editor
+Bundle-Vendor: jasima solutions UG
