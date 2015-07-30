@@ -1,0 +1,83 @@
+#
+# This implements the simplified MiniFab scenario without operators. Bottleneck utilization is set to be 90%. 
+#
+
+
+# number of machine groups
+3
+
+# number of routes
+1
+
+#
+# machine orders <machine number(s)>;<setup state> (no space after or before comma/semicolon)
+#
+
+# route A: 6 operations
+1 2 3 2 1 3
+
+#
+# processing times, batch id, and max. batch size for each operation on a route
+#
+
+# route A
+95 60 75 80 105 30
+
+
+#
+# machine group configuration
+#
+#
+#
+#
+#
+
+
+# configuration for machine number 1
+1
+machineName
+G1_Mab
+numInGroup
+2
+
+# machine 2 starts here...
+2
+machineName
+G2_Mcd
+numInGroup
+2
+
+3
+machineName
+G3_Me
+numInGroup
+1
+
+
+# job specifications, jobs have to be ordered by release date
+#
+#jobs
+#
+#number of jobs
+#4
+#
+# <route number> <release date> <due date> <weight>
+#1	0	12	2
+#2	0	37	4
+#3	0	21	2
+#4	0	22	5
+
+# create a dynamic job source
+jobs_dynamic
+
+route
+1
+
+arrivals
+dblExp(116.63)
+
+due_dates
+const(2.0)
+
+weights
+const(1.0)

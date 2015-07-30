@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?jasima bean?>
+<jasima.shopSim.models.staticShop.StaticShopExperiment>
+  <batchForming class="null"/>
+  <batchFormingRules class="null"/>
+  <batchSequencingRule class="null"/>
+  <batchSequencingRules class="null"/>
+  <dueDateTightness class="double">NaN</dueDateTightness>
+  <enableLookAhead class="boolean">false</enableLookAhead>
+  <initialSeed class="long">902790708899</initialSeed>
+  <instFileName class="string">miniFabNoOps90.txt</instFileName>
+  <instURI class="null"/>
+  <machineListener class="jasima.core.util.observer.NotifierListener-array">
+    <jasima.shopSim.util.MachineStatCollector/>
+  </machineListener>
+  <maxJobsInSystem class="int">0</maxJobsInSystem>
+  <name class="null"/>
+  <roundingMode class="jasima.shopSim.models.staticShop.StaticShopExperiment$RoundingMode">NONE</roundingMode>
+  <sequencingRule class="null"/>
+  <sequencingRules class="null"/>
+  <shopDef class="null"/>
+  <shopListener class="jasima.core.util.observer.NotifierListener-array">
+    <jasima.shopSim.util.BasicJobStatCollector>
+      <ignoreFirst class="int">0</ignoreFirst>
+      <initialPeriod class="double">0.0</initialPeriod>
+    </jasima.shopSim.util.BasicJobStatCollector>
+  </shopListener>
+  <simulationLength class="double">5184000.0</simulationLength>
+  <stopAfterNumJobs class="int">0</stopAfterNumJobs>
+</jasima.shopSim.models.staticShop.StaticShopExperiment>
