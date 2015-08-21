@@ -1,5 +1,8 @@
-package jasima.shopSim.core;
+package minifab.model;
 
+import jasima.shopSim.core.Job;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.IndividualMachine.MachineState;
 
 public class OperatorGroup extends WorkStation {

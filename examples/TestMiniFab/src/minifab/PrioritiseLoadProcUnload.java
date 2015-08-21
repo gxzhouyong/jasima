@@ -1,12 +1,12 @@
-package example;
+package minifab;
 
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 
 @SuppressWarnings("serial")
-public class PrioritizeLoadProcUnload extends PR {
+public class PrioritiseLoadProcUnload extends PR {
 
-	public PrioritizeLoadProcUnload() {
+	public PrioritiseLoadProcUnload() {
 		super();
 	}
 

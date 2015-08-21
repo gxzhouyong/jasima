@@ -1,4 +1,4 @@
-package example;
+package minifab;
 
 import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.WorkStation;

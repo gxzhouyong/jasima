@@ -1,4 +1,4 @@
-package example;
+package minifab;
 
 import jasima.core.experiment.FullFactorialExperiment;
 import jasima.core.experiment.MultipleReplicationExperiment;
