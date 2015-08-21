@@ -1,22 +1,17 @@
 package minifab.control;
 
-import minifab.model.MiniFabOperation;
 import jasima.shopSim.core.Job;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
+import minifab.model.MiniFabOperation;
 
-public class CheckOperatorAvailability extends PR {
+public class CheckResourceAvailability extends PR {
 
 	private boolean canStartAny;
 
-	public CheckOperatorAvailability() {
+	public CheckResourceAvailability() {
 		super();
-	}
-
-	@Override
-	public double calcPrio(PrioRuleTarget entry) {
-		return 0;
 	}
 
 	@Override
@@ -38,6 +33,16 @@ public class CheckOperatorAvailability extends PR {
 	@Override
 	public boolean keepIdle() {
 		return !canStartAny;
+	}
+
+	@Override
+	public double calcPrio(PrioRuleTarget job) {
+		MiniFabOperation op = (MiniFabOperation) job.getCurrentOperation();
+		if (op.canStart()) {
+			return +1;
+		} else {
+			return -1;
+		}
 	}
 
 }

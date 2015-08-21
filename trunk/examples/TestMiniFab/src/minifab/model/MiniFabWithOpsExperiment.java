@@ -6,9 +6,13 @@ import jasima.core.simulation.arrivalprocess.ArrivalsStationary;
 import jasima.core.util.TypeUtil;
 import jasima.shopSim.core.DynamicJobSource;
 import jasima.shopSim.core.JobShopExperiment;
+import jasima.shopSim.core.PR;
 import jasima.shopSim.core.Route;
 import jasima.shopSim.core.WorkStation;
+import minifab.control.CheckResourceAvailability;
+import minifab.control.MachinesAsOpSlavesPR;
 
+@SuppressWarnings("serial")
 public class MiniFabWithOpsExperiment extends JobShopExperiment {
 
 	public static final int[] LOAD_TIMES = { 10, 0, 5, 0, 0, 0 };
@@ -18,10 +22,10 @@ public class MiniFabWithOpsExperiment extends JobShopExperiment {
 			"G2_Mcd", "G1_Mab", "G3_Me" };
 	public static final String OPS_POOL_NAME = "Ops";
 
-	private int numOperators = 0;
+	private int numOperators = 2;
 	private DblStream interArrivalTimes = new DblConst(116.63);
 
-	protected WorkStation ops;
+	protected OperatorGroup ops;
 
 	public MiniFabWithOpsExperiment() {
 		super();
@@ -36,17 +40,27 @@ public class MiniFabWithOpsExperiment extends JobShopExperiment {
 		createJobSource();
 	}
 
-	private void createJobSource() {
-		DynamicJobSource js = new DynamicJobSource();
+	private void createResources() {
+		SyncMachinesAndOps sync = new SyncMachinesAndOps();
 
-		assert shop.routes.length == 1;
-		js.setRoute(shop.routes[0]);
+		WorkStation ma = new WorkStation(2);
+		ma.setName("G1_Mab");
+		ma.addNotifierListener(sync);
+		shop.addMachine(ma);
 
-		ArrivalsStationary arrivals = new ArrivalsStationary(
-				TypeUtil.cloneIfPossible(getInterArrivalTimes()));
-		js.setArrivalProcess(arrivals);
+		WorkStation mb = new WorkStation(2);
+		mb.setName("G2_Mcd");
+		mb.addNotifierListener(sync);
+		shop.addMachine(mb);
 
-		shop.addJobSource(js);
+		WorkStation mc = new WorkStation(1);
+		mc.setName("G3_Me");
+		mc.addNotifierListener(sync);
+		shop.addMachine(mc);
+
+		ops = new OperatorGroup(getNumOperators());
+		ops.setName(OPS_POOL_NAME);
+		shop.addMachine(ops);
 	}
 
 	private void createRoute() {
@@ -97,25 +111,33 @@ public class MiniFabWithOpsExperiment extends JobShopExperiment {
 		shop.addRoute(r);
 	}
 
-	private void createResources() {
-		WorkStation ma = new WorkStation(2);
-		ma.setName("G1_Mab");
-		shop.addMachine(ma);
+	private void createJobSource() {
+		DynamicJobSource js = new DynamicJobSource();
 
-		WorkStation mb = new WorkStation(2);
-		mb.setName("G2_Mcd");
-		shop.addMachine(mb);
+		assert shop.routes.length == 1;
+		js.setRoute(shop.routes[0]);
 
-		WorkStation mc = new WorkStation(1);
-		mc.setName("G3_Me");
-		shop.addMachine(mc);
+		ArrivalsStationary arrivals = new ArrivalsStationary(
+				TypeUtil.cloneIfPossible(getInterArrivalTimes()));
+		js.setArrivalProcess(arrivals);
 
-		if (getNumOperators() > 0) {
-			ops = new WorkStation(getNumOperators());
-			ops.setName(OPS_POOL_NAME);
-			shop.addMachine(ops);
-		} else
-			ops = null;
+		shop.addJobSource(js);
+	}
+
+	@Override
+	protected void postConfigShop() {
+		super.postConfigShop();
+
+		// overwrite sequencingRules, only opGroup get "sequencingRule"
+		for (WorkStation ws : shop.machines) {
+			if (ws instanceof OperatorGroup) {
+				PR currentPR = ws.queue.getSequencingRule();
+				ws.queue.setSequencingRule(new CheckResourceAvailability()
+						.setFinalTieBreaker(currentPR));
+			} else {
+				ws.queue.setSequencingRule(new MachinesAsOpSlavesPR());
+			}
+		}
 	}
 
 	public int getNumOperators() {
@@ -123,8 +145,8 @@ public class MiniFabWithOpsExperiment extends JobShopExperiment {
 	}
 
 	public void setNumOperators(int numOps) {
-		if (numOps < 0)
-			throw new IllegalArgumentException("Can't be negative.");
+		if (numOps < 1)
+			throw new IllegalArgumentException();
 
 		this.numOperators = numOps;
 	}
