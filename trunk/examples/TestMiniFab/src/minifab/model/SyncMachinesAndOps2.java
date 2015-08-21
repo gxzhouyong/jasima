@@ -1,6 +1,5 @@
 package minifab.model;
 
-import minifab.MiniFabOperation;
 import jasima.shopSim.core.Job;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;

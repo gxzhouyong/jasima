@@ -22,7 +22,8 @@ public class OperatorGroup extends WorkStation {
 
 	/**
 	 * Called when an operation of Job j is finished. This is the same method as
-	 * in WorkStation, only j.proceed() is not called.
+	 * in WorkStation, only jobs are not notified (this is done by the
+	 * machines and has to occur only once).
 	 */
 	@Override
 	protected void depart() {
@@ -44,12 +45,12 @@ public class OperatorGroup extends WorkStation {
 			justCompleted = null;
 		}
 
-		for (int i = 0, n = b.numJobsInBatch(); i < n; i++) {
-			Job j = b.job(i);
-			j.endProcessing();
-			// send jobs to next machine
-			// j.proceed();
-		}
+		// for (int i = 0, n = b.numJobsInBatch(); i < n; i++) {
+		// Job j = b.job(i);
+		// j.endProcessing();
+		// send jobs to next machine
+		// j.proceed();
+		// }
 
 		currMachine = null;
 
