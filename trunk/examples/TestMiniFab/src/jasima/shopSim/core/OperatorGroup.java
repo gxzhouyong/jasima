@@ -2,13 +2,13 @@ package jasima.shopSim.core;
 
 import jasima.shopSim.core.IndividualMachine.MachineState;
 
-public class MiniFabWorkstation extends WorkStation {
+public class OperatorGroup extends WorkStation {
 
-	public MiniFabWorkstation() {
+	public OperatorGroup() {
 		this(1);
 	}
 
-	public MiniFabWorkstation(int numInGroup) {
+	public OperatorGroup(int numInGroup) {
 		super(numInGroup);
 	}
 
@@ -17,7 +17,10 @@ public class MiniFabWorkstation extends WorkStation {
 		super.startProc(batch);
 	}
 
-	/** Called when an operation of Job j is finished. */
+	/**
+	 * Called when an operation of Job j is finished. This is the same method as
+	 * in WorkStation, only j.proceed() is not called.
+	 */
 	@Override
 	protected void depart() {
 		assert currMachine.state == MachineState.WORKING;
@@ -42,7 +45,7 @@ public class MiniFabWorkstation extends WorkStation {
 			Job j = b.job(i);
 			j.endProcessing();
 			// send jobs to next machine
-			j.proceed();
+			// j.proceed();
 		}
 
 		currMachine = null;

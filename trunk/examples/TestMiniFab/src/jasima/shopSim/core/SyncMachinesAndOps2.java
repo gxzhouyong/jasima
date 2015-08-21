@@ -15,7 +15,7 @@ public class SyncMachinesAndOps2 extends WorkStationListenerBase {
 		Job j = (Job) justStarted;
 		MiniFabOperation op = (MiniFabOperation) j.getCurrentOperation();
 
-		MiniFabWorkstation ws = (MiniFabWorkstation) op.machine;
+		OperatorGroup ws = (OperatorGroup) op.machine;
 		ws.removeFromQueue(j);
 		ws.currMachine = ws.freeMachines.peek();
 		ws.startProc(justStarted);
