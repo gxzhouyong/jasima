@@ -7,6 +7,14 @@ import minifab.model.MiniFabOperation;
 import minifab.model.MiniFabWithOpsExperiment;
 import minifab.model.OperatorGroup;
 
+/**
+ * This is a kind of dummy PR for machine resources that only looks at the
+ * decisions of the operator pool and assigns the right priority values to match
+ * the operator's decision.
+ * 
+ * @author Torsten Hildebrandt
+ */
+@SuppressWarnings("serial")
 public class MachinesAsOpSlavesPR extends PR {
 
 	private OperatorGroup ops;
