@@ -32,14 +32,4 @@ public class MiniFabOperation extends Operation {
 		return loadOp.procTime + procOp.procTime + unloadOp.procTime;
 	}
 
-	public boolean canStart() {
-		boolean canStart = machine.numFreeMachines() > 0;
-
-		if (canStart && operator != null) {
-			canStart = operator.numFreeMachines() > 0;
-		}
-
-		return canStart;
-	}
-
 }
