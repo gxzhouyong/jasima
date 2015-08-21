@@ -6,6 +6,11 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import minifab.model.MiniFabOperation;
 
+/**
+ * Tests whether both machine and operator are available.
+ * 
+ * @author Torsten Hildebrandt
+ */
 public class CheckResourceAvailability extends PR {
 
 	private boolean canStartAny;
