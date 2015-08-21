@@ -11,13 +11,14 @@ import jasima.shopSim.core.Route;
 import jasima.shopSim.core.WorkStation;
 import minifab.control.CheckResourceAvailability;
 import minifab.control.MachinesAsOpSlavesPR;
+import minifab.control.PrioritiseProcOperations;
 
 @SuppressWarnings("serial")
 public class MiniFabWithOpsExperiment extends JobShopExperiment {
 
-	public static final int[] LOAD_TIMES = { 10, 0, 5, 0, 0, 0 };
-	public static final int[] PROC_TIMES = { 20, 10, 10, 80, 105, 30 };
-	public static final int[] UNLOAD_TIMES = { 10, 15, 10, 0, 0, 0 };
+	public static final int[] LOAD_TIMES = { 15, 20, 15, 20, 15, 10 };
+	public static final int[] PROC_TIMES = { 55, 25, 45, 35, 65, 10 };
+	public static final int[] UNLOAD_TIMES = { 25, 15, 15, 25, 25, 10 };
 	public static final String[] WORKSTATIONS = { "G1_Mab", "G2_Mcd", "G3_Me",
 			"G2_Mcd", "G1_Mab", "G3_Me" };
 	public static final String OPS_POOL_NAME = "Ops";
@@ -135,7 +136,8 @@ public class MiniFabWithOpsExperiment extends JobShopExperiment {
 				ws.queue.setSequencingRule(new CheckResourceAvailability()
 						.setFinalTieBreaker(currentPR));
 			} else {
-				MachinesAsOpSlavesPR pr = new MachinesAsOpSlavesPR();
+				PR pr = new PrioritiseProcOperations()
+						.setFinalTieBreaker(new MachinesAsOpSlavesPR());
 				pr.setOwner(ws);
 				ws.queue.setSequencingRule(pr);
 			}
