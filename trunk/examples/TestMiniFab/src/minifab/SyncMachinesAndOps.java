@@ -1,4 +1,4 @@
-package example;
+package minifab;
 
 import jasima.shopSim.core.Job;
 import jasima.shopSim.core.PrioRuleTarget;

@@ -1,4 +1,4 @@
-package example;
+package minifab;
 
 import jasima.core.random.continuous.DblConst;
 import jasima.core.random.continuous.DblStream;

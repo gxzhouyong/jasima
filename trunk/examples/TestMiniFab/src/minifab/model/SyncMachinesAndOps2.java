@@ -1,7 +1,10 @@
-package jasima.shopSim.core;
+package minifab.model;
 
+import minifab.MiniFabOperation;
+import jasima.shopSim.core.Job;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.util.WorkStationListenerBase;
-import example.MiniFabOperation;
 
 public class SyncMachinesAndOps2 extends WorkStationListenerBase {
 
