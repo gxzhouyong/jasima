@@ -135,7 +135,9 @@ public class MiniFabWithOpsExperiment extends JobShopExperiment {
 				ws.queue.setSequencingRule(new CheckResourceAvailability()
 						.setFinalTieBreaker(currentPR));
 			} else {
-				ws.queue.setSequencingRule(new MachinesAsOpSlavesPR());
+				MachinesAsOpSlavesPR pr = new MachinesAsOpSlavesPR();
+				pr.setOwner(ws);
+				ws.queue.setSequencingRule(pr);
 			}
 		}
 	}
