@@ -12,8 +12,8 @@ public class PrioritiseLoadProcUnload extends PR {
 	}
 
 	@Override
-	public double calcPrio(PrioRuleTarget entry) {
-		MiniFabOperation op = (MiniFabOperation) entry.getCurrentOperation();
+	public double calcPrio(PrioRuleTarget job) {
+		MiniFabOperation op = (MiniFabOperation) job.getCurrentOperation();
 
 		if (op.isLoadOperation())
 			return 1;
