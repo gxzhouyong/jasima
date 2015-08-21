@@ -22,8 +22,9 @@ public class SyncMachinesAndOps extends WorkStationListenerBase {
 		// just one op group for now
 		assert op.operator == ops || op.operator == null;
 
-		if (op.operator != null)
-			op.operator.enqueueOrProcess(justArrived);
+		ops.enqueueOrProcess(justArrived);
+		assert justArrived.getCurrMachine() == ops;
+		justArrived.setCurrMachine(m);
 	}
 
 	@Override
@@ -31,7 +32,6 @@ public class SyncMachinesAndOps extends WorkStationListenerBase {
 			PrioRuleTarget justCompleted) {
 		// trigger new selection also for operations that did not require the
 		// operator
-		if (ops != null)
-			ops.selectAndStart();
+		ops.selectAndStart();
 	}
 }
