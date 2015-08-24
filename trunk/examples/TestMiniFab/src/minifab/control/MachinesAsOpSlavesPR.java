@@ -62,16 +62,20 @@ public class MachinesAsOpSlavesPR extends PR {
 			// processing operations can be started right away
 			return false;
 		} else {
-			// for everything else we have to check what the operator did
-			MiniFabOperation op = (MiniFabOperation) ops.jobLastStarted()
-					.getCurrentOperation();
-			return op.machine != getOwner();
+			for (Job j : ops.jobsLastStarted()) {
+				// for everything else we have to check what the operator did
+				MiniFabOperation op = (MiniFabOperation) j
+						.getCurrentOperation();
+				if (op.machine == getOwner())
+					return false;
+			}
+			return true;
 		}
 	}
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		if (entry == ops.jobLastStarted()) {
+		if (ops.jobsLastStarted().contains(entry)) {
 			IndividualMachine im = (IndividualMachine) entry
 					.valueStoreGet(CheckResourceAvailability.LAST_MACHINE);
 			// force unloading operations on the correct machine

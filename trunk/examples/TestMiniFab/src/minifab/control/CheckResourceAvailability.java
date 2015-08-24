@@ -76,9 +76,9 @@ public class CheckResourceAvailability extends PR {
 		MiniFabOperation op = (MiniFabOperation) j.getCurrentOperation();
 		MiniFabOperation loadOp = op.loadOp;
 
-		IndividualMachine lastMachine = (IndividualMachine) j
-				.valueStoreGet(LAST_MACHINE);
-		assert lastMachine != null;
+//		IndividualMachine lastMachine = (IndividualMachine) j
+//				.valueStoreGet(LAST_MACHINE);
+//		assert lastMachine != null;
 
 		Collection<IndividualMachine> ms = m.getFreeMachines();
 		int n = ms.size();
