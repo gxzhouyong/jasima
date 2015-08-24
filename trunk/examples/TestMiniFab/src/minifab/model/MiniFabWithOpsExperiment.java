@@ -133,8 +133,10 @@ public class MiniFabWithOpsExperiment extends JobShopExperiment {
 		for (WorkStation ws : shop.machines) {
 			if (ws instanceof OperatorGroup) {
 				PR currentPR = ws.queue.getSequencingRule();
-				ws.queue.setSequencingRule(new CheckResourceAvailability()
-						.setFinalTieBreaker(currentPR));
+				PR pr = new CheckResourceAvailability()
+						.setFinalTieBreaker(currentPR);
+				pr.setOwner(ws);
+				ws.queue.setSequencingRule(pr);
 			} else {
 				PR pr = new PrioritiseProcOperations()
 						.setFinalTieBreaker(new MachinesAsOpSlavesPR());
