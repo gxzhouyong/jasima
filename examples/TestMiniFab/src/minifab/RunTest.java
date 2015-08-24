@@ -13,7 +13,7 @@ public class RunTest {
 		MiniFabWithOpsExperiment ex = new MiniFabWithOpsExperiment();
 		ex.setSequencingRule(new SPT()
 				.setFinalTieBreaker(new TieBreakerFASFS()));
-		ex.setSimulationLength(24 * 60);
+		ex.setSimulationLength(2 * 24 * 60);
 
 		ex.addShopListener(new TraceFileProducer());
 		ex.addNotifierListener(new ConsolePrinter(ExpMsgCategory.ALL));

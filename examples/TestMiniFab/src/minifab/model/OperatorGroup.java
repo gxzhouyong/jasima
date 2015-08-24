@@ -2,13 +2,17 @@ package minifab.model;
 
 import jasima.core.simulation.Event;
 import jasima.shopSim.core.Job;
+import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OperatorGroup extends WorkStation {
 
 	private static final double SMALL_TIME = 1e-4;
-	private Job jobLastStarted;
+	private ArrayList<Job> jobsLastStarted;
 
 	public OperatorGroup() {
 		this(1);
@@ -16,6 +20,12 @@ public class OperatorGroup extends WorkStation {
 
 	public OperatorGroup(int numInGroup) {
 		super(numInGroup);
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		jobsLastStarted = new ArrayList<>();
 	}
 
 	@Override
@@ -39,13 +49,29 @@ public class OperatorGroup extends WorkStation {
 	}
 
 	/**
+	 * Job 'j' arrives at a machine. Skip assertion checks.
+	 */
+	@Override
+	public void enqueueOrProcess(Job j) {
+		Operation o = j.getCurrentOperation();
+		WorkStation m = o.machine;
+		o.machine = this; // prevent assertion failure in super
+		super.enqueueOrProcess(j);
+		o.machine = m;
+	}
+
+	/**
 	 * Start processing the current batch/job.
 	 */
 	@Override
 	public void startProc(PrioRuleTarget batch) {
+		Operation o = batch.getCurrentOperation();
+		WorkStation m = o.machine;
+		o.machine = this; // prevent assertion failure in super
 		super.startProc(batch);
+		o.machine = m;
 
-		jobLastStarted = (Job) batch;
+		jobsLastStarted.add((Job) batch);
 
 		// be use machine always follows operator
 		batch.getCurrentOperation().machine.selectAndStart();
@@ -76,7 +102,7 @@ public class OperatorGroup extends WorkStation {
 		// do nothing
 	}
 
-	public Job jobLastStarted() {
-		return jobLastStarted;
+	public List<Job> jobsLastStarted() {
+		return jobsLastStarted;
 	}
 }
