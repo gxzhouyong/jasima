@@ -5,7 +5,12 @@ import jasima.shopSim.core.Job;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
+import jasima.shopSim.core.WorkStation;
+
+import java.util.Collection;
+
 import minifab.model.MiniFabOperation;
+import minifab.model.SyncMachinesAndOps;
 
 /**
  * Tests whether both machine and operator are available.
@@ -30,9 +35,8 @@ public class CheckResourceAvailability extends PR {
 		canStartAny = false;
 		for (int i = 0; i < q.size(); i++) {
 			Job j = (Job) q.get(i);
-			MiniFabOperation op = (MiniFabOperation) j.getCurrentOperation();
 
-			if (canStart(op, j)) {
+			if (canStart(j)) {
 				canStartAny = true;
 				break;
 			}
@@ -46,33 +50,47 @@ public class CheckResourceAvailability extends PR {
 
 	@Override
 	public double calcPrio(PrioRuleTarget job) {
-		MiniFabOperation op = (MiniFabOperation) job.getCurrentOperation();
-		if (canStart(op, (Job) job)) {
+		if (canStart((Job) job)) {
 			return +1;
 		} else {
 			return -1;
 		}
 	}
 
-	public static boolean canStart(MiniFabOperation op, Job j) {
+	public static boolean canStart(Job j) {
+		MiniFabOperation op = (MiniFabOperation) j.getCurrentOperation();
+
 		// operator available
 		boolean canStart = op.operator == null
 				|| op.operator.numFreeMachines() > 0;
 
 		// machine available?
 		if (canStart) {
-			// load can be performed on any machine
-			if (op.isLoadOperation()) {
-				canStart = op.machine.numFreeMachines() > 0;
-			} else {
-				IndividualMachine lastMachine = (IndividualMachine) j
-						.valueStoreGet(LAST_MACHINE);
-				assert lastMachine != null;
-				canStart = op.machine.isFree(lastMachine);
-			}
+			canStart = compatibleMachines(op.machine, j) > 0;
 		}
 
 		return canStart;
+	}
+
+	private static int compatibleMachines(WorkStation m, Job j) {
+		MiniFabOperation op = (MiniFabOperation) j.getCurrentOperation();
+		MiniFabOperation loadOp = op.loadOp;
+
+		IndividualMachine lastMachine = (IndividualMachine) j
+				.valueStoreGet(LAST_MACHINE);
+		assert lastMachine != null;
+
+		Collection<IndividualMachine> ms = m.getFreeMachines();
+		int n = ms.size();
+		// are they really available or waiting for other proc or unload
+		// operation
+		for (IndividualMachine im : ms) {
+			Object o = m.valueStoreGet(SyncMachinesAndOps.createKeyName(im));
+			if (o != null && o != loadOp)
+				n--;
+		}
+
+		return n;
 	}
 
 }

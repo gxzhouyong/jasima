@@ -2,7 +2,6 @@ package minifab.model;
 
 import jasima.core.simulation.Event;
 import jasima.shopSim.core.Job;
-import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 
@@ -28,7 +27,7 @@ public class OperatorGroup extends WorkStation {
 			public void handle() {
 				// are there jobs that could be started and is there at
 				// least one free machine
-				if (numBusy < numInGroup() && numJobsWaiting() > 0) {
+				if (numBusy() < numInGroup() && numJobsWaiting() > 0) {
 					// at least 1 machine idle, start job selection
 					selectAndStart0();
 				}
@@ -37,16 +36,6 @@ public class OperatorGroup extends WorkStation {
 
 		// execute asynchronously so all jobs arrived/departed before selection
 		shop.schedule(selectEvent);
-	}
-
-	@Override
-	protected double procTime(Operation op) {
-		MiniFabOperation o = (MiniFabOperation) op;
-		if (o.operator == null) {
-			return SMALL_TIME;
-		} else {
-			return super.procTime(op);
-		}
 	}
 
 	/**
@@ -68,7 +57,7 @@ public class OperatorGroup extends WorkStation {
 			public void handle() {
 				// are there jobs that could be started and is there at
 				// least one free machine
-				if (numBusy < numInGroup() && numJobsWaiting() > 0) {
+				if (numBusy() < numInGroup() && numJobsWaiting() > 0) {
 					// at least 1 machine idle, start job selection
 					selectAndStart0();
 				}
